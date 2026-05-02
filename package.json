@@ -1,17 +1,18 @@
 {
   "name": "visual-research-board",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "private": true,
-  "description": "A creator-focused source-aware visual research board with multi-project library, URL metadata extraction, export templates, and executable normalization tests.",
+  "description": "A creator-focused source-aware visual research board with provider hardening, persistent result snapshots, project-library import/export, and stronger fixture checks.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
-    "normalization:test": "node tests/normalization-check.mjs"
+    "normalization:test": "node tests/normalization-check.mjs",
+    "e2e:fixtures": "node tests/e2e-fixture-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

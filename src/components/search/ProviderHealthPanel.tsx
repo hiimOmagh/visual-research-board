@@ -4,6 +4,7 @@ import type { ProviderHealth } from "@/types/research";
 
 const statusClass: Record<ProviderHealth["status"], string> = {
   active: "border-emerald-400/35 bg-emerald-400/10 text-emerald-100",
+  no_results: "border-blue-300/35 bg-blue-300/10 text-blue-100",
   missing_key: "border-amber-300/35 bg-amber-300/10 text-amber-100",
   skipped: "border-slate-300/20 bg-slate-300/5 text-slate-300",
   error: "border-red-400/35 bg-red-400/10 text-red-100",
@@ -13,6 +14,7 @@ const statusClass: Record<ProviderHealth["status"], string> = {
 function statusLabel(status: ProviderHealth["status"]): string {
   const labels: Record<ProviderHealth["status"], string> = {
     active: "Active",
+    no_results: "No results",
     missing_key: "Missing key",
     skipped: "Skipped",
     error: "Error",
@@ -31,7 +33,7 @@ export function ProviderHealthPanel({ health }: { health: ProviderHealth[] }) {
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider health</p>
           <h2 className="mt-1 text-xl font-bold text-white">Search adapters</h2>
         </div>
-        <p className="text-xs text-slate-400">Missing keys are expected unless you add them in .env.local.</p>
+        <p className="text-xs text-slate-400">Alpha.6 records query samples and no-result states for provider debugging.</p>
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -52,7 +54,20 @@ export function ProviderHealthPanel({ health }: { health: ProviderHealth[] }) {
                 <dt className="text-slate-500">Time</dt>
                 <dd className="font-semibold text-slate-100">{item.duration_ms} ms</dd>
               </div>
+              <div className="rounded-xl bg-white/5 p-2">
+                <dt className="text-slate-500">Queries</dt>
+                <dd className="font-semibold text-slate-100">{item.queries_used}</dd>
+              </div>
+              <div className="rounded-xl bg-white/5 p-2">
+                <dt className="text-slate-500">Enabled</dt>
+                <dd className="font-semibold text-slate-100">{item.enabled ? "Yes" : "No"}</dd>
+              </div>
             </dl>
+            {item.query_sample.length > 0 && (
+              <p className="mt-3 line-clamp-2 text-[11px] leading-5 text-slate-500">
+                {item.query_sample.join(" · ")}
+              </p>
+            )}
             {item.message && <p className="mt-3 text-xs leading-5 text-slate-400">{item.message}</p>}
           </article>
         ))}

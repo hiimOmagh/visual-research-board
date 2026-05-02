@@ -24,7 +24,7 @@ export type LicenseDetected =
 export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock" | "manual";
 export type SearchProviderName = Exclude<ProviderName, "manual">;
 
-export type ProviderStatus = "active" | "missing_key" | "skipped" | "error" | "timeout";
+export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderToggleMap = Record<SearchProviderName, boolean>;
 
@@ -90,6 +90,7 @@ export interface ProviderHealth {
   result_count: number;
   duration_ms: number;
   queries_used: number;
+  query_sample: string[];
   message?: string;
 }
 
@@ -100,6 +101,7 @@ export interface SearchDiagnostics {
   total_deduped_results: number;
   duplicate_count: number;
   provider_health: ProviderHealth[];
+  provider_toggles: ProviderToggleMap;
 }
 
 export interface ResearchResponse {
@@ -116,8 +118,19 @@ export interface BoardSection {
   created_at: string;
 }
 
+export interface SearchResultSnapshot {
+  id: string;
+  request: ResearchRequest;
+  search_plan: SearchPlan;
+  diagnostics: SearchDiagnostics;
+  results: ResearchResult[];
+  created_at: string;
+  label: string;
+}
+
 export interface SearchHistoryEntry {
   id: string;
+  snapshot_id: string;
   topic: string;
   mode: ResearchMode;
   depth: SearchDepth;
@@ -126,10 +139,11 @@ export interface SearchHistoryEntry {
   result_count: number;
   duplicate_count: number;
   provider_health: ProviderHealth[];
+  provider_toggles: ProviderToggleMap;
 }
 
 export interface ResearchProject {
-  schema_version: "0.1.0-alpha.5";
+  schema_version: "0.1.0-alpha.6";
   id: string;
   name: string;
   created_at: string;
@@ -137,10 +151,11 @@ export interface ResearchProject {
   board_sections: BoardSection[];
   saved_results: ResearchResult[];
   search_history: SearchHistoryEntry[];
+  result_snapshots: SearchResultSnapshot[];
 }
 
 export interface ProjectLibrary {
-  schema_version: "0.1.0-alpha.5";
+  schema_version: "0.1.0-alpha.6";
   active_project_id: string;
   projects: ResearchProject[];
   updated_at: string;

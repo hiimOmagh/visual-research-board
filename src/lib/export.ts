@@ -1,4 +1,4 @@
-import type { ExportTemplateId, ResearchProject, ResearchResult } from "@/types/research";
+import type { ExportTemplateId, ProjectLibrary, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
@@ -35,7 +35,7 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
 export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.5",
+      export_schema_version: "0.1.0-alpha.6",
       exported_at: new Date().toISOString(),
       project: project ? {
         id: project.id,
@@ -246,6 +246,26 @@ export function createCsvExport(results: ResearchResult[]): string {
   ].map(csvEscape).join(","));
 
   return [headers.join(","), ...rows].join("\n");
+}
+
+export function createProjectLibraryExport(library: ProjectLibrary): string {
+  return JSON.stringify(
+    {
+      export_schema_version: "0.1.0-alpha.6",
+      exported_at: new Date().toISOString(),
+      warning: "Local project-library export. License labels and attribution lines remain candidates requiring manual verification.",
+      audit: {
+        project_count: library.projects.length,
+        active_project_id: library.active_project_id,
+        saved_result_count: library.projects.reduce((total, project) => total + project.saved_results.length, 0),
+        search_history_count: library.projects.reduce((total, project) => total + project.search_history.length, 0),
+        result_snapshot_count: library.projects.reduce((total, project) => total + project.result_snapshots.length, 0)
+      },
+      library
+    },
+    null,
+    2
+  );
 }
 
 export function downloadTextFile(filename: string, content: string, mimeType: string): void {

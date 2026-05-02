@@ -1,10 +1,12 @@
-import type { BoardSection, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry } from "@/types/research";
+import type { BoardSection, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
 
-export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.5" as const;
-export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.5" as const;
+export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.6" as const;
+export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.6" as const;
 export const INBOX_SECTION_ID = "section_inbox";
 export const PUBLIC_DOMAIN_SECTION_ID = "section_public_domain";
 export const THUMBNAIL_SECTION_ID = "section_thumbnail";
+export const MAX_SEARCH_HISTORY = 50;
+export const MAX_RESULT_SNAPSHOTS = 20;
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -48,7 +50,8 @@ export function createEmptyProject(name = "Untitled research project"): Research
     updated_at: createdAt,
     board_sections: createDefaultSections(),
     saved_results: [],
-    search_history: []
+    search_history: [],
+    result_snapshots: []
   };
 }
 
@@ -80,8 +83,61 @@ export function assignDefaultSection(result: ResearchResult): ResearchResult {
   return { ...result, section_id: INBOX_SECTION_ID };
 }
 
+function normalizeProviderHealth(health: ProviderHealth[]): ProviderHealth[] {
+  return health.map((item) => ({
+    ...item,
+    query_sample: item.query_sample ?? []
+  }));
+}
+
+function normalizeSnapshot(snapshot: Partial<SearchResultSnapshot>): SearchResultSnapshot | null {
+  if (!snapshot || !snapshot.request || !snapshot.search_plan || !snapshot.diagnostics || !Array.isArray(snapshot.results)) return null;
+  return {
+    id: snapshot.id || createId("snapshot"),
+    request: snapshot.request,
+    search_plan: snapshot.search_plan,
+    diagnostics: {
+      ...snapshot.diagnostics,
+      provider_toggles: snapshot.diagnostics.provider_toggles ?? snapshot.request.provider_toggles ?? { mock: true, wikimedia: true, brave: true, tavily: true },
+      provider_health: normalizeProviderHealth(snapshot.diagnostics.provider_health ?? [])
+    },
+    results: snapshot.results,
+    created_at: snapshot.created_at || snapshot.diagnostics.generated_at || nowIso(),
+    label: snapshot.label || snapshot.request.topic
+  };
+}
+
+function normalizeHistoryEntry(entry: Partial<SearchHistoryEntry>): SearchHistoryEntry | null {
+  if (!entry || !entry.topic || !entry.mode || !entry.depth || !entry.generated_at) return null;
+  return {
+    id: entry.id || createId("search"),
+    snapshot_id: entry.snapshot_id || "",
+    topic: entry.topic,
+    mode: entry.mode,
+    depth: entry.depth,
+    generated_at: entry.generated_at,
+    query_count: entry.query_count ?? 0,
+    result_count: entry.result_count ?? 0,
+    duplicate_count: entry.duplicate_count ?? 0,
+    provider_health: normalizeProviderHealth(entry.provider_health ?? []),
+    provider_toggles: entry.provider_toggles ?? {
+      mock: true,
+      wikimedia: true,
+      brave: true,
+      tavily: true
+    }
+  };
+}
+
 export function normalizeProject(project: Partial<ResearchProject> & { name?: string; id?: string }): ResearchProject {
   const fallback = createEmptyProject(project.name || "Migrated research project");
+  const normalizedSnapshots = (project.result_snapshots ?? [])
+    .map((snapshot) => normalizeSnapshot(snapshot))
+    .filter((snapshot): snapshot is SearchResultSnapshot => Boolean(snapshot));
+  const normalizedHistory = (project.search_history ?? [])
+    .map((entry) => normalizeHistoryEntry(entry))
+    .filter((entry): entry is SearchHistoryEntry => Boolean(entry));
+
   return {
     ...fallback,
     ...project,
@@ -89,10 +145,11 @@ export function normalizeProject(project: Partial<ResearchProject> & { name?: st
     id: project.id || fallback.id,
     name: project.name || fallback.name,
     created_at: project.created_at || fallback.created_at,
-    updated_at: project.updated_at || new Date().toISOString(),
+    updated_at: project.updated_at || nowIso(),
     board_sections: project.board_sections?.length ? project.board_sections : fallback.board_sections,
     saved_results: (project.saved_results ?? []).map(assignDefaultSection),
-    search_history: project.search_history ?? []
+    search_history: normalizedHistory.slice(0, MAX_SEARCH_HISTORY),
+    result_snapshots: normalizedSnapshots.slice(0, MAX_RESULT_SNAPSHOTS)
   };
 }
 
@@ -132,13 +189,14 @@ export function updateActiveProject(library: ProjectLibrary, updater: (project: 
 }
 
 export function upsertProject(library: ProjectLibrary, project: ResearchProject): ProjectLibrary {
-  const exists = library.projects.some((entry) => entry.id === project.id);
+  const normalized = normalizeProject(project);
+  const exists = library.projects.some((entry) => entry.id === normalized.id);
   return {
     ...library,
-    active_project_id: project.id,
+    active_project_id: normalized.id,
     projects: exists
-      ? library.projects.map((entry) => entry.id === project.id ? project : entry)
-      : [project, ...library.projects],
+      ? library.projects.map((entry) => entry.id === normalized.id ? normalized : entry)
+      : [normalized, ...library.projects],
     updated_at: nowIso()
   };
 }
@@ -165,13 +223,27 @@ export function duplicateProject(project: ResearchProject): ResearchProject {
     updated_at: now,
     saved_results: project.saved_results.map((item) => ({ ...item, updated_at: now })),
     search_history: [...project.search_history],
+    result_snapshots: [...project.result_snapshots],
     board_sections: [...project.board_sections]
   };
 }
 
-export function createSearchHistoryEntry(response: ResearchResponse, request: ResearchRequest): SearchHistoryEntry {
+export function createSearchSnapshot(response: ResearchResponse, request: ResearchRequest): SearchResultSnapshot {
+  return {
+    id: createId("snapshot"),
+    request,
+    search_plan: response.search_plan,
+    diagnostics: response.diagnostics,
+    results: response.results,
+    created_at: response.diagnostics.generated_at,
+    label: `${request.topic} · ${request.mode} · ${request.depth}`
+  };
+}
+
+export function createSearchHistoryEntry(response: ResearchResponse, request: ResearchRequest, snapshotId: string): SearchHistoryEntry {
   return {
     id: createId("search"),
+    snapshot_id: snapshotId,
     topic: request.topic,
     mode: request.mode,
     depth: request.depth,
@@ -179,7 +251,8 @@ export function createSearchHistoryEntry(response: ResearchResponse, request: Re
     query_count: response.search_plan.queries.length,
     result_count: response.results.length,
     duplicate_count: response.diagnostics.duplicate_count,
-    provider_health: response.diagnostics.provider_health
+    provider_health: response.diagnostics.provider_health,
+    provider_toggles: response.diagnostics.provider_toggles
   };
 }
 

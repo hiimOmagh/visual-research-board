@@ -23,7 +23,22 @@ import { ProviderTogglePanel } from "@/components/search/ProviderTogglePanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
-import { assignDefaultSection, createProjectLibrary, createSearchHistoryEntry, createSection, duplicateProject, getActiveProject, removeProject, updateActiveProject, upsertProject } from "@/lib/project";
+import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
+import {
+  assignDefaultSection,
+  createProjectLibrary,
+  createSearchHistoryEntry,
+  createSearchSnapshot,
+  createSection,
+  duplicateProject,
+  getActiveProject,
+  MAX_RESULT_SNAPSHOTS,
+  MAX_SEARCH_HISTORY,
+  normalizeLibrary,
+  removeProject,
+  updateActiveProject,
+  upsertProject
+} from "@/lib/project";
 
 export function SearchPanel() {
   const [topic, setTopic] = useState("Hannibal crossing the Alps");
@@ -34,6 +49,7 @@ export function SearchPanel() {
   const [hydrated, setHydrated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importNotice, setImportNotice] = useState<string | null>(null);
   const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
   const [diagnostics, setDiagnostics] = useState<SearchDiagnostics | null>(null);
   const [results, setResults] = useState<ResearchResult[]>([]);
@@ -74,6 +90,14 @@ export function SearchPanel() {
       .sort((a, b) => b.scores.overall - a.scores.overall);
   }, [filters, results, savedIds]);
 
+  const resetVisibleSearchState = () => {
+    setSearchPlan(null);
+    setDiagnostics(null);
+    setResults([]);
+    setSelectedResult(null);
+    setFilters(defaultResultFilters);
+  };
+
   const submitSearch = async () => {
     const request: ResearchRequest = {
       topic: topic.trim(),
@@ -89,6 +113,7 @@ export function SearchPanel() {
 
     setIsLoading(true);
     setError(null);
+    setImportNotice(null);
     setFilters(defaultResultFilters);
 
     try {
@@ -106,16 +131,37 @@ export function SearchPanel() {
       setSearchPlan(data.search_plan);
       setDiagnostics(data.diagnostics);
       setResults(data.results);
-      const historyEntry = createSearchHistoryEntry(data, request);
+      const snapshot = createSearchSnapshot(data, request);
+      const historyEntry = createSearchHistoryEntry(data, request, snapshot.id);
       updateProject((current) => ({
         ...current,
-        search_history: [historyEntry, ...current.search_history].slice(0, 25)
+        result_snapshots: [snapshot, ...current.result_snapshots].slice(0, MAX_RESULT_SNAPSHOTS),
+        search_history: [historyEntry, ...current.search_history].slice(0, MAX_SEARCH_HISTORY)
       }));
     } catch (searchError) {
       setError(searchError instanceof Error ? searchError.message : "Unknown search error.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const restoreSnapshot = (snapshotId: string) => {
+    const snapshot = project.result_snapshots.find((item) => item.id === snapshotId);
+    if (!snapshot) {
+      setError("Snapshot not found in the active project.");
+      return;
+    }
+    setError(null);
+    setImportNotice(`Restored snapshot: ${snapshot.label}`);
+    setTopic(snapshot.request.topic);
+    setMode(snapshot.request.mode);
+    setDepth(snapshot.request.depth);
+    setProviderToggles(snapshot.request.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES);
+    setSearchPlan(snapshot.search_plan);
+    setDiagnostics(snapshot.diagnostics);
+    setResults(snapshot.results);
+    setSelectedResult(null);
+    setFilters(defaultResultFilters);
   };
 
   const saveResult = (result: ResearchResult) => {
@@ -174,20 +220,12 @@ export function SearchPanel() {
   const createNewProject = () => {
     const nextProject = createFreshProject("Visual research project");
     updateLibrary((current) => upsertProject(current, nextProject));
-    setSearchPlan(null);
-    setDiagnostics(null);
-    setResults([]);
-    setSelectedResult(null);
-    setFilters(defaultResultFilters);
+    resetVisibleSearchState();
   };
 
   const selectProject = (projectId: string) => {
     updateLibrary((current) => ({ ...current, active_project_id: projectId, updated_at: new Date().toISOString() }));
-    setSearchPlan(null);
-    setDiagnostics(null);
-    setResults([]);
-    setSelectedResult(null);
-    setFilters(defaultResultFilters);
+    resetVisibleSearchState();
   };
 
   const duplicateActiveProject = () => {
@@ -196,11 +234,27 @@ export function SearchPanel() {
 
   const deleteProject = (projectId: string) => {
     updateLibrary((current) => removeProject(current, projectId));
-    setSearchPlan(null);
-    setDiagnostics(null);
-    setResults([]);
-    setSelectedResult(null);
-    setFilters(defaultResultFilters);
+    resetVisibleSearchState();
+  };
+
+  const exportLibrary = () => {
+    downloadTextFile("visual-research-board-library-alpha6.json", createProjectLibraryExport(library), "application/json");
+  };
+
+  const importLibraryFile = async (file: File) => {
+    setError(null);
+    setImportNotice(null);
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as { library?: unknown } | ProjectLibrary;
+      const candidate = "library" in parsed && parsed.library ? parsed.library : parsed;
+      const normalized = normalizeLibrary(candidate as Partial<ProjectLibrary>);
+      setLibrary(normalized);
+      resetVisibleSearchState();
+      setImportNotice(`Imported ${normalized.projects.length} project(s) from ${file.name}.`);
+    } catch (importError) {
+      setError(importError instanceof Error ? `Library import failed: ${importError.message}` : "Library import failed.");
+    }
   };
 
   return (
@@ -208,12 +262,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.5</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.6</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware workspace for collecting visual references, extracting manual URL metadata, preserving source links, sectioning saved boards, tracking searches, and exporting creator-ready packs.
+              A multi-project, source-aware workspace with hardened provider diagnostics, persistent result snapshots, import/export project libraries, and stronger no-browser fixture checks.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md">
@@ -230,7 +284,11 @@ export function SearchPanel() {
         onNewProject={createNewProject}
         onDuplicateProject={duplicateActiveProject}
         onDeleteProject={deleteProject}
+        onExportLibrary={exportLibrary}
+        onImportLibraryFile={importLibraryFile}
       />
+
+      {importNotice && <p className="mb-4 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-3 text-sm text-lime-100">{importNotice}</p>}
 
       <section className="mb-6 rounded-[2rem] border border-white/10 bg-slate-950/70 p-5 shadow-soft">
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.5fr_auto] lg:items-end">
@@ -291,7 +349,7 @@ export function SearchPanel() {
           <ProviderTogglePanel toggles={providerToggles} onChange={setProviderToggles} />
           {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
-          <SearchHistoryPanel history={project.search_history} />
+          <SearchHistoryPanel history={project.search_history} onRestoreSnapshot={restoreSnapshot} />
           <ResultFilters filters={filters} onChange={setFilters} totalCount={results.length} visibleCount={filteredResults.length} />
           <ResultGrid results={filteredResults} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
         </div>

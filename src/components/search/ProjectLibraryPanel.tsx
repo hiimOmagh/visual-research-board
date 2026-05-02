@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import type { ProjectLibrary, ResearchProject } from "@/types/research";
 
 interface ProjectLibraryPanelProps {
@@ -10,6 +11,8 @@ interface ProjectLibraryPanelProps {
   onNewProject: () => void;
   onDuplicateProject: () => void;
   onDeleteProject: (projectId: string) => void;
+  onExportLibrary: () => void;
+  onImportLibraryFile: (file: File) => void;
 }
 
 export function ProjectLibraryPanel({
@@ -19,13 +22,17 @@ export function ProjectLibraryPanel({
   onRenameActiveProject,
   onNewProject,
   onDuplicateProject,
-  onDeleteProject
+  onDeleteProject,
+  onExportLibrary,
+  onImportLibraryFile
 }: ProjectLibraryPanelProps) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const sortedProjects = [...library.projects].sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+  const totalSnapshots = library.projects.reduce((total, project) => total + project.result_snapshots.length, 0);
 
   return (
     <section className="mb-6 rounded-[2rem] border border-white/10 bg-slate-950/70 p-5 shadow-soft">
-      <div className="grid gap-4 xl:grid-cols-[1fr_1fr_auto_auto_auto] xl:items-end">
+      <div className="grid gap-4 xl:grid-cols-[1fr_1fr_auto_auto_auto_auto] xl:items-end">
         <label className="block">
           <span className="mb-2 block text-sm font-semibold text-slate-200">Project library</span>
           <select
@@ -35,7 +42,7 @@ export function ProjectLibraryPanel({
           >
             {sortedProjects.map((project) => (
               <option key={project.id} value={project.id}>
-                {project.name} · {project.saved_results.length} saved · {project.search_history.length} searches
+                {project.name} · {project.saved_results.length} saved · {project.search_history.length} searches · {project.result_snapshots.length} snapshots
               </option>
             ))}
           </select>
@@ -54,6 +61,7 @@ export function ProjectLibraryPanel({
         <ProjectStat label="Projects" value={library.projects.length} />
         <ProjectStat label="Saved" value={activeProject.saved_results.length} />
         <ProjectStat label="Searches" value={activeProject.search_history.length} />
+        <ProjectStat label="Snapshots" value={totalSnapshots} />
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -73,6 +81,31 @@ export function ProjectLibraryPanel({
         </button>
         <button
           type="button"
+          onClick={onExportLibrary}
+          className="rounded-2xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/60"
+        >
+          Export library
+        </button>
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="rounded-2xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/60"
+        >
+          Import library
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) onImportLibraryFile(file);
+            event.currentTarget.value = "";
+          }}
+        />
+        <button
+          type="button"
           onClick={() => onDeleteProject(activeProject.id)}
           disabled={library.projects.length <= 1}
           className="rounded-2xl border border-red-300/20 px-4 py-2 text-sm font-semibold text-red-100 transition hover:border-red-300/50 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
@@ -82,7 +115,7 @@ export function ProjectLibraryPanel({
       </div>
 
       <p className="mt-3 text-xs leading-5 text-slate-500">
-        Alpha.5 stores a local multi-project library. Data stays in browser localStorage; export critical boards before clearing browser storage.
+        Alpha.6 stores a local multi-project library, persistent result snapshots, and import/export JSON bundles in browser localStorage.
       </p>
     </section>
   );
