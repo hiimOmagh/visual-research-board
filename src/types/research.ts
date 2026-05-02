@@ -23,6 +23,8 @@ export type LicenseDetected =
 
 export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock";
 
+export type ProviderStatus = "active" | "missing_key" | "skipped" | "error" | "timeout";
+
 export interface ResearchRequest {
   topic: string;
   mode: ResearchMode;
@@ -36,6 +38,7 @@ export interface ResultScores {
   license_clarity: number;
   uniqueness: number;
   production_usefulness: number;
+  overall: number;
 }
 
 export interface ResearchResult {
@@ -52,10 +55,12 @@ export interface ResearchResult {
   height?: number;
   license_detected: LicenseDetected;
   license_confidence: number;
+  license_url?: string;
   risk_level: RiskLevel;
   tags: string[];
   scores: ResultScores;
   notes?: string;
+  collected_at: string;
 }
 
 export interface SearchPlan {
@@ -66,10 +71,30 @@ export interface SearchPlan {
   source_targets: Array<"web" | "image" | "news" | "archive" | "commons">;
 }
 
+export interface ProviderHealth {
+  provider: ProviderName;
+  status: ProviderStatus;
+  enabled: boolean;
+  result_count: number;
+  duration_ms: number;
+  queries_used: number;
+  message?: string;
+}
+
+export interface SearchDiagnostics {
+  generated_at: string;
+  total_raw_results: number;
+  total_normalized_results: number;
+  total_deduped_results: number;
+  duplicate_count: number;
+  provider_health: ProviderHealth[];
+}
+
 export interface ResearchResponse {
   request: ResearchRequest;
   search_plan: SearchPlan;
   results: ResearchResult[];
+  diagnostics: SearchDiagnostics;
 }
 
 export const RESEARCH_MODES: Array<{ value: ResearchMode; label: string; description: string }> = [
@@ -120,3 +145,8 @@ export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; descripti
   { value: "standard", label: "Standard", description: "Balanced breadth and speed." },
   { value: "deep", label: "Deep", description: "More query branches and sources." }
 ];
+
+export const PROVIDERS: ProviderName[] = ["mock", "wikimedia", "brave", "tavily"];
+export const RESULT_TYPES: ResultType[] = ["image", "web", "news", "archive"];
+export const RISK_LEVELS: RiskLevel[] = ["low", "medium", "high", "reference_only", "avoid"];
+export const LICENSE_TYPES: LicenseDetected[] = ["public_domain", "creative_commons", "copyrighted", "unknown", "unclear"];

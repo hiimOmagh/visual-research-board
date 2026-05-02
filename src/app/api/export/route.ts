@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createJsonExport, createMarkdownExport } from "@/lib/export";
+import { createCsvExport, createJsonExport, createMarkdownExport } from "@/lib/export";
 import type { ResearchResult } from "@/types/research";
 
 export async function POST(request: Request) {
@@ -13,6 +13,14 @@ export async function POST(request: Request) {
     return new Response(createMarkdownExport(body.results), {
       headers: {
         "Content-Type": "text/markdown; charset=utf-8"
+      }
+    });
+  }
+
+  if (body.format === "csv") {
+    return new Response(createCsvExport(body.results), {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8"
       }
     });
   }

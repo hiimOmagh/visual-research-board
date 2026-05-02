@@ -1,8 +1,8 @@
 # Visual Research Board
 
-`v0.1.0-alpha.1`
+`v0.1.0-alpha.2`
 
-A mock-first, source-aware visual research board for creators. It converts a topic/person/event into a query plan, normalized result cards, saved references, and exportable JSON/Markdown packs.
+A source-aware visual research board for creators. It converts a topic/person/event into a query plan, normalized result cards, filtered boards, saved references, provider diagnostics, and exportable JSON/Markdown/CSV packs.
 
 ## What is included
 
@@ -12,21 +12,26 @@ A mock-first, source-aware visual research board for creators. It converts a top
 - Search depth selector
 - Generated search plan panel
 - Mock provider data so the app works without API keys
+- Provider health panel showing active/skipped/missing-key providers
 - Optional provider adapters for:
   - Wikimedia Commons
   - Brave Image Search
   - Brave Web Search
   - Tavily Search
+- Improved Wikimedia metadata extraction using imageinfo/extmetadata
 - Normalized result cards
+- Better deduplication and score sorting
+- Source/risk/license/provider/type filters
 - Risk and license labels
 - Source URL preservation
 - Saved board with localStorage persistence
 - JSON export
 - Markdown export
+- CSV export
 - API route: `POST /api/search`
 - API route: `POST /api/export`
 
-## What is intentionally excluded in v0.1.0
+## What is intentionally excluded
 
 - Login/auth
 - Database
@@ -85,10 +90,12 @@ Input topic
 → generate search plan
 → collect mock / provider results
 → normalize metadata
-→ score lightly
+→ deduplicate
+→ score and sort
+→ filter by risk/license/provider/type/source
 → show visual board
 → save selected results
-→ export JSON or Markdown
+→ export JSON, Markdown, or CSV
 ```
 
 ## Risk policy
@@ -104,12 +111,25 @@ This project does not claim that any image is commercially safe. It uses cautiou
 
 Always verify source pages and license terms before direct use, publication, or commercial work.
 
+## v0.1.0-alpha.2 changes
+
+- Added provider health diagnostics.
+- Added result filtering.
+- Added grouped result display.
+- Added overall scoring.
+- Added stronger source/risk scoring.
+- Added CSV export.
+- Added Wikimedia license metadata extraction.
+- Added better deduplication.
+- Updated localStorage key for alpha.2.
+
 ## Recommended next milestone
 
-`v0.1.0-alpha.2` should add:
+`v0.1.0-alpha.3` should add:
 
-- Source/risk filters
-- Better grouping by result type
-- Stronger deduplication
-- Better Wikimedia license extraction
-- API health panel showing which providers are active
+- Real provider QA with your API keys.
+- Search history per project.
+- Editable notes per saved item.
+- Manual URL import.
+- Attribution generator.
+- Basic automated test suite for scoring/export/normalization.

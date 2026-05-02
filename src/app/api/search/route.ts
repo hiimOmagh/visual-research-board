@@ -5,7 +5,8 @@ import { searchMockProvider } from "@/lib/providers/mock";
 import { searchBraveImages, searchBraveWeb } from "@/lib/providers/brave";
 import { searchTavily } from "@/lib/providers/tavily";
 import { searchWikimediaCommons } from "@/lib/providers/wikimedia";
-import type { ResearchMode, ResearchRequest, SearchDepth } from "@/types/research";
+import type { ProviderHealth, ProviderName, ResearchMode, ResearchRequest, SearchDepth, SearchPlan } from "@/types/research";
+import type { RawProviderResult } from "@/lib/result-normalizer";
 
 const validModes: ResearchMode[] = [
   "person_reference",
@@ -33,6 +34,74 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
   };
 }
 
+async function runProvider(params: {
+  provider: ProviderName;
+  enabled: boolean;
+  missingKey?: boolean;
+  plan: SearchPlan;
+  run: () => Promise<RawProviderResult[]>;
+}): Promise<{ results: RawProviderResult[]; health: ProviderHealth }> {
+  const startedAt = Date.now();
+
+  if (!params.enabled) {
+    return {
+      results: [],
+      health: {
+        provider: params.provider,
+        status: "skipped",
+        enabled: false,
+        result_count: 0,
+        duration_ms: 0,
+        queries_used: 0,
+        message: "Provider not targeted by this research mode."
+      }
+    };
+  }
+
+  if (params.missingKey) {
+    return {
+      results: [],
+      health: {
+        provider: params.provider,
+        status: "missing_key",
+        enabled: false,
+        result_count: 0,
+        duration_ms: 0,
+        queries_used: 0,
+        message: "Missing API key. Mock data still keeps the app usable."
+      }
+    };
+  }
+
+  try {
+    const results = await params.run();
+    return {
+      results,
+      health: {
+        provider: params.provider,
+        status: "active",
+        enabled: true,
+        result_count: results.length,
+        duration_ms: Date.now() - startedAt,
+        queries_used: params.plan.depth === "quick" ? 1 : params.plan.depth === "standard" ? 2 : 3
+      }
+    };
+  } catch (error) {
+    return {
+      results: [],
+      health: {
+        provider: params.provider,
+        status: error instanceof DOMException && error.name === "AbortError" ? "timeout" : "error",
+        enabled: true,
+        result_count: 0,
+        duration_ms: Date.now() - startedAt,
+        queries_used: 0,
+        message: error instanceof Error ? error.message : "Unknown provider error."
+      }
+    };
+  }
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const validRequest = validateResearchRequest(body);
@@ -46,20 +115,55 @@ export async function POST(request: Request) {
 
   const searchPlan = createSearchPlan(validRequest);
 
-  const providerResults = await Promise.allSettled([
-    searchMockProvider(searchPlan),
-    searchWikimediaCommons(searchPlan),
-    searchBraveImages(searchPlan),
-    searchBraveWeb(searchPlan),
-    searchTavily(searchPlan)
+  const providerRuns = await Promise.all([
+    runProvider({
+      provider: "mock",
+      enabled: true,
+      plan: searchPlan,
+      run: () => searchMockProvider(searchPlan)
+    }),
+    runProvider({
+      provider: "wikimedia",
+      enabled: searchPlan.source_targets.includes("commons"),
+      plan: searchPlan,
+      run: () => searchWikimediaCommons(searchPlan)
+    }),
+    runProvider({
+      provider: "brave",
+      enabled: searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("web"),
+      missingKey: !process.env.BRAVE_SEARCH_API_KEY,
+      plan: searchPlan,
+      run: async () => {
+        const [images, web] = await Promise.all([
+          searchBraveImages(searchPlan),
+          searchBraveWeb(searchPlan)
+        ]);
+        return [...images, ...web];
+      }
+    }),
+    runProvider({
+      provider: "tavily",
+      enabled: searchPlan.source_targets.includes("web"),
+      missingKey: !process.env.TAVILY_API_KEY,
+      plan: searchPlan,
+      run: () => searchTavily(searchPlan)
+    })
   ]);
 
-  const rawResults = providerResults.flatMap((entry) => entry.status === "fulfilled" ? entry.value : []);
-  const results = normalizeResults(rawResults);
+  const rawResults = providerRuns.flatMap((entry) => entry.results);
+  const normalized = normalizeResults(rawResults);
 
   return NextResponse.json({
     request: validRequest,
     search_plan: searchPlan,
-    results
+    results: normalized.results,
+    diagnostics: {
+      generated_at: new Date().toISOString(),
+      total_raw_results: normalized.stats.raw_count,
+      total_normalized_results: normalized.stats.normalized_count,
+      total_deduped_results: normalized.stats.deduped_count,
+      duplicate_count: normalized.stats.duplicate_count,
+      provider_health: providerRuns.map((entry) => entry.health)
+    }
   });
 }

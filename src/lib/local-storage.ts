@@ -1,6 +1,6 @@
 import type { ResearchResult } from "@/types/research";
 
-const STORAGE_KEY = "visual-research-board:saved-results:v0.1.0";
+const STORAGE_KEY = "visual-research-board:saved-results:v0.1.0-alpha.2";
 
 export function loadSavedResults(): ResearchResult[] {
   if (typeof window === "undefined") return [];

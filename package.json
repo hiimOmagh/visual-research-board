@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "private": true,
-  "description": "A mock-first creator-focused visual research board for source-aware reference gathering.",
+  "description": "A creator-focused source-aware visual research board with provider health, filters, deduplication, and export packs.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

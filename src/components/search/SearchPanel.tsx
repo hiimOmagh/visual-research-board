@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { ResearchRequest, ResearchResponse, ResearchResult, SearchDepth, ResearchMode, SearchPlan } from "@/types/research";
+import type { ResearchRequest, ResearchResponse, ResearchResult, SearchDepth, ResearchMode, SearchDiagnostics, SearchPlan } from "@/types/research";
 import { RESEARCH_MODES, SEARCH_DEPTHS } from "@/types/research";
 import { ResultGrid } from "@/components/search/ResultGrid";
 import { SavedBoard } from "@/components/search/SavedBoard";
 import { ResultDetailPanel } from "@/components/search/ResultDetailPanel";
+import { ProviderHealthPanel } from "@/components/search/ProviderHealthPanel";
+import { ResultFilters, defaultResultFilters, type ResultFilterState } from "@/components/search/ResultFilters";
 import { loadSavedResults, persistSavedResults } from "@/lib/local-storage";
 
 export function SearchPanel() {
@@ -15,9 +17,11 @@ export function SearchPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
+  const [diagnostics, setDiagnostics] = useState<SearchDiagnostics | null>(null);
   const [results, setResults] = useState<ResearchResult[]>([]);
   const [saved, setSaved] = useState<ResearchResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<ResearchResult | null>(null);
+  const [filters, setFilters] = useState<ResultFilterState>(defaultResultFilters);
 
   useEffect(() => {
     setSaved(loadSavedResults());
@@ -28,6 +32,19 @@ export function SearchPanel() {
   }, [saved]);
 
   const savedIds = useMemo(() => new Set(saved.map((item) => item.id)), [saved]);
+
+  const filteredResults = useMemo(() => {
+    const sourceNeedle = filters.source.trim().toLowerCase();
+    return results
+      .filter((result) => filters.type === "all" || result.type === filters.type)
+      .filter((result) => filters.provider === "all" || result.provider === filters.provider)
+      .filter((result) => filters.risk === "all" || result.risk_level === filters.risk)
+      .filter((result) => filters.license === "all" || result.license_detected === filters.license)
+      .filter((result) => !sourceNeedle || result.source_domain.toLowerCase().includes(sourceNeedle) || result.source_url.toLowerCase().includes(sourceNeedle))
+      .filter((result) => !filters.savedOnly || savedIds.has(result.id))
+      .filter((result) => result.scores.overall >= filters.minOverall)
+      .sort((a, b) => b.scores.overall - a.scores.overall);
+  }, [filters, results, savedIds]);
 
   const submitSearch = async () => {
     const request: ResearchRequest = {
@@ -43,6 +60,7 @@ export function SearchPanel() {
 
     setIsLoading(true);
     setError(null);
+    setFilters(defaultResultFilters);
 
     try {
       const response = await fetch("/api/search", {
@@ -57,6 +75,7 @@ export function SearchPanel() {
 
       const data = await response.json() as ResearchResponse;
       setSearchPlan(data.search_plan);
+      setDiagnostics(data.diagnostics);
       setResults(data.results);
     } catch (searchError) {
       setError(searchError instanceof Error ? searchError.message : "Unknown search error.");
@@ -78,12 +97,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.1</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.2</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A mock-first, source-aware workspace for collecting visual references, preserving source links, and exporting creator-ready research packs.
+              A source-aware workspace for collecting visual references, preserving source links, filtering risk, and exporting creator-ready research packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md">
@@ -148,8 +167,10 @@ export function SearchPanel() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
         <div className="space-y-6">
-          {searchPlan && <SearchPlanPanel plan={searchPlan} />}
-          <ResultGrid results={results} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
+          {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
+          {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
+          <ResultFilters filters={filters} onChange={setFilters} totalCount={results.length} visibleCount={filteredResults.length} />
+          <ResultGrid results={filteredResults} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
         </div>
         <SavedBoard saved={saved} onRemove={removeSaved} onClear={() => setSaved([])} />
       </div>
@@ -159,13 +180,18 @@ export function SearchPanel() {
   );
 }
 
-function SearchPlanPanel({ plan }: { plan: SearchPlan }) {
+function SearchPlanPanel({ plan, diagnostics }: { plan: SearchPlan; diagnostics: SearchDiagnostics | null }) {
   return (
     <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Generated search plan</p>
           <h2 className="mt-1 text-xl font-bold text-white">{plan.original_topic}</h2>
+          {diagnostics && (
+            <p className="mt-2 text-xs text-slate-400">
+              {diagnostics.total_raw_results} raw · {diagnostics.total_deduped_results} deduped · {diagnostics.duplicate_count} duplicates removed
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap gap-2 text-xs text-slate-200">
           {plan.source_targets.map((target) => (

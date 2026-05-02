@@ -38,10 +38,13 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
         <Field label="Type" value={result.type} />
         <Field label="License label" value={licenseLabel(result.license_detected)} />
         <Field label="License confidence" value={`${Math.round(result.license_confidence * 100)}%`} />
+        {result.license_url && <Field label="License URL" value={result.license_url} />}
         <Field label="Risk label" value={riskLabel(result.risk_level)} />
+        <Field label="Overall score" value={`${Math.round(result.scores.overall * 100)}%`} />
         {result.width && result.height && <Field label="Dimensions" value={`${result.width} × ${result.height}`} />}
         {result.description && <Field label="Description" value={result.description} />}
         <Field label="Tags" value={result.tags.join(", ") || "none"} />
+        <Field label="Collected at" value={result.collected_at} />
 
         <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-amber-100">
           License labels are candidates only. Verify the source page and license terms before direct use, publication, or commercial work.
