@@ -1,4 +1,4 @@
-import type { ResearchResult } from "@/types/research";
+import type { ExportTemplateId, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
@@ -9,11 +9,40 @@ function countBy<T extends string>(items: ResearchResult[], getKey: (item: Resea
   }, {} as Record<T, number>);
 }
 
-export function createJsonExport(results: ResearchResult[]): string {
+function projectName(project?: Pick<ResearchProject, "name">): string {
+  return project?.name?.trim() || "Visual Research Board";
+}
+
+function sectionName(project: Pick<ResearchProject, "board_sections"> | undefined, sectionId?: string): string {
+  return project?.board_sections.find((section) => section.id === sectionId)?.name ?? "Unassigned";
+}
+
+function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections">): Array<{ section: string; items: ResearchResult[] }> {
+  const sectionOrder = project?.board_sections.map((section) => section.id) ?? [];
+  const buckets = new Map<string, ResearchResult[]>();
+
+  results.forEach((result) => {
+    const key = result.section_id ?? "unassigned";
+    buckets.set(key, [...(buckets.get(key) ?? []), result]);
+  });
+
+  const orderedIds = [...sectionOrder, ...Array.from(buckets.keys()).filter((key) => !sectionOrder.includes(key))];
+  return orderedIds
+    .map((id) => ({ section: sectionName(project, id), items: buckets.get(id) ?? [] }))
+    .filter((entry) => entry.items.length > 0);
+}
+
+export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.3",
+      export_schema_version: "0.1.0-alpha.5",
       exported_at: new Date().toISOString(),
+      project: project ? {
+        id: project.id,
+        name: project.name,
+        section_count: project.board_sections.length,
+        search_history_count: project.search_history.length
+      } : undefined,
       warning: "License labels are candidates and require manual verification before publication or commercial use.",
       audit: {
         total_items: results.length,
@@ -21,6 +50,7 @@ export function createJsonExport(results: ResearchResult[]): string {
         by_provider: countBy(results, (item) => item.provider),
         by_risk: countBy(results, (item) => item.risk_level),
         by_license: countBy(results, (item) => item.license_detected),
+        by_section: countBy(results, (item) => item.section_id ?? "unassigned"),
         notes_count: results.filter((item) => Boolean(item.notes?.trim())).length,
         manual_import_count: results.filter((item) => item.provider === "manual").length
       },
@@ -31,9 +61,9 @@ export function createJsonExport(results: ResearchResult[]): string {
   );
 }
 
-export function createMarkdownExport(results: ResearchResult[]): string {
+export function createMarkdownExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
   const lines = [
-    "# Visual Research Board Export",
+    `# ${projectName(project)} — Visual Research Board Export`,
     "",
     `Exported at: ${new Date().toISOString()}`,
     "",
@@ -49,25 +79,29 @@ export function createMarkdownExport(results: ResearchResult[]): string {
     ""
   ];
 
-  results.forEach((result, index) => {
-    lines.push(`## ${index + 1}. ${result.title}`);
-    lines.push("");
-    lines.push(`- Type: ${result.type}`);
-    lines.push(`- Source: ${result.source_domain}`);
-    lines.push(`- URL: ${result.source_url}`);
-    lines.push(`- Provider: ${result.provider}`);
-    lines.push(`- License label: ${licenseLabel(result.license_detected)}`);
-    lines.push(`- License confidence: ${Math.round(result.license_confidence * 100)}%`);
-    if (result.license_url) lines.push(`- License URL: ${result.license_url}`);
-    lines.push(`- Risk label: ${riskLabel(result.risk_level)}`);
-    lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
-    lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
-    if (result.notes) lines.push(`- Notes: ${result.notes}`);
-    lines.push(`- Attribution line: ${createSingleAttribution(result)}`);
-    lines.push("");
-  });
+  results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id)));
 
   return lines.join("\n");
+}
+
+function appendDetailedResult(lines: string[], result: ResearchResult, index: number, section: string): void {
+  lines.push(`## ${index}. ${result.title}`);
+  lines.push("");
+  lines.push(`- Section: ${section}`);
+  lines.push(`- Type: ${result.type}`);
+  lines.push(`- Source: ${result.source_domain}`);
+  lines.push(`- URL: ${result.source_url}`);
+  lines.push(`- Provider: ${result.provider}`);
+  lines.push(`- License label: ${licenseLabel(result.license_detected)}`);
+  lines.push(`- License confidence: ${Math.round(result.license_confidence * 100)}%`);
+  if (result.license_url) lines.push(`- License URL: ${result.license_url}`);
+  lines.push(`- Risk label: ${riskLabel(result.risk_level)}`);
+  lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
+  lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
+  if (result.description) lines.push(`- Description: ${result.description}`);
+  if (result.notes) lines.push(`- Notes: ${result.notes}`);
+  lines.push(`- Attribution line: ${createSingleAttribution(result)}`);
+  lines.push("");
 }
 
 export function createSingleAttribution(result: ResearchResult): string {
@@ -77,9 +111,9 @@ export function createSingleAttribution(result: ResearchResult): string {
   return `${result.title} — Source: ${result.source_domain} (${result.source_url}). ${license}; ${risk}.${licenseUrl}`;
 }
 
-export function createAttributionExport(results: ResearchResult[]): string {
+export function createAttributionExport(results: ResearchResult[], project?: Pick<ResearchProject, "name">): string {
   const lines = [
-    "# Attribution Pack",
+    `# ${projectName(project)} — Attribution Pack`,
     "",
     `Generated at: ${new Date().toISOString()}`,
     "",
@@ -101,6 +135,77 @@ export function createAttributionExport(results: ResearchResult[]): string {
   return lines.join("\n");
 }
 
+export function createProductionBriefExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+  const lines = [
+    `# ${projectName(project)} — Production Brief`,
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "## Editorial Warning",
+    "",
+    "Use this brief as a curation aid. Verify all source pages and licensing terms before publication.",
+    "",
+    "## Board Summary",
+    "",
+    `- Saved references: ${results.length}`,
+    `- Strong production candidates: ${results.filter((item) => item.scores.production_usefulness >= 0.7).length}`,
+    `- Needs legal/source verification: ${results.filter((item) => item.risk_level !== "low").length}`,
+    ""
+  ];
+
+  sortedBySection(results, project).forEach((group) => {
+    lines.push(`## ${group.section}`);
+    lines.push("");
+    group.items
+      .sort((a, b) => b.scores.production_usefulness - a.scores.production_usefulness)
+      .forEach((item) => {
+        lines.push(`### ${item.title}`);
+        lines.push(`- Production usefulness: ${Math.round(item.scores.production_usefulness * 100)}%`);
+        lines.push(`- Source/risk: ${item.source_domain} · ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+        lines.push(`- Source URL: ${item.source_url}`);
+        if (item.notes) lines.push(`- Production note: ${item.notes}`);
+        lines.push("");
+      });
+  });
+
+  return lines.join("\n");
+}
+
+export function createVisualMoodboardExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+  const imageResults = results.filter((item) => item.thumbnail_url || item.image_url || item.type === "image");
+  const lines = [
+    `# ${projectName(project)} — Visual Moodboard`,
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "> Moodboard export keeps sources attached. It is not a license clearance document.",
+    ""
+  ];
+
+  sortedBySection(imageResults, project).forEach((group) => {
+    lines.push(`## ${group.section}`);
+    lines.push("");
+    group.items.forEach((item) => {
+      lines.push(`### ${item.title}`);
+      if (item.thumbnail_url || item.image_url) lines.push(`![${item.title}](${item.thumbnail_url ?? item.image_url})`);
+      lines.push(`- Source: ${item.source_url}`);
+      lines.push(`- Tags: ${item.tags.join(", ") || "none"}`);
+      lines.push(`- Risk/license: ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+      if (item.notes) lines.push(`- Note: ${item.notes}`);
+      lines.push("");
+    });
+  });
+
+  return lines.join("\n");
+}
+
+export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
+  if (templateId === "production_brief") return createProductionBriefExport(results, project);
+  if (templateId === "visual_moodboard") return createVisualMoodboardExport(results, project);
+  if (templateId === "attribution_pack") return createAttributionExport(results, project);
+  return createMarkdownExport(results, project);
+}
+
 function csvEscape(value: string | number | undefined): string {
   const raw = String(value ?? "");
   if (/[",\n]/.test(raw)) return `"${raw.replace(/"/g, '""')}"`;
@@ -110,6 +215,7 @@ function csvEscape(value: string | number | undefined): string {
 export function createCsvExport(results: ResearchResult[]): string {
   const headers = [
     "title",
+    "section_id",
     "type",
     "provider",
     "source_domain",
@@ -125,6 +231,7 @@ export function createCsvExport(results: ResearchResult[]): string {
 
   const rows = results.map((result) => [
     result.title,
+    result.section_id ?? "",
     result.type,
     result.provider,
     result.source_domain,

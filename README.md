@@ -1,209 +1,261 @@
 # Visual Research Board
 
-`v0.1.0-alpha.4`
+`v0.1.0-alpha.5`
 
-A source-aware visual research board for creators. It converts a topic/person/event into a query plan, normalized result cards, filtered boards, saved references, editable notes, manual source imports, attribution packs, provider diagnostics, project search history, board sections, and exportable JSON/Markdown/CSV packs.
+A creator-focused, source-aware visual research board for collecting image/web references, preserving source links, organizing references into local projects, importing URLs with metadata, and exporting production-ready research packs.
 
-## What is included
+## Current scope
 
-- Next.js App Router + TypeScript + Tailwind
-- Topic input
-- Research mode selector
-- Search depth selector
-- Project object stored in localStorage
-- Project rename and new-project reset
-- Search history stored per project
-- Board sections with per-item section assignment
-- Provider toggles for mock, Wikimedia, Brave, and Tavily
-- Generated search plan panel
-- Mock provider data so the app works without API keys
-- Provider health panel showing active/skipped/missing-key providers
-- Optional provider adapters for:
-  - Wikimedia Commons
-  - Brave Image Search
-  - Brave Web Search
-  - Tavily Search
-- Improved Wikimedia metadata extraction using imageinfo/extmetadata
-- Normalized result cards
-- Better deduplication and score sorting
-- Source/risk/license/provider/type filters
-- Risk and license labels
-- Source URL preservation
-- Saved board with project-level localStorage persistence
-- Editable notes per saved item
-- Manual URL import
-- Per-item attribution copy
-- Attribution pack export
-- JSON export
-- Markdown export
-- CSV export
-- API route: `POST /api/search`
-- API route: `POST /api/export`
-- QA harness: `npm run qa`
-- No-browser CI script: `npm run test:ci:no-browser`
+This is still an MVP vertical slice. It is not a crawler, not a copyright clearance system, and not a commercial-use license verifier.
 
-## What is intentionally excluded
+The product goal is workflow compression:
 
-- Login/auth
-- Database
-- Team workspace
-- Full web crawler
-- Browser automation
-- AI image generation
-- Full copyright verification
-- Automatic commercial-use claims
+```text
+Input topic
+→ generate query plan
+→ collect image/web/source results
+→ normalize + score + dedupe
+→ save useful references into project boards
+→ add notes/sections/manual imports
+→ export source-aware production packs
+```
 
-## Setup
+## Alpha.5 additions
+
+- Multi-project local library.
+- Active project switching.
+- Project duplication.
+- Project deletion with safe fallback.
+- Migration from the alpha.4 active project key.
+- URL metadata extraction endpoint: `/api/metadata`.
+- Manual URL import can fetch title, description, and Open Graph image.
+- Export template selector.
+- New export templates:
+  - Source Audit
+  - Production Brief
+  - Visual Moodboard
+  - Attribution Pack
+- Executable normalization fixture test: `npm run normalization:test`.
+- Stronger QA harness: `npm run qa`.
+
+## Install
 
 ```bash
 npm install
+```
+
+## Run locally
+
+```bash
 npm run dev
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:3000
 ```
 
+The app works without API keys because mock data is enabled by default.
+
 ## Optional API keys
 
-The app works without keys because mock results are enabled by default.
-
-To enable external providers, copy `.env.example` to `.env.local`:
+Create `.env.local`:
 
 ```bash
-cp .env.example .env.local
+BRAVE_SEARCH_API_KEY=
+TAVILY_API_KEY=
 ```
 
-Then add:
+Without keys:
+
+- Mock provider works.
+- Wikimedia provider can run when targeted.
+- Brave and Tavily report `missing_key` in provider health.
+
+## Scripts
 
 ```bash
-BRAVE_SEARCH_API_KEY=your_key_here
-TAVILY_API_KEY=your_key_here
-```
-
-## Available scripts
-
-```bash
-npm run dev
-npm run build
+npm run qa
+npm run normalization:test
 npm run typecheck
 npm run lint
-npm run qa
 npm run test:ci:no-browser
 ```
 
-`npm run qa` is dependency-light and checks the alpha.4 structure, versioning, project objects, search history, board sections, provider toggles, export schema, manual-import feature, attribution generator, and legacy localStorage migration. `npm run test:ci:no-browser` also runs TypeScript and ESLint after dependencies are installed.
+`npm run qa` is dependency-light and runs:
 
-## Core workflow
-
-```text
-Create or rename project
-→ input topic
-→ choose mode
-→ choose depth
-→ choose provider toggles
-→ generate search plan
-→ collect mock / provider results
-→ normalize metadata
-→ deduplicate
-→ score and sort
-→ filter by risk/license/provider/type/source
-→ show visual board
-→ record search history in project
-→ save selected results
-→ assign board sections
-→ edit production notes
-→ import manual URLs when needed
-→ export JSON, Markdown, CSV, or attribution pack
+```bash
+node tests/qa-check.mjs
+node tests/normalization-check.mjs
 ```
 
-## Project object model
+`npm run test:ci:no-browser` additionally runs TypeScript and ESLint after dependencies are installed.
 
-Alpha.4 stores one active project in localStorage:
+## Folder structure
 
 ```text
-ResearchProject
-├── board_sections
-├── saved_results
-└── search_history
+src/
+├── app/
+│   ├── api/
+│   │   ├── search/route.ts
+│   │   ├── metadata/route.ts
+│   │   └── export/route.ts
+│   ├── page.tsx
+│   ├── layout.tsx
+│   └── globals.css
+│
+├── components/search/
+│   ├── SearchPanel.tsx
+│   ├── ProjectLibraryPanel.tsx
+│   ├── ProviderTogglePanel.tsx
+│   ├── ProviderHealthPanel.tsx
+│   ├── SearchHistoryPanel.tsx
+│   ├── ResultFilters.tsx
+│   ├── ResultGrid.tsx
+│   ├── ResultCard.tsx
+│   ├── ResultDetailPanel.tsx
+│   └── SavedBoard.tsx
+│
+├── lib/
+│   ├── query-planner.ts
+│   ├── result-normalizer.ts
+│   ├── scoring.ts
+│   ├── risk.ts
+│   ├── export.ts
+│   ├── local-storage.ts
+│   ├── manual-import.ts
+│   ├── project.ts
+│   └── providers/
+│       ├── mock.ts
+│       ├── brave.ts
+│       ├── tavily.ts
+│       ├── wikimedia.ts
+│       └── provider-utils.ts
+│
+├── types/research.ts
+└── tests/
+    ├── qa-check.mjs
+    ├── normalization-check.mjs
+    └── fixtures/
 ```
 
-This is the main structural upgrade from alpha.3. Saved items are no longer isolated localStorage entries; they belong to a project with sections and history.
+## Storage model
 
-## Provider toggles
+Alpha.5 stores a local `ProjectLibrary` in browser `localStorage`:
 
-The Provider Toggles panel lets you disable noisy providers while testing:
+```text
+visual-research-board:project-library:v0.1.0-alpha.5
+```
+
+It migrates from:
+
+```text
+visual-research-board:active-project:v0.1.0-alpha.4
+visual-research-board:saved-results:v0.1.0-alpha.3
+visual-research-board:saved-results:v0.1.0-alpha.2
+visual-research-board:saved-results:v0.1.0-alpha.1
+```
+
+## Provider behavior
+
+Provider toggles allow local control over:
 
 - Mock
 - Wikimedia
 - Brave
 - Tavily
 
-If all providers are switched off, mock is automatically re-enabled so the app remains testable.
+Search provider health reports:
 
-## Board sections
+- active
+- missing_key
+- skipped
+- error
+- timeout
 
-The saved board includes default sections:
+## Metadata extraction
 
-- Inbox
-- Public-domain / CC candidates
-- Thumbnail / production ideas
+`POST /api/metadata`
 
-You can add more sections and assign saved items to them. This is still intentionally lightweight; drag-and-drop is deferred.
+Input:
 
-## Manual URL import
+```json
+{
+  "url": "https://example.com/source-page"
+}
+```
 
-The manual import form lets you add sources that were not returned by the search providers. It stores:
+Output:
 
-- source URL
-- optional title
-- optional thumbnail URL
-- result type
-- cautious license label
-- note
+```json
+{
+  "url": "https://example.com/source-page",
+  "source_domain": "example.com",
+  "title": "Example title",
+  "description": "Optional description",
+  "thumbnail_url": "https://example.com/image.jpg",
+  "fetched_at": "2026-05-02T00:00:00.000Z",
+  "status": "ok"
+}
+```
 
-Manual imports are tagged as `manual-import` and `source-check-needed`.
+The extractor reads HTML metadata such as:
 
-## Attribution generator
+- `<title>`
+- `og:title`
+- `og:description`
+- `og:image`
+- `twitter:title`
+- `twitter:description`
+- `twitter:image`
 
-The attribution pack creates draft attribution lines for every saved item. These lines are drafting aids only; they do not guarantee publication or commercial-use safety.
+It does not crawl sites. It only fetches the provided URL and extracts page-level metadata.
 
-## Risk policy
+## Export templates
 
-This project does not claim that any image is commercially safe. It uses cautious labels such as:
+Available Markdown templates:
+
+| Template | Use |
+|---|---|
+| Source Audit | Verification-oriented source list. |
+| Production Brief | Creator-facing planning brief grouped by board section. |
+| Visual Moodboard | Image-first board with thumbnails and notes. |
+| Attribution Pack | Draft attribution lines requiring verification. |
+
+JSON and CSV export remain available.
+
+## Risk and license warning
+
+The app uses cautious labels:
 
 - Public-domain candidate
 - Creative Commons candidate
 - Unknown license
 - Unclear license
-- Reference only
+- Likely copyrighted
+- Low risk candidate
+- Needs verification
 - High risk
+- Reference only
+- Avoid
 
-Always verify source pages and license terms before direct use, publication, or commercial work.
+The app does **not** claim commercial-use safety. Always verify the source page and license terms before publication.
 
-## v0.1.0-alpha.4 changes
+## Acceptance criteria for alpha.5
 
-- Added project objects.
-- Added active project storage and migration from legacy saved-result keys.
-- Added project rename and new-project reset.
-- Added per-project search history.
-- Added board sections.
-- Added per-item section assignment.
-- Added provider toggles.
-- Updated `/api/search` to accept `provider_toggles`.
-- Updated JSON/Markdown exports to include project/section context.
-- Added stronger QA checks and alpha.4 project fixture.
-- Updated README and version metadata.
+- App runs without API keys using mock provider data.
+- User can create, switch, duplicate, rename, and delete local projects.
+- Saved board remains project-specific.
+- Search history remains project-specific.
+- Manual import can fetch metadata from a provided URL.
+- Manual import can still be completed without metadata extraction.
+- Saved notes and board sections persist.
+- Export templates work from saved items.
+- JSON, Markdown, CSV, and attribution exports remain available.
+- Normalization fixture test runs with `npm run normalization:test`.
+- QA runs with `npm run qa`.
 
-## Recommended next milestone
+## Next logical build
 
-`v0.1.0-alpha.5` should add:
-
-- Project library with multiple saved projects instead of one active project.
-- URL metadata extraction for manual imports.
-- Export templates for YouTube/documentary/source-audit packs.
-- Result comparison drawer.
-- Better normalization tests using executable fixtures.
-- Optional drag-and-drop section ordering.
+`v0.1.0-alpha.6 — provider integration hardening + persistent result snapshots + import/export project library + stronger end-to-end fixture checks`

@@ -1,0 +1,45 @@
+{
+  "raw_results": [
+    {
+      "type": "image",
+      "title": "Hannibal crossing the Alps map",
+      "source_url": "https://example.com/hannibal-map?utm=tracking",
+      "image_url": "https://cdn.example.com/hannibal-map.jpg",
+      "source_domain": "example.com",
+      "provider": "mock",
+      "width": 1600,
+      "height": 900,
+      "license_detected": "unknown",
+      "license_confidence": 0.2,
+      "tags": ["map"]
+    },
+    {
+      "type": "image",
+      "title": "Hannibal crossing the Alps map",
+      "source_url": "https://www.example.com/hannibal-map#fragment",
+      "image_url": "https://cdn.example.com/hannibal-map.jpg",
+      "source_domain": "example.com",
+      "provider": "mock",
+      "width": 1600,
+      "height": 900,
+      "license_detected": "unknown",
+      "license_confidence": 0.2,
+      "tags": ["map"]
+    },
+    {
+      "type": "archive",
+      "title": "Public domain Alpine route reference",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Alps_route_reference.jpg",
+      "source_domain": "commons.wikimedia.org",
+      "provider": "wikimedia",
+      "license_detected": "public_domain",
+      "license_confidence": 0.78,
+      "tags": ["archive", "public-domain"]
+    }
+  ],
+  "expected": {
+    "raw_count": 3,
+    "deduped_count": 2,
+    "duplicate_count": 1
+  }
+}

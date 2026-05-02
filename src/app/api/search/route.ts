@@ -5,7 +5,8 @@ import { searchMockProvider } from "@/lib/providers/mock";
 import { searchBraveImages, searchBraveWeb } from "@/lib/providers/brave";
 import { searchTavily } from "@/lib/providers/tavily";
 import { searchWikimediaCommons } from "@/lib/providers/wikimedia";
-import type { ProviderHealth, ProviderName, ResearchMode, ResearchRequest, SearchDepth, SearchPlan } from "@/types/research";
+import type { ProviderHealth, ResearchMode, ResearchRequest, SearchDepth, SearchPlan, SearchProviderName } from "@/types/research";
+import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 
 const validModes: ResearchMode[] = [
@@ -27,15 +28,31 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
   if (typeof candidate.topic !== "string" || candidate.topic.trim().length < 2) return null;
   if (!candidate.mode || !validModes.includes(candidate.mode)) return null;
   if (!candidate.depth || !validDepths.includes(candidate.depth)) return null;
+  const providedToggles: Partial<Record<SearchProviderName, boolean>> =
+    typeof candidate.provider_toggles === "object" && candidate.provider_toggles !== null
+      ? candidate.provider_toggles
+      : {};
+
+  const provider_toggles = SEARCH_PROVIDERS.reduce((acc, provider) => {
+    const requested = providedToggles[provider];
+    acc[provider] = typeof requested === "boolean" ? requested : DEFAULT_PROVIDER_TOGGLES[provider];
+    return acc;
+  }, { ...DEFAULT_PROVIDER_TOGGLES });
+
+  if (!provider_toggles.mock && !provider_toggles.wikimedia && !provider_toggles.brave && !provider_toggles.tavily) {
+    provider_toggles.mock = true;
+  }
+
   return {
     topic: candidate.topic.trim(),
     mode: candidate.mode,
-    depth: candidate.depth
+    depth: candidate.depth,
+    provider_toggles
   };
 }
 
 async function runProvider(params: {
-  provider: Exclude<ProviderName, "manual">;
+  provider: SearchProviderName;
   enabled: boolean;
   missingKey?: boolean;
   plan: SearchPlan;
@@ -118,19 +135,19 @@ export async function POST(request: Request) {
   const providerRuns = await Promise.all([
     runProvider({
       provider: "mock",
-      enabled: true,
+      enabled: validRequest.provider_toggles?.mock ?? true,
       plan: searchPlan,
       run: () => searchMockProvider(searchPlan)
     }),
     runProvider({
       provider: "wikimedia",
-      enabled: searchPlan.source_targets.includes("commons"),
+      enabled: Boolean(validRequest.provider_toggles?.wikimedia) && searchPlan.source_targets.includes("commons"),
       plan: searchPlan,
       run: () => searchWikimediaCommons(searchPlan)
     }),
     runProvider({
       provider: "brave",
-      enabled: searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("web"),
+      enabled: Boolean(validRequest.provider_toggles?.brave) && (searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("web")),
       missingKey: !process.env.BRAVE_SEARCH_API_KEY,
       plan: searchPlan,
       run: async () => {
@@ -143,7 +160,7 @@ export async function POST(request: Request) {
     }),
     runProvider({
       provider: "tavily",
-      enabled: searchPlan.source_targets.includes("web"),
+      enabled: Boolean(validRequest.provider_toggles?.tavily) && searchPlan.source_targets.includes("web"),
       missingKey: !process.env.TAVILY_API_KEY,
       plan: searchPlan,
       run: () => searchTavily(searchPlan)

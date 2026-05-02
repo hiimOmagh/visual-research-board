@@ -22,13 +22,23 @@ export type LicenseDetected =
   | "unclear";
 
 export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock" | "manual";
+export type SearchProviderName = Exclude<ProviderName, "manual">;
 
 export type ProviderStatus = "active" | "missing_key" | "skipped" | "error" | "timeout";
+
+export type ProviderToggleMap = Record<SearchProviderName, boolean>;
+
+export type ExportTemplateId =
+  | "source_audit"
+  | "production_brief"
+  | "visual_moodboard"
+  | "attribution_pack";
 
 export interface ResearchRequest {
   topic: string;
   mode: ResearchMode;
   depth: SearchDepth;
+  provider_toggles?: ProviderToggleMap;
 }
 
 export interface ResultScores {
@@ -60,6 +70,7 @@ export interface ResearchResult {
   tags: string[];
   scores: ResultScores;
   notes?: string;
+  section_id?: string;
   collected_at: string;
   updated_at?: string;
 }
@@ -73,7 +84,7 @@ export interface SearchPlan {
 }
 
 export interface ProviderHealth {
-  provider: Exclude<ProviderName, "manual">;
+  provider: SearchProviderName;
   status: ProviderStatus;
   enabled: boolean;
   result_count: number;
@@ -97,6 +108,88 @@ export interface ResearchResponse {
   results: ResearchResult[];
   diagnostics: SearchDiagnostics;
 }
+
+export interface BoardSection {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+}
+
+export interface SearchHistoryEntry {
+  id: string;
+  topic: string;
+  mode: ResearchMode;
+  depth: SearchDepth;
+  generated_at: string;
+  query_count: number;
+  result_count: number;
+  duplicate_count: number;
+  provider_health: ProviderHealth[];
+}
+
+export interface ResearchProject {
+  schema_version: "0.1.0-alpha.5";
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  board_sections: BoardSection[];
+  saved_results: ResearchResult[];
+  search_history: SearchHistoryEntry[];
+}
+
+export interface ProjectLibrary {
+  schema_version: "0.1.0-alpha.5";
+  active_project_id: string;
+  projects: ResearchProject[];
+  updated_at: string;
+}
+
+export interface UrlMetadataRequest {
+  url: string;
+}
+
+export interface UrlMetadataResponse {
+  url: string;
+  source_domain: string;
+  title: string;
+  description?: string;
+  thumbnail_url?: string;
+  fetched_at: string;
+  status: "ok" | "partial" | "error";
+  message?: string;
+}
+
+export const DEFAULT_PROVIDER_TOGGLES: ProviderToggleMap = {
+  mock: true,
+  wikimedia: true,
+  brave: true,
+  tavily: true
+};
+
+export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; description: string }> = [
+  {
+    value: "source_audit",
+    label: "Source Audit",
+    description: "Structured verification view with source, license, risk, and notes."
+  },
+  {
+    value: "production_brief",
+    label: "Production Brief",
+    description: "Creator-facing pack grouped for scripts, thumbnails, and editorial planning."
+  },
+  {
+    value: "visual_moodboard",
+    label: "Visual Moodboard",
+    description: "Compact visual reference board with thumbnails, tags, and production notes."
+  },
+  {
+    value: "attribution_pack",
+    label: "Attribution Pack",
+    description: "Draft attribution lines that still require manual verification."
+  }
+];
 
 export const RESEARCH_MODES: Array<{ value: ResearchMode; label: string; description: string }> = [
   {
@@ -147,6 +240,7 @@ export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; descripti
   { value: "deep", label: "Deep", description: "More query branches and sources." }
 ];
 
+export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "brave", "tavily"];
 export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "brave", "tavily"];
 export const RESULT_TYPES: ResultType[] = ["image", "web", "news", "archive"];
 export const RISK_LEVELS: RiskLevel[] = ["low", "medium", "high", "reference_only", "avoid"];

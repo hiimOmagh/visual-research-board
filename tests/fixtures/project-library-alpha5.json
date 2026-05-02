@@ -1,0 +1,91 @@
+{
+  "schema_version": "0.1.0-alpha.5",
+  "active_project_id": "project_fixture_alpha5_main",
+  "updated_at": "2026-05-02T00:00:00.000Z",
+  "projects": [
+    {
+      "schema_version": "0.1.0-alpha.5",
+      "id": "project_fixture_alpha5_main",
+      "name": "Fixture research project",
+      "created_at": "2026-05-02T00:00:00.000Z",
+      "updated_at": "2026-05-02T00:00:00.000Z",
+      "board_sections": [
+        {
+          "id": "section_inbox",
+          "name": "Inbox",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        },
+        {
+          "id": "section_thumbnail",
+          "name": "Thumbnail / production ideas",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        }
+      ],
+      "saved_results": [
+        {
+          "id": "manual_example",
+          "type": "web",
+          "title": "Manual source example",
+          "description": "Fixture metadata description.",
+          "source_url": "https://example.com/source",
+          "source_domain": "example.com",
+          "provider": "manual",
+          "license_detected": "unknown",
+          "license_confidence": 0.2,
+          "risk_level": "reference_only",
+          "tags": ["manual-import", "source-check-needed"],
+          "scores": {
+            "relevance": 0.55,
+            "visual_quality": 0.2,
+            "source_credibility": 0.45,
+            "license_clarity": 0.2,
+            "uniqueness": 0.7,
+            "production_usefulness": 0.5,
+            "overall": 0.43
+          },
+          "notes": "Fixture note",
+          "section_id": "section_inbox",
+          "collected_at": "2026-05-02T00:00:00.000Z"
+        }
+      ],
+      "search_history": [
+        {
+          "id": "search_fixture",
+          "topic": "Hannibal crossing the Alps",
+          "mode": "youtube_documentary",
+          "depth": "standard",
+          "generated_at": "2026-05-02T00:00:00.000Z",
+          "query_count": 6,
+          "result_count": 10,
+          "duplicate_count": 2,
+          "provider_health": [
+            {
+              "provider": "mock",
+              "status": "active",
+              "enabled": true,
+              "result_count": 10,
+              "duration_ms": 1,
+              "queries_used": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1.0-alpha.5",
+      "id": "project_fixture_alpha5_secondary",
+      "name": "Secondary fixture project",
+      "created_at": "2026-05-02T00:00:00.000Z",
+      "updated_at": "2026-05-02T00:00:00.000Z",
+      "board_sections": [
+        {
+          "id": "section_inbox",
+          "name": "Inbox",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        }
+      ],
+      "saved_results": [],
+      "search_history": []
+    }
+  ]
+}

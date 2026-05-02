@@ -9,6 +9,7 @@ export interface ManualImportInput {
   licenseDetected: LicenseDetected;
   notes?: string;
   thumbnailUrl?: string;
+  description?: string;
 }
 
 function domainFromUrl(url: string): string {
@@ -53,7 +54,7 @@ export function createManualUrlResult(input: ManualImportInput): ResearchResult 
     id: stableManualId(`${title}|${sourceUrl}|${input.type}`),
     type: input.type,
     title,
-    description: "Manually imported source. Metadata and license status require verification.",
+    description: input.description?.trim() || "Manually imported source. Metadata and license status require verification.",
     thumbnail_url: input.thumbnailUrl?.trim() || undefined,
     image_url: input.thumbnailUrl?.trim() || undefined,
     source_url: sourceUrl,

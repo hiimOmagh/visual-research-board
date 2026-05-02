@@ -1,37 +1,65 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { ResearchRequest, ResearchResponse, ResearchResult, SearchDepth, ResearchMode, SearchDiagnostics, SearchPlan } from "@/types/research";
-import { RESEARCH_MODES, SEARCH_DEPTHS } from "@/types/research";
+import type {
+  ProjectLibrary,
+  ProviderToggleMap,
+  ResearchProject,
+  ResearchRequest,
+  ResearchResponse,
+  ResearchResult,
+  SearchDepth,
+  SearchDiagnostics,
+  SearchPlan,
+  ResearchMode
+} from "@/types/research";
+import { DEFAULT_PROVIDER_TOGGLES, RESEARCH_MODES, SEARCH_DEPTHS } from "@/types/research";
 import { ResultGrid } from "@/components/search/ResultGrid";
 import { SavedBoard } from "@/components/search/SavedBoard";
 import { ResultDetailPanel } from "@/components/search/ResultDetailPanel";
 import { ProviderHealthPanel } from "@/components/search/ProviderHealthPanel";
 import { ResultFilters, defaultResultFilters, type ResultFilterState } from "@/components/search/ResultFilters";
-import { loadSavedResults, persistSavedResults } from "@/lib/local-storage";
+import { ProviderTogglePanel } from "@/components/search/ProviderTogglePanel";
+import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
+import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
+import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
+import { assignDefaultSection, createProjectLibrary, createSearchHistoryEntry, createSection, duplicateProject, getActiveProject, removeProject, updateActiveProject, upsertProject } from "@/lib/project";
 
 export function SearchPanel() {
   const [topic, setTopic] = useState("Hannibal crossing the Alps");
   const [mode, setMode] = useState<ResearchMode>("youtube_documentary");
   const [depth, setDepth] = useState<SearchDepth>("standard");
+  const [providerToggles, setProviderToggles] = useState<ProviderToggleMap>(DEFAULT_PROVIDER_TOGGLES);
+  const [library, setLibrary] = useState<ProjectLibrary>(() => createProjectLibrary(createFreshProject("Visual research project")));
+  const [hydrated, setHydrated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
   const [diagnostics, setDiagnostics] = useState<SearchDiagnostics | null>(null);
   const [results, setResults] = useState<ResearchResult[]>([]);
-  const [saved, setSaved] = useState<ResearchResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<ResearchResult | null>(null);
   const [filters, setFilters] = useState<ResultFilterState>(defaultResultFilters);
 
   useEffect(() => {
-    setSaved(loadSavedResults());
+    setLibrary(loadProjectLibrary());
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
-    persistSavedResults(saved);
-  }, [saved]);
+    if (hydrated) persistProjectLibrary(library);
+  }, [hydrated, library]);
 
+  const project = useMemo(() => getActiveProject(library), [library]);
+  const saved = project.saved_results;
   const savedIds = useMemo(() => new Set(saved.map((item) => item.id)), [saved]);
+
+  const updateLibrary = (updater: (current: ProjectLibrary) => ProjectLibrary) => {
+    setLibrary((current) => updater(current));
+  };
+
+  const updateProject = (updater: (current: ResearchProject) => ResearchProject) => {
+    updateLibrary((current) => updateActiveProject(current, updater));
+  };
 
   const filteredResults = useMemo(() => {
     const sourceNeedle = filters.source.trim().toLowerCase();
@@ -50,7 +78,8 @@ export function SearchPanel() {
     const request: ResearchRequest = {
       topic: topic.trim(),
       mode,
-      depth
+      depth,
+      provider_toggles: providerToggles
     };
 
     if (request.topic.length < 2) {
@@ -77,6 +106,11 @@ export function SearchPanel() {
       setSearchPlan(data.search_plan);
       setDiagnostics(data.diagnostics);
       setResults(data.results);
+      const historyEntry = createSearchHistoryEntry(data, request);
+      updateProject((current) => ({
+        ...current,
+        search_history: [historyEntry, ...current.search_history].slice(0, 25)
+      }));
     } catch (searchError) {
       setError(searchError instanceof Error ? searchError.message : "Unknown search error.");
     } finally {
@@ -85,27 +119,88 @@ export function SearchPanel() {
   };
 
   const saveResult = (result: ResearchResult) => {
-    setSaved((current) => {
-      const exists = current.some((item) => item.id === result.id);
+    updateProject((current) => {
+      const exists = current.saved_results.some((item) => item.id === result.id);
       if (exists) return current;
-      return [{ ...result, updated_at: new Date().toISOString() }, ...current];
+      const savedResult = assignDefaultSection({ ...result, updated_at: new Date().toISOString() });
+      return { ...current, saved_results: [savedResult, ...current.saved_results] };
     });
   };
 
   const removeSaved = (id: string) => {
-    setSaved((current) => current.filter((item) => item.id !== id));
+    updateProject((current) => ({
+      ...current,
+      saved_results: current.saved_results.filter((item) => item.id !== id)
+    }));
   };
 
   const updateSavedNotes = (id: string, notes: string) => {
-    setSaved((current) => current.map((item) => item.id === id ? { ...item, notes, updated_at: new Date().toISOString() } : item));
+    updateProject((current) => ({
+      ...current,
+      saved_results: current.saved_results.map((item) => item.id === id ? { ...item, notes, updated_at: new Date().toISOString() } : item)
+    }));
+  };
+
+  const updateSavedSection = (id: string, sectionId: string) => {
+    updateProject((current) => ({
+      ...current,
+      saved_results: current.saved_results.map((item) => item.id === id ? { ...item, section_id: sectionId, updated_at: new Date().toISOString() } : item)
+    }));
   };
 
   const addManualResult = (result: ResearchResult) => {
-    setSaved((current) => {
-      const exists = current.some((item) => item.id === result.id || item.source_url === result.source_url);
+    updateProject((current) => {
+      const exists = current.saved_results.some((item) => item.id === result.id || item.source_url === result.source_url);
       if (exists) return current;
-      return [result, ...current];
+      return { ...current, saved_results: [assignDefaultSection(result), ...current.saved_results] };
     });
+  };
+
+  const addSection = (name: string) => {
+    updateProject((current) => ({
+      ...current,
+      board_sections: [...current.board_sections, createSection(name)]
+    }));
+  };
+
+  const renameProject = (name: string) => {
+    updateProject((current) => ({ ...current, name }));
+  };
+
+  const clearSaved = () => {
+    updateProject((current) => ({ ...current, saved_results: [] }));
+  };
+
+  const createNewProject = () => {
+    const nextProject = createFreshProject("Visual research project");
+    updateLibrary((current) => upsertProject(current, nextProject));
+    setSearchPlan(null);
+    setDiagnostics(null);
+    setResults([]);
+    setSelectedResult(null);
+    setFilters(defaultResultFilters);
+  };
+
+  const selectProject = (projectId: string) => {
+    updateLibrary((current) => ({ ...current, active_project_id: projectId, updated_at: new Date().toISOString() }));
+    setSearchPlan(null);
+    setDiagnostics(null);
+    setResults([]);
+    setSelectedResult(null);
+    setFilters(defaultResultFilters);
+  };
+
+  const duplicateActiveProject = () => {
+    updateLibrary((current) => upsertProject(current, duplicateProject(getActiveProject(current))));
+  };
+
+  const deleteProject = (projectId: string) => {
+    updateLibrary((current) => removeProject(current, projectId));
+    setSearchPlan(null);
+    setDiagnostics(null);
+    setResults([]);
+    setSelectedResult(null);
+    setFilters(defaultResultFilters);
   };
 
   return (
@@ -113,12 +208,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.3</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.5</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A source-aware workspace for collecting visual references, preserving source links, editing saved notes, importing manual URLs, and exporting creator-ready research packs.
+              A multi-project, source-aware workspace for collecting visual references, extracting manual URL metadata, preserving source links, sectioning saved boards, tracking searches, and exporting creator-ready packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md">
@@ -126,6 +221,16 @@ export function SearchPanel() {
           </div>
         </div>
       </header>
+
+      <ProjectLibraryPanel
+        library={library}
+        activeProject={project}
+        onSelectProject={selectProject}
+        onRenameActiveProject={renameProject}
+        onNewProject={createNewProject}
+        onDuplicateProject={duplicateActiveProject}
+        onDeleteProject={deleteProject}
+      />
 
       <section className="mb-6 rounded-[2rem] border border-white/10 bg-slate-950/70 p-5 shadow-soft">
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.5fr_auto] lg:items-end">
@@ -183,16 +288,22 @@ export function SearchPanel() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_26rem]">
         <div className="space-y-6">
+          <ProviderTogglePanel toggles={providerToggles} onChange={setProviderToggles} />
           {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
+          <SearchHistoryPanel history={project.search_history} />
           <ResultFilters filters={filters} onChange={setFilters} totalCount={results.length} visibleCount={filteredResults.length} />
           <ResultGrid results={filteredResults} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
         </div>
         <SavedBoard
+          project={project}
           saved={saved}
+          sections={project.board_sections}
           onRemove={removeSaved}
-          onClear={() => setSaved([])}
+          onClear={clearSaved}
           onUpdateNotes={updateSavedNotes}
+          onUpdateSection={updateSavedSection}
+          onAddSection={addSection}
           onManualImport={addManualResult}
         />
       </div>
