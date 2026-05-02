@@ -35,7 +35,7 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
 }
 
 async function runProvider(params: {
-  provider: ProviderName;
+  provider: Exclude<ProviderName, "manual">;
   enabled: boolean;
   missingKey?: boolean;
   plan: SearchPlan;

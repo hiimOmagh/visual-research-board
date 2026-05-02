@@ -21,7 +21,7 @@ export type LicenseDetected =
   | "unknown"
   | "unclear";
 
-export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock";
+export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock" | "manual";
 
 export type ProviderStatus = "active" | "missing_key" | "skipped" | "error" | "timeout";
 
@@ -61,6 +61,7 @@ export interface ResearchResult {
   scores: ResultScores;
   notes?: string;
   collected_at: string;
+  updated_at?: string;
 }
 
 export interface SearchPlan {
@@ -72,7 +73,7 @@ export interface SearchPlan {
 }
 
 export interface ProviderHealth {
-  provider: ProviderName;
+  provider: Exclude<ProviderName, "manual">;
   status: ProviderStatus;
   enabled: boolean;
   result_count: number;
@@ -146,7 +147,7 @@ export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; descripti
   { value: "deep", label: "Deep", description: "More query branches and sources." }
 ];
 
-export const PROVIDERS: ProviderName[] = ["mock", "wikimedia", "brave", "tavily"];
+export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "brave", "tavily"];
 export const RESULT_TYPES: ResultType[] = ["image", "web", "news", "archive"];
 export const RISK_LEVELS: RiskLevel[] = ["low", "medium", "high", "reference_only", "avoid"];
 export const LICENSE_TYPES: LicenseDetected[] = ["public_domain", "creative_commons", "copyrighted", "unknown", "unclear"];

@@ -12,7 +12,7 @@ function countBy<T extends string>(items: ResearchResult[], getKey: (item: Resea
 export function createJsonExport(results: ResearchResult[]): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.2",
+      export_schema_version: "0.1.0-alpha.3",
       exported_at: new Date().toISOString(),
       warning: "License labels are candidates and require manual verification before publication or commercial use.",
       audit: {
@@ -20,7 +20,9 @@ export function createJsonExport(results: ResearchResult[]): string {
         by_type: countBy(results, (item) => item.type),
         by_provider: countBy(results, (item) => item.provider),
         by_risk: countBy(results, (item) => item.risk_level),
-        by_license: countBy(results, (item) => item.license_detected)
+        by_license: countBy(results, (item) => item.license_detected),
+        notes_count: results.filter((item) => Boolean(item.notes?.trim())).length,
+        manual_import_count: results.filter((item) => item.provider === "manual").length
       },
       results
     },
@@ -42,6 +44,8 @@ export function createMarkdownExport(results: ResearchResult[]): string {
     `- Total items: ${results.length}`,
     `- Low-risk candidates: ${results.filter((item) => item.risk_level === "low").length}`,
     `- Reference-only/high-risk/avoid: ${results.filter((item) => ["reference_only", "high", "avoid"].includes(item.risk_level)).length}`,
+    `- Manual imports: ${results.filter((item) => item.provider === "manual").length}`,
+    `- Items with notes: ${results.filter((item) => Boolean(item.notes?.trim())).length}`,
     ""
   ];
 
@@ -59,6 +63,38 @@ export function createMarkdownExport(results: ResearchResult[]): string {
     lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
     lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
     if (result.notes) lines.push(`- Notes: ${result.notes}`);
+    lines.push(`- Attribution line: ${createSingleAttribution(result)}`);
+    lines.push("");
+  });
+
+  return lines.join("\n");
+}
+
+export function createSingleAttribution(result: ResearchResult): string {
+  const license = licenseLabel(result.license_detected);
+  const risk = riskLabel(result.risk_level);
+  const licenseUrl = result.license_url ? ` License: ${result.license_url}.` : "";
+  return `${result.title} — Source: ${result.source_domain} (${result.source_url}). ${license}; ${risk}.${licenseUrl}`;
+}
+
+export function createAttributionExport(results: ResearchResult[]): string {
+  const lines = [
+    "# Attribution Pack",
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "> These attribution lines are drafting aids only. Verify source pages and license terms before publication or commercial use.",
+    ""
+  ];
+
+  results.forEach((result, index) => {
+    lines.push(`## ${index + 1}. ${result.title}`);
+    lines.push("");
+    lines.push(createSingleAttribution(result));
+    if (result.notes) {
+      lines.push("");
+      lines.push(`Internal note: ${result.notes}`);
+    }
     lines.push("");
   });
 
@@ -83,7 +119,8 @@ export function createCsvExport(results: ResearchResult[]): string {
     "risk_level",
     "overall_score",
     "production_usefulness",
-    "tags"
+    "tags",
+    "notes"
   ];
 
   const rows = results.map((result) => [
@@ -97,7 +134,8 @@ export function createCsvExport(results: ResearchResult[]): string {
     result.risk_level,
     Math.round(result.scores.overall * 100),
     Math.round(result.scores.production_usefulness * 100),
-    result.tags.join(";")
+    result.tags.join(";"),
+    result.notes ?? ""
   ].map(csvEscape).join(","));
 
   return [headers.join(","), ...rows].join("\n");

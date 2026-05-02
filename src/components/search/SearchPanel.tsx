@@ -85,11 +85,27 @@ export function SearchPanel() {
   };
 
   const saveResult = (result: ResearchResult) => {
-    setSaved((current) => current.some((item) => item.id === result.id) ? current : [result, ...current]);
+    setSaved((current) => {
+      const exists = current.some((item) => item.id === result.id);
+      if (exists) return current;
+      return [{ ...result, updated_at: new Date().toISOString() }, ...current];
+    });
   };
 
   const removeSaved = (id: string) => {
     setSaved((current) => current.filter((item) => item.id !== id));
+  };
+
+  const updateSavedNotes = (id: string, notes: string) => {
+    setSaved((current) => current.map((item) => item.id === id ? { ...item, notes, updated_at: new Date().toISOString() } : item));
+  };
+
+  const addManualResult = (result: ResearchResult) => {
+    setSaved((current) => {
+      const exists = current.some((item) => item.id === result.id || item.source_url === result.source_url);
+      if (exists) return current;
+      return [result, ...current];
+    });
   };
 
   return (
@@ -97,12 +113,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.2</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.3</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A source-aware workspace for collecting visual references, preserving source links, filtering risk, and exporting creator-ready research packs.
+              A source-aware workspace for collecting visual references, preserving source links, editing saved notes, importing manual URLs, and exporting creator-ready research packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md">
@@ -165,14 +181,20 @@ export function SearchPanel() {
         {error && <p className="mt-4 rounded-2xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-100">{error}</p>}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_26rem]">
         <div className="space-y-6">
           {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
           <ResultFilters filters={filters} onChange={setFilters} totalCount={results.length} visibleCount={filteredResults.length} />
           <ResultGrid results={filteredResults} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
         </div>
-        <SavedBoard saved={saved} onRemove={removeSaved} onClear={() => setSaved([])} />
+        <SavedBoard
+          saved={saved}
+          onRemove={removeSaved}
+          onClear={() => setSaved([])}
+          onUpdateNotes={updateSavedNotes}
+          onManualImport={addManualResult}
+        />
       </div>
 
       <ResultDetailPanel result={selectedResult} onClose={() => setSelectedResult(null)} />

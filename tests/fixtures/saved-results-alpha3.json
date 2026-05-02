@@ -1,0 +1,27 @@
+[
+  {
+    "id": "fixture_manual_source",
+    "type": "web",
+    "title": "Fixture manual source",
+    "description": "Manual fixture for export and attribution QA.",
+    "source_url": "https://example.org/source",
+    "source_domain": "example.org",
+    "provider": "manual",
+    "license_detected": "unknown",
+    "license_confidence": 0.18,
+    "risk_level": "reference_only",
+    "tags": ["manual-import", "source-check-needed"],
+    "scores": {
+      "relevance": 0.7,
+      "visual_quality": 0.44,
+      "source_credibility": 0.56,
+      "license_clarity": 0.24,
+      "uniqueness": 0.66,
+      "production_usefulness": 0.5,
+      "overall": 0.55
+    },
+    "notes": "Verify before use.",
+    "collected_at": "2026-05-02T00:00:00.000Z",
+    "updated_at": "2026-05-02T00:00:00.000Z"
+  }
+]
