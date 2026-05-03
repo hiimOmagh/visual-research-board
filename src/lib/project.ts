@@ -2,8 +2,8 @@ import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 
-export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.10" as const;
-export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.10" as const;
+export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
+export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
 export const INBOX_SECTION_ID = "section_inbox";
 export const PUBLIC_DOMAIN_SECTION_ID = "section_public_domain";
 export const THUMBNAIL_SECTION_ID = "section_thumbnail";

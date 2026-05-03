@@ -29,6 +29,14 @@ function stableManualId(input: string): string {
   return `manual_${Math.abs(hash).toString(36)}`;
 }
 
+export function createFallbackMetadata(url: string): { title: string; source_domain: string } {
+  const source_domain = domainFromUrl(url);
+  return {
+    title: source_domain === "unknown-source" ? "Manual source" : source_domain,
+    source_domain
+  };
+}
+
 export function isValidHttpUrl(value: string): boolean {
   try {
     const url = new URL(value);
