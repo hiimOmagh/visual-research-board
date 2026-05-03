@@ -1,4 +1,4 @@
-import type { ProviderStatus } from "@/types/research";
+import type { ProviderStatus, SearchDepth } from "@/types/research";
 
 export class ProviderFetchError extends Error {
   status: Extract<ProviderStatus, "error" | "timeout">;
@@ -37,9 +37,26 @@ export async function fetchJsonWithTimeout<T>(url: string, init: RequestInit = {
   }
 }
 
-export function querySlice(queries: string[], depth: "quick" | "standard" | "deep"): string[] {
-  const count = depth === "quick" ? 1 : depth === "standard" ? 2 : 3;
+export function querySlice(queries: string[], depth: SearchDepth): string[] {
+  const count = depth === "quick" ? 2 : depth === "standard" ? 5 : 8;
   return queries.slice(0, count);
+}
+
+export async function runLimited<T>(tasks: Array<() => Promise<T>>, concurrency = 3): Promise<T[]> {
+  const results: T[] = new Array(tasks.length);
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < tasks.length) {
+      const current = cursor;
+      cursor += 1;
+      results[current] = await tasks[current]();
+    }
+  }
+
+  const workerCount = Math.min(Math.max(concurrency, 1), tasks.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return results;
 }
 
 export function stripHtml(value?: string): string {

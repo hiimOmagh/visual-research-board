@@ -1,6 +1,6 @@
-import type { LicenseDetected, SearchPlan } from "@/types/research";
+import type { LicenseDetected, SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { fetchJsonWithTimeout, stripHtml } from "@/lib/providers/provider-utils";
+import { fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface WikimediaImageInfo {
   url?: string;
@@ -76,31 +76,34 @@ function detectLicense(meta?: Record<string, { value?: string }>): {
   };
 }
 
-export async function searchWikimediaCommons(plan: SearchPlan): Promise<RawProviderResult[]> {
-  if (!plan.source_targets.includes("commons")) return [];
+function limitForDepth(depth: SearchDepth): number {
+  if (depth === "quick") return 10;
+  if (depth === "standard") return 16;
+  return 24;
+}
 
-  const limit = plan.depth === "quick" ? 6 : plan.depth === "standard" ? 10 : 16;
+async function searchWikimediaQuery(query: string, queryIndex: number, plan: SearchPlan): Promise<RawProviderResult[]> {
   const url = new URL("https://commons.wikimedia.org/w/api.php");
   url.searchParams.set("action", "query");
   url.searchParams.set("generator", "search");
-  url.searchParams.set("gsrsearch", plan.queries[0]);
+  url.searchParams.set("gsrsearch", query);
   url.searchParams.set("gsrnamespace", "6");
-  url.searchParams.set("gsrlimit", String(limit));
+  url.searchParams.set("gsrlimit", String(limitForDepth(plan.depth)));
   url.searchParams.set("prop", "imageinfo|info");
   url.searchParams.set("iiprop", "url|mime|size|extmetadata");
-  url.searchParams.set("iiurlwidth", "800");
+  url.searchParams.set("iiurlwidth", "900");
   url.searchParams.set("inprop", "url");
   url.searchParams.set("origin", "*");
   url.searchParams.set("format", "json");
 
-  const data = await fetchJsonWithTimeout<{ query?: { pages?: Record<string, WikimediaPage> } }>(url.toString(), {}, 5500);
+  const data = await fetchJsonWithTimeout<{ query?: { pages?: Record<string, WikimediaPage> } }>(url.toString(), {}, 7000);
   const pages = Object.values(data?.query?.pages ?? {});
 
   return pages.map((page) => {
     const info = page.imageinfo?.[0];
     const license = detectLicense(info?.extmetadata);
     return {
-      id: `wikimedia_${page.pageid}`,
+      id: `wikimedia_${queryIndex}_${page.pageid}`,
       type: "image",
       title: page.title.replace(/^File:/, ""),
       thumbnail_url: info?.thumburl ?? info?.url,
@@ -113,7 +116,15 @@ export async function searchWikimediaCommons(plan: SearchPlan): Promise<RawProvi
       license_detected: license.license_detected,
       license_confidence: license.license_confidence,
       license_url: license.license_url,
-      tags: license.tags
+      tags: [...license.tags, "broad-commons-candidate", `query-${queryIndex + 1}`]
     } satisfies RawProviderResult;
   });
+}
+
+export async function searchWikimediaCommons(plan: SearchPlan): Promise<RawProviderResult[]> {
+  if (!plan.source_targets.includes("commons")) return [];
+
+  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchWikimediaQuery(query, queryIndex, plan));
+  const batches = await runLimited(tasks, 3);
+  return batches.flat();
 }
