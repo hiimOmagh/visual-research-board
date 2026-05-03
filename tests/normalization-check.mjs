@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/normalization-alpha10.json"), "utf8"));
+const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/normalization-stable.json"), "utf8"));
 
 function normalizeKey(value) {
   return String(value)
@@ -95,4 +95,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Normalization checks passed for v0.1.0-alpha.10.");
+console.log("Normalization checks passed for v0.1.0.");

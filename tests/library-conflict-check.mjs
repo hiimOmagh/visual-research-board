@@ -7,8 +7,8 @@ function assert(condition, message) {
   if (!condition) failures.push(message);
 }
 
-const existingFixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-alpha10.json"), "utf8"));
-const incomingFixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-conflict-alpha10.json"), "utf8"));
+const existingFixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-stable.json"), "utf8"));
+const incomingFixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-conflict-stable.json"), "utf8"));
 
 // Mirror of src/lib/project.ts::mergeLibraries, kept in sync intentionally.
 // If you change the source merge behaviour, update this too. Both must agree
@@ -78,7 +78,7 @@ function mergeLibraries(existing, incoming) {
 
   return {
     library: {
-      schema_version: "0.1.0-alpha.10",
+      schema_version: "0.1.0",
       active_project_id: activeStillValid ? activeProjectId : mergedProjects[0]?.id ?? null,
       projects: mergedProjects,
       updated_at: nowIso()
@@ -101,9 +101,9 @@ const { library, summary } = mergeLibraries(existingFixture, incomingFixture);
 
 // --- Expected outcomes for the conflict fixture ---------------------------
 //
-// project-library-conflict-alpha10.json contains 4 candidates:
+// project-library-conflict-stable.json contains 4 candidates:
 //
-//   1. { id: "project_fixture_alpha10_main", name: "Fixture research project" }
+//   1. { id: "project_fixture_stable_main", name: "Fixture research project" }
 //        -> id collision AND name collision: remapped + renamed
 //   2. { id: "project_incoming_clean", name: "Brand new incoming project" }
 //        -> imported as-is
@@ -168,4 +168,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Library conflict checks passed for v0.1.0-alpha.10.");
+console.log("Library conflict checks passed for v0.1.0.");
