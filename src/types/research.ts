@@ -22,6 +22,18 @@ export type LicenseDetected =
   | "unclear";
 
 export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock" | "manual";
+
+export type SourceGroup =
+  | "commons_open_access"
+  | "institutional_archive"
+  | "official_academic"
+  | "news_media"
+  | "commercial_stock"
+  | "search_or_social"
+  | "general_web"
+  | "unknown";
+
+export type ResultSortMode = "overall" | "relevance" | "visual_quality" | "source_credibility" | "license_clarity" | "production_usefulness" | "newest";
 export type SearchProviderName = Exclude<ProviderName, "manual">;
 
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
@@ -69,6 +81,9 @@ export interface ResearchResult {
   risk_level: RiskLevel;
   tags: string[];
   scores: ResultScores;
+  source_group?: SourceGroup;
+  quality_reasons?: string[];
+  duplicate_group_key?: string;
   notes?: string;
   section_id?: string;
   collected_at: string;
@@ -88,9 +103,12 @@ export interface ProviderHealth {
   status: ProviderStatus;
   enabled: boolean;
   result_count: number;
+  result_type_counts: Partial<Record<ResultType, number>>;
   duration_ms: number;
   queries_used: number;
   query_sample: string[];
+  endpoint_sample?: string[];
+  missing_env?: string;
   message?: string;
 }
 
@@ -102,6 +120,7 @@ export interface SearchDiagnostics {
   duplicate_count: number;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
+  mock_only: boolean;
 }
 
 export interface ResearchResponse {
@@ -143,7 +162,7 @@ export interface SearchHistoryEntry {
 }
 
 export interface ResearchProject {
-  schema_version: "0.1.0-alpha.8";
+  schema_version: "0.1.0-alpha.10";
   id: string;
   name: string;
   created_at: string;
@@ -155,7 +174,7 @@ export interface ResearchProject {
 }
 
 export interface ProjectLibrary {
-  schema_version: "0.1.0-alpha.8";
+  schema_version: "0.1.0-alpha.10";
   active_project_id: string;
   projects: ResearchProject[];
   updated_at: string;
