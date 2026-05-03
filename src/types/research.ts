@@ -77,6 +77,56 @@ export type EvidenceDrivenTuningVerdict =
   | "evidence_observed_no_change"
   | "needs_live_matrix_artifact";
 
+
+export type ManualReviewLabel = "unreviewed" | "pass" | "watch" | "fail";
+
+export type ManualReviewVerdict =
+  | "approved_reference"
+  | "use_with_caution"
+  | "needs_source_check"
+  | "reject"
+  | "unreviewed";
+
+export interface ManualQualityReview {
+  relevance: ManualReviewLabel;
+  visual_usefulness: ManualReviewLabel;
+  source_trust: ManualReviewLabel;
+  license_status: ManualReviewLabel;
+  verdict: ManualReviewVerdict;
+  reviewer_note?: string;
+  reviewed_at?: string;
+}
+
+export interface ProviderResultInspectionEntry {
+  provider: SearchProviderName;
+  status: ProviderStatus;
+  enabled: boolean;
+  result_count: number;
+  image_count: number;
+  web_context_count: number;
+  clear_license_count: number;
+  low_risk_count: number;
+  high_risk_count: number;
+  average_overall: number;
+  average_relevance: number;
+  average_visual_quality: number;
+  average_source_credibility: number;
+  top_result_ids: string[];
+  review_candidate_ids: string[];
+  warnings: string[];
+}
+
+export interface ProviderResultInspection {
+  generated_at: string;
+  provider_count: number;
+  active_provider_count: number;
+  inspected_result_count: number;
+  manual_review_candidate_count: number;
+  providers: ProviderResultInspectionEntry[];
+  global_review_candidate_ids: string[];
+  warnings: string[];
+}
+
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
@@ -94,7 +144,8 @@ export type ExportTemplateId =
   | "source_audit"
   | "production_brief"
   | "visual_moodboard"
-  | "attribution_pack";
+  | "attribution_pack"
+  | "quality_review";
 
 export interface ResearchRequest {
   topic: string;
@@ -138,6 +189,7 @@ export interface ResearchResult {
   section_id?: string;
   collected_at: string;
   updated_at?: string;
+  manual_review?: ManualQualityReview;
 }
 
 export interface SearchPlan {
@@ -299,6 +351,7 @@ export interface SearchDiagnostics {
   quality_calibration?: RetrievalQualityCalibration;
   auto_tuning?: RetrievalAutoTuningTrace;
   evidence_tuning?: EvidenceDrivenTuningTrace;
+  provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }
 
@@ -413,6 +466,11 @@ export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; d
     value: "attribution_pack",
     label: "Attribution Pack",
     description: "Draft attribution lines that still require manual verification."
+  },
+  {
+    value: "quality_review",
+    label: "Quality Review",
+    description: "Manual review loop evidence with relevance, visual usefulness, source trust, license status, and reviewer verdicts."
   }
 ];
 

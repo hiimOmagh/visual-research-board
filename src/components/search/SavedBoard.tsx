@@ -1,13 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { BoardSection, ExportTemplateId, LicenseDetected, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
+import type { BoardSection, ExportTemplateId, LicenseDetected, ManualQualityReview, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
 import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research";
-import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
+import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createFallbackMetadata, createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { INBOX_SECTION_ID } from "@/lib/project";
+import { manualReviewBadge, normalizeManualReview, REVIEW_LABELS, REVIEW_VERDICTS } from "@/lib/manual-quality-review";
 import { EmptyState } from "@/components/search/EmptyState";
 import { ExportPreviewDrawer, type ExportPreviewFormat } from "@/components/search/ExportPreviewDrawer";
 
@@ -19,11 +20,12 @@ interface SavedBoardProps {
   onClear: () => void;
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateSection: (id: string, sectionId: string) => void;
+  onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
   onAddSection: (name: string) => void;
   onManualImport: (result: ResearchResult) => void;
 }
 
-export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onAddSection, onManualImport }: SavedBoardProps) {
+export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onUpdateManualReview, onAddSection, onManualImport }: SavedBoardProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sectionName, setSectionName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<ExportTemplateId>("source_audit");
@@ -56,6 +58,10 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
     downloadTextFile("visual-research-board-attribution-pack.md", createAttributionExport(saved, project), "text/markdown");
   };
 
+  const exportQualityReview = () => {
+    downloadTextFile("visual-research-board-quality-review.md", createQualityReviewExport(saved, project), "text/markdown");
+  };
+
   const exportSelectedTemplate = () => {
     downloadTextFile(`visual-research-board-${selectedTemplate}.md`, createTemplateExport(selectedTemplate, saved, project), "text/markdown");
   };
@@ -79,6 +85,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
   const lowRiskCount = saved.filter((item) => item.risk_level === "low").length;
   const highRiskCount = saved.filter((item) => ["high", "avoid"].includes(item.risk_level)).length;
   const manualCount = saved.filter((item) => item.provider === "manual").length;
+  const reviewedCount = saved.filter((item) => normalizeManualReview(item.manual_review).verdict !== "unreviewed").length;
 
   return (
     <aside className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
@@ -89,7 +96,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
           <p className="mt-1 text-xs text-slate-500">Project: {project.name}</p>
           {saved.length > 0 && (
             <p className="mt-1 text-xs text-slate-400">
-              {lowRiskCount} low-risk · {highRiskCount} high-risk/avoid · {manualCount} manual
+              {lowRiskCount} low-risk · {highRiskCount} high-risk/avoid · {manualCount} manual · {reviewedCount} reviewed
             </p>
           )}
         </div>
@@ -219,6 +226,14 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
         >
           Attribution Pack
         </button>
+        <button
+          type="button"
+          onClick={exportQualityReview}
+          disabled={saved.length === 0}
+          className="rounded-xl border border-amber-300/30 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:border-amber-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+        >
+          Quality Review
+        </button>
       </div>
 
       <div className="mt-5 max-h-[48rem] space-y-5 overflow-y-auto pr-1">
@@ -248,6 +263,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
                     onRemove={onRemove}
                     onUpdateNotes={onUpdateNotes}
                     onUpdateSection={onUpdateSection}
+                    onUpdateManualReview={onUpdateManualReview}
                     onCopyAttribution={copyAttribution}
                   />
                 ))}
@@ -276,6 +292,7 @@ function SavedItem({
   onRemove,
   onUpdateNotes,
   onUpdateSection,
+  onUpdateManualReview,
   onCopyAttribution
 }: {
   item: ResearchResult;
@@ -284,6 +301,7 @@ function SavedItem({
   onRemove: (id: string) => void;
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateSection: (id: string, sectionId: string) => void;
+  onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
   onCopyAttribution: (item: ResearchResult) => void;
 }) {
   return (
@@ -295,7 +313,7 @@ function SavedItem({
         )}
         <div className="min-w-0 flex-1">
           <h3 className="line-clamp-2 text-sm font-semibold text-white">{item.title}</h3>
-          <p className="mt-1 text-xs text-slate-500">{item.source_domain} · {Math.round(item.scores.overall * 100)}%</p>
+          <p className="mt-1 text-xs text-slate-500">{item.source_domain} · {Math.round(item.scores.overall * 100)}% · {manualReviewBadge(item.manual_review)}</p>
         </div>
       </div>
       <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
@@ -327,6 +345,11 @@ function SavedItem({
         />
       </label>
 
+      <ManualReviewControls
+        item={item}
+        onUpdateManualReview={onUpdateManualReview}
+      />
+
       <div className="mt-3 flex flex-wrap gap-2">
         <a
           href={item.source_url}
@@ -352,6 +375,65 @@ function SavedItem({
         </button>
       </div>
     </article>
+  );
+}
+
+function ManualReviewControls({
+  item,
+  onUpdateManualReview
+}: {
+  item: ResearchResult;
+  onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
+}) {
+  const review = normalizeManualReview(item.manual_review);
+  return (
+    <section className="mt-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-3" aria-label={`Manual quality review for ${item.title}`}>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-200">Manual quality review</p>
+        <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-2 py-1 text-[11px] text-amber-100">{manualReviewBadge(review)}</span>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <ReviewSelect label="Relevance" value={review.relevance} onChange={(value) => onUpdateManualReview(item.id, { relevance: value })} />
+        <ReviewSelect label="Visual" value={review.visual_usefulness} onChange={(value) => onUpdateManualReview(item.id, { visual_usefulness: value })} />
+        <ReviewSelect label="Source" value={review.source_trust} onChange={(value) => onUpdateManualReview(item.id, { source_trust: value })} />
+        <ReviewSelect label="License" value={review.license_status} onChange={(value) => onUpdateManualReview(item.id, { license_status: value })} />
+      </div>
+      <label className="mt-2 block">
+        <span className="mb-1 block text-xs font-semibold text-slate-400">Final verdict</span>
+        <select
+          value={review.verdict}
+          onChange={(event) => onUpdateManualReview(item.id, { verdict: event.target.value as ManualQualityReview["verdict"] })}
+          className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none ring-amber-300/40 focus:ring-4"
+        >
+          {REVIEW_VERDICTS.map((entry) => <option key={entry.value} value={entry.value}>{entry.label}</option>)}
+        </select>
+      </label>
+      <label className="mt-2 block">
+        <span className="mb-1 block text-xs font-semibold text-slate-400">Reviewer note</span>
+        <textarea
+          value={review.reviewer_note ?? ""}
+          onChange={(event) => onUpdateManualReview(item.id, { reviewer_note: event.target.value })}
+          rows={2}
+          className="w-full resize-y rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs leading-5 text-slate-100 outline-none ring-amber-300/40 placeholder:text-slate-600 focus:ring-4"
+          placeholder="Why approve, use with caution, source-check, or reject this reference?"
+        />
+      </label>
+    </section>
+  );
+}
+
+function ReviewSelect({ label, value, onChange }: { label: string; value: ManualQualityReview["relevance"]; onChange: (value: ManualQualityReview["relevance"]) => void }) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-[11px] font-semibold text-slate-400">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value as ManualQualityReview["relevance"])}
+        className="w-full rounded-xl border border-white/10 bg-slate-950 px-2 py-2 text-xs text-slate-100 outline-none ring-amber-300/40 focus:ring-4"
+      >
+        {REVIEW_LABELS.map((entry) => <option key={entry.value} value={entry.value}>{entry.label}</option>)}
+      </select>
+    </label>
   );
 }
 

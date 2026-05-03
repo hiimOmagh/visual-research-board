@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.6 deployed-evidence package`
+`v0.2.7 provider-inspection and manual-review package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -26,7 +26,13 @@ Implemented:
 - Retrieval weak-case auto-tuning with tuned query branches, provider/source/license weighting, and diversity-aware reranking.
 - Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
+- Provider result inspector with provider-level warnings, review candidate IDs, and visual/source/license quality signals.
+- Manual quality review loop for saved references with relevance, visual usefulness, source trust, license status, final verdict, reviewer note, and Quality Review export.
 
+
+## v0.2.7 focus
+
+This package adds provider inspection and human review evidence. Retrieval ranking is no longer treated as sufficient by itself: the app now exposes which providers produced useful candidates and gives saved references an explicit manual review state before export.
 
 ## Broad image retrieval boundary
 
@@ -209,4 +215,4 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.6` is the evidence-driven ranking/query tuning package. Future work should use live provider outputs and the topic-matrix artifacts to calibrate actual retrieval quality, not add speculative infrastructure.
+`v0.2.7` is the provider-inspection and manual-review package. Future work should use provider inspection output and manual review evidence to calibrate actual retrieval quality, not add speculative infrastructure.

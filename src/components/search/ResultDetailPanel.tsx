@@ -3,6 +3,7 @@
 import type { ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { buildQualityReasons, classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
+import { normalizeManualReview } from "@/lib/manual-quality-review";
 
 interface ResultDetailPanelProps {
   result: ResearchResult | null;
@@ -14,6 +15,7 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
 
   const sourceGroup = result.source_group ?? classifySourceDomain(result.source_domain);
   const reasons = result.quality_reasons?.length ? result.quality_reasons : buildQualityReasons({ ...result, source_group: sourceGroup });
+  const manualReview = normalizeManualReview(result.manual_review);
 
   return (
     <aside className="fixed inset-y-0 right-0 z-50 w-full max-w-xl overflow-y-auto border-l border-white/10 bg-slate-950/95 p-6 shadow-soft backdrop-blur md:w-[32rem]" aria-label="Result detail panel">
@@ -61,6 +63,9 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
         {result.description && <Field label="Description" value={result.description} />}
         <Field label="Tags" value={result.tags.join(", ") || "none"} />
         <Field label="Collected at" value={result.collected_at} />
+        <Field label="Manual review verdict" value={manualReview.verdict} />
+        <Field label="Manual review labels" value={`relevance=${manualReview.relevance}; visual=${manualReview.visual_usefulness}; source=${manualReview.source_trust}; license=${manualReview.license_status}`} />
+        {manualReview.reviewer_note && <Field label="Manual reviewer note" value={manualReview.reviewer_note} />}
 
         <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-amber-100">
           License labels are candidates only. Verify the source page and license terms before direct use, publication, or commercial work.

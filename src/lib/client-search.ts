@@ -8,6 +8,7 @@ import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
+import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -127,6 +128,8 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     finalCalibration
   });
 
+  const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
+
   const diagnostics: SearchDiagnostics = {
     generated_at: generatedAt,
     total_raw_results: normalized.stats.raw_count,
@@ -140,6 +143,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     quality_calibration: finalCalibration,
     auto_tuning: autoTuning,
     evidence_tuning: evidenceTuning,
+    provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,
       staticDemo: true,

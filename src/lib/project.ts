@@ -2,6 +2,7 @@ import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
+import { normalizeManualReview } from "@/lib/manual-quality-review";
 
 export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
 export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
@@ -80,6 +81,7 @@ export function ensureResultQuality(result: ResearchResult): ResearchResult {
   const scores = result.scores ?? scoreResult(result);
   const enriched = {
     ...result,
+    manual_review: result.manual_review ? normalizeManualReview(result.manual_review) : undefined,
     source_group,
     scores,
     duplicate_group_key: result.duplicate_group_key ?? result.source_url.toLowerCase()

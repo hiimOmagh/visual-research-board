@@ -14,6 +14,7 @@ import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
+import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -319,6 +320,7 @@ export async function POST(request: Request) {
     finalEvidence: retrievalEvidence,
     finalCalibration: qualityCalibration
   });
+  const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
   const runtimeReport = buildProviderRuntimeReport({
     mockOnly,
     staticDemo: false,
@@ -344,6 +346,7 @@ export async function POST(request: Request) {
       quality_calibration: qualityCalibration,
       auto_tuning: autoTuning,
       evidence_tuning: evidenceTuning,
+      provider_result_inspection: providerResultInspection,
       runtime_report: runtimeReport
     }
   });

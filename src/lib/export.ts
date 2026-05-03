@@ -1,6 +1,7 @@
-import type { ExportTemplateId, ProjectLibrary, ResearchProject, ResearchResult } from "@/types/research";
+import type { ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
+import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -54,7 +55,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         by_section: countBy(results, (item) => item.section_id ?? "unassigned"),
         by_source_group: countBy(results, (item) => item.source_group ?? classifySourceDomain(item.source_domain)),
         notes_count: results.filter((item) => Boolean(item.notes?.trim())).length,
-        manual_import_count: results.filter((item) => item.provider === "manual").length
+        manual_import_count: results.filter((item) => item.provider === "manual").length,
+        manual_review_summary: summarizeManualReviews(results)
       },
       results
     },
@@ -104,6 +106,9 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
   if (result.description) lines.push(`- Description: ${result.description}`);
   if (result.notes) lines.push(`- Notes: ${result.notes}`);
+  const manualReview = normalizeManualReview(result.manual_review);
+  lines.push(`- Manual review: ${manualReview.verdict} · relevance=${manualReview.relevance} · visual=${manualReview.visual_usefulness} · source=${manualReview.source_trust} · license=${manualReview.license_status}`);
+  if (manualReview.reviewer_note) lines.push(`- Reviewer note: ${manualReview.reviewer_note}`);
   lines.push(`- Attribution line: ${createSingleAttribution(result)}`);
   lines.push("");
 }
@@ -206,10 +211,55 @@ export function createVisualMoodboardExport(results: ResearchResult[], project?:
   return lines.join("\n");
 }
 
+
+export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+  const summary = summarizeManualReviews(results);
+  const summaryLine = (verdict: ManualReviewVerdict) => `- ${verdict}: ${summary[verdict]}`;
+  const lines = [
+    `# ${projectName(project)} — Manual Quality Review Evidence`,
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "> This report captures human review labels for relevance, visual usefulness, source trust, license status, and final curation verdict. It is evidence for editorial review, not legal clearance.",
+    "",
+    "## Review Summary",
+    "",
+    summaryLine("approved_reference"),
+    summaryLine("use_with_caution"),
+    summaryLine("needs_source_check"),
+    summaryLine("reject"),
+    summaryLine("unreviewed"),
+    ""
+  ];
+
+  sortedBySection(results, project).forEach((group) => {
+    lines.push(`## ${group.section}`);
+    lines.push("");
+    group.items.forEach((item) => {
+      const review = normalizeManualReview(item.manual_review);
+      lines.push(`### ${item.title}`);
+      lines.push(`- Verdict: ${review.verdict}`);
+      lines.push(`- Relevance: ${review.relevance}`);
+      lines.push(`- Visual usefulness: ${review.visual_usefulness}`);
+      lines.push(`- Source trust: ${review.source_trust}`);
+      lines.push(`- License status: ${review.license_status}`);
+      lines.push(`- Reviewed at: ${review.reviewed_at ?? "not reviewed"}`);
+      if (review.reviewer_note) lines.push(`- Reviewer note: ${review.reviewer_note}`);
+      lines.push(`- Source: ${item.source_url}`);
+      lines.push(`- Provider/source group: ${item.provider} · ${sourceGroupLabel(item.source_group ?? classifySourceDomain(item.source_domain))}`);
+      lines.push(`- Risk/license candidate: ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+      lines.push("");
+    });
+  });
+
+  return lines.join("\n");
+}
+
 export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
   if (templateId === "production_brief") return createProductionBriefExport(results, project);
   if (templateId === "visual_moodboard") return createVisualMoodboardExport(results, project);
   if (templateId === "attribution_pack") return createAttributionExport(results, project);
+  if (templateId === "quality_review") return createQualityReviewExport(results, project);
   return createMarkdownExport(results, project);
 }
 
@@ -235,7 +285,14 @@ export function createCsvExport(results: ResearchResult[]): string {
     "production_usefulness",
     "quality_reasons",
     "tags",
-    "notes"
+    "notes",
+    "manual_review_verdict",
+    "manual_review_relevance",
+    "manual_review_visual_usefulness",
+    "manual_review_source_trust",
+    "manual_review_license_status",
+    "manual_review_note",
+    "manual_reviewed_at"
   ];
 
   const rows = results.map((result) => [
@@ -253,7 +310,14 @@ export function createCsvExport(results: ResearchResult[]): string {
     Math.round(result.scores.production_usefulness * 100),
     result.quality_reasons?.join(";") ?? "",
     result.tags.join(";"),
-    result.notes ?? ""
+    result.notes ?? "",
+    normalizeManualReview(result.manual_review).verdict,
+    normalizeManualReview(result.manual_review).relevance,
+    normalizeManualReview(result.manual_review).visual_usefulness,
+    normalizeManualReview(result.manual_review).source_trust,
+    normalizeManualReview(result.manual_review).license_status,
+    normalizeManualReview(result.manual_review).reviewer_note ?? "",
+    normalizeManualReview(result.manual_review).reviewed_at ?? ""
   ].map(csvEscape).join(","));
 
   return [headers.join(","), ...rows].join("\n");

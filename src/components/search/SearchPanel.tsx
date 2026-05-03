@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
   LibraryImportSummary,
+  ManualQualityReview,
   ProjectLibrary,
   ProviderToggleMap,
   ResearchProject,
@@ -26,11 +27,13 @@ import { ProviderRuntimePanel } from "@/components/search/ProviderRuntimePanel";
 import { LiveQualityCalibrationPanel } from "@/components/search/LiveQualityCalibrationPanel";
 import { RetrievalAutoTuningPanel } from "@/components/search/RetrievalAutoTuningPanel";
 import { EvidenceDrivenTuningPanel } from "@/components/search/EvidenceDrivenTuningPanel";
+import { ProviderResultInspectorPanel } from "@/components/search/ProviderResultInspectorPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
 import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
 import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/client-search";
+import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import {
   assignDefaultSection,
   createProjectLibrary,
@@ -228,6 +231,13 @@ export function SearchPanel() {
     }));
   };
 
+  const updateSavedManualReview = (id: string, patch: Partial<ManualQualityReview>) => {
+    updateProject((current) => ({
+      ...current,
+      saved_results: current.saved_results.map((item) => item.id === id ? applyManualReviewPatch(item, patch) : item)
+    }));
+  };
+
   const addManualResult = (result: ResearchResult) => {
     updateProject((current) => {
       const exists = current.saved_results.some((item) => item.id === result.id || item.source_url === result.source_url);
@@ -272,7 +282,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.2.6.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.2.7.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -305,12 +315,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.6</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.7</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware MVP workspace with broad retrieval diagnostics, provider runtime validation, weak-case auto-tuning, source grouping, saved-first sorting, and export-ready production packs.
+              A multi-project, source-aware MVP workspace with broad retrieval diagnostics, provider runtime validation, weak-case auto-tuning, provider result inspection, manual quality review loops, source grouping, saved-first sorting, and export-ready production packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -446,6 +456,7 @@ export function SearchPanel() {
           {diagnostics?.quality_calibration && <LiveQualityCalibrationPanel calibration={diagnostics.quality_calibration} />}
           {diagnostics?.auto_tuning && <RetrievalAutoTuningPanel trace={diagnostics.auto_tuning} />}
           {diagnostics?.evidence_tuning && <EvidenceDrivenTuningPanel trace={diagnostics.evidence_tuning} />}
+          {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
           <SearchHistoryPanel history={project.search_history} onRestoreSnapshot={restoreSnapshot} />
@@ -460,6 +471,7 @@ export function SearchPanel() {
           onClear={clearSaved}
           onUpdateNotes={updateSavedNotes}
           onUpdateSection={updateSavedSection}
+          onUpdateManualReview={updateSavedManualReview}
           onAddSection={addSection}
           onManualImport={addManualResult}
         />
