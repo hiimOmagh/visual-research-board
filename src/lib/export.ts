@@ -35,7 +35,7 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
 export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.6",
+      export_schema_version: "0.1.0-alpha.8",
       exported_at: new Date().toISOString(),
       project: project ? {
         id: project.id,
@@ -251,7 +251,7 @@ export function createCsvExport(results: ResearchResult[]): string {
 export function createProjectLibraryExport(library: ProjectLibrary): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.6",
+      export_schema_version: "0.1.0-alpha.8",
       exported_at: new Date().toISOString(),
       warning: "Local project-library export. License labels and attribution lines remain candidates requiring manual verification.",
       audit: {

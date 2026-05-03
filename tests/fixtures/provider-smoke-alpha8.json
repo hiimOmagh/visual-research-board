@@ -1,0 +1,93 @@
+{
+  "_comment": "Raw provider responses used by tests/provider-smoke-check.mjs. Verifies each provider's raw shape can be normalized into ResearchResult without network access.",
+  "providers": {
+    "mock": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "mock_smoke_001",
+          "type": "image",
+          "title": "Public-domain candidate visual",
+          "thumbnail_url": "https://example.com/thumb.svg",
+          "image_url": "https://example.com/image.svg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Example.svg",
+          "source_domain": "commons.wikimedia.org",
+          "provider": "mock",
+          "license_detected": "public_domain",
+          "license_confidence": 0.72,
+          "tags": ["public-domain-candidate", "archive"]
+        }
+      ]
+    },
+    "wikimedia": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "wikimedia_smoke_001",
+          "type": "image",
+          "title": "Hannibal crossing the Alps - painting",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/example.jpg/300px-example.jpg",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/example.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Example.jpg",
+          "source_domain": "commons.wikimedia.org",
+          "provider": "wikimedia",
+          "width": 1024,
+          "height": 768,
+          "license_detected": "creative_commons",
+          "license_confidence": 0.7,
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "tags": ["wikimedia-commons", "license-check-needed"]
+        }
+      ]
+    },
+    "brave": {
+      "expected_min_count": 2,
+      "raw_results": [
+        {
+          "id": "brave_image_0_0",
+          "type": "image",
+          "title": "Hannibal crossing the Alps photograph",
+          "thumbnail_url": "https://imgs.search.brave.com/example.jpg",
+          "image_url": "https://www.example.com/photo.jpg",
+          "source_url": "https://www.example.com/article",
+          "source_domain": "example.com",
+          "provider": "brave",
+          "width": 1200,
+          "height": 800,
+          "license_detected": "unknown",
+          "license_confidence": 0.15,
+          "tags": ["brave-image", "license-check-needed", "query-1"]
+        },
+        {
+          "id": "brave_web_0_0",
+          "type": "web",
+          "title": "Hannibal crossing the Alps history article",
+          "description": "Background article about the Carthaginian general's famous crossing.",
+          "source_url": "https://www.history.example.com/hannibal",
+          "source_domain": "history.example.com",
+          "provider": "brave",
+          "license_detected": "unknown",
+          "license_confidence": 0.15,
+          "tags": ["brave-web", "source-link", "query-1"]
+        }
+      ]
+    },
+    "tavily": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "tavily_smoke_001",
+          "type": "web",
+          "title": "Academic source on Hannibal Barca",
+          "description": "Peer-reviewed coverage of the Punic Wars.",
+          "source_url": "https://academic.example.edu/hannibal",
+          "source_domain": "academic.example.edu",
+          "provider": "tavily",
+          "license_detected": "unknown",
+          "license_confidence": 0.2,
+          "tags": ["tavily-web", "source-link"]
+        }
+      ]
+    }
+  }
+}

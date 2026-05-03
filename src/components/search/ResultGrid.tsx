@@ -2,6 +2,7 @@
 
 import type { ResearchResult, ResultType } from "@/types/research";
 import { ResultCard } from "@/components/search/ResultCard";
+import { EmptyState } from "@/components/search/EmptyState";
 
 interface ResultGridProps {
   results: ResearchResult[];
@@ -20,9 +21,11 @@ const typeLabels: Record<ResultType, string> = {
 export function ResultGrid({ results, savedIds, onSave, onInspect }: ResultGridProps) {
   if (results.length === 0) {
     return (
-      <section className="rounded-3xl border border-dashed border-white/15 bg-white/[0.03] p-10 text-center text-slate-400">
-        Search results will appear here. If filters are active, reset them to view hidden results.
-      </section>
+      <EmptyState
+        eyebrow="Results"
+        title="No results to display yet"
+        description="Run a search above to populate this grid. If filters are active, reset them to view hidden results."
+      />
     );
   }
 

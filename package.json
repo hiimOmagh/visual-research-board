@@ -1,18 +1,20 @@
 {
   "name": "visual-research-board",
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0-alpha.8",
   "private": true,
-  "description": "A creator-focused source-aware visual research board with provider hardening, persistent result snapshots, project-library import/export, and stronger fixture checks.",
+  "description": "A creator-focused source-aware visual research board with hardened provider diagnostics, persistent result snapshots, conflict-safe project-library import/export, an export preview drawer, an accessibility-aware UI, and fixture-driven QA.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
-    "e2e:fixtures": "node tests/e2e-fixture-check.mjs"
+    "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
+    "provider:smoke": "node tests/provider-smoke-check.mjs",
+    "library:conflict:test": "node tests/library-conflict-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

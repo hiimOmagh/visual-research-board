@@ -39,6 +39,7 @@ export function ProjectLibraryPanel({
             value={activeProject.id}
             onChange={(event) => onSelectProject(event.target.value)}
             className="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none ring-lime-300/40 focus:ring-4"
+            aria-label="Active project selector"
           >
             {sortedProjects.map((project) => (
               <option key={project.id} value={project.id}>
@@ -55,6 +56,7 @@ export function ProjectLibraryPanel({
             onChange={(event) => onRenameActiveProject(event.target.value)}
             className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none ring-lime-300/40 placeholder:text-slate-500 focus:ring-4"
             placeholder="Project name"
+            aria-label="Active project name"
           />
         </label>
 
@@ -115,7 +117,7 @@ export function ProjectLibraryPanel({
       </div>
 
       <p className="mt-3 text-xs leading-5 text-slate-500">
-        Alpha.6 stores a local multi-project library, persistent result snapshots, and import/export JSON bundles in browser localStorage.
+        Alpha.8 stores a local multi-project library with persistent result snapshots and conflict-safe import/export bundles in browser localStorage. Existing projects are never overwritten by an import.
       </p>
     </section>
   );

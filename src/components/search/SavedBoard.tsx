@@ -7,6 +7,8 @@ import { createAttributionExport, createCsvExport, createJsonExport, createMarkd
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
 import { INBOX_SECTION_ID } from "@/lib/project";
+import { EmptyState } from "@/components/search/EmptyState";
+import { ExportPreviewDrawer, type ExportPreviewFormat } from "@/components/search/ExportPreviewDrawer";
 
 interface SavedBoardProps {
   project: ResearchProject;
@@ -24,6 +26,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sectionName, setSectionName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<ExportTemplateId>("source_audit");
+  const [previewFormat, setPreviewFormat] = useState<ExportPreviewFormat | null>(null);
 
   const groupedSaved = useMemo(() => {
     const grouped = new Map<string, ResearchResult[]>();
@@ -131,57 +134,87 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
       <section className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4">
         <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Export templates</p>
         <div className="mt-3 grid gap-2">
-          <select
-            value={selectedTemplate}
-            onChange={(event) => setSelectedTemplate(event.target.value as ExportTemplateId)}
-            className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white outline-none ring-lime-300/40 focus:ring-4"
-          >
-            {EXPORT_TEMPLATES.map((template) => <option key={template.value} value={template.value}>{template.label}</option>)}
-          </select>
+          <label className="block">
+            <span className="sr-only">Export template</span>
+            <select
+              value={selectedTemplate}
+              onChange={(event) => setSelectedTemplate(event.target.value as ExportTemplateId)}
+              className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white outline-none ring-lime-300/40 focus:ring-4"
+              aria-label="Export template"
+            >
+              {EXPORT_TEMPLATES.map((template) => <option key={template.value} value={template.value}>{template.label}</option>)}
+            </select>
+          </label>
           <p className="text-xs leading-5 text-slate-500">
             {EXPORT_TEMPLATES.find((template) => template.value === selectedTemplate)?.description}
           </p>
-          <button
-            type="button"
-            onClick={exportSelectedTemplate}
-            disabled={saved.length === 0}
-            className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
-          >
-            Export selected template
-          </button>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setPreviewFormat("template")}
+              disabled={saved.length === 0}
+              className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+            >
+              Preview template
+            </button>
+            <button
+              type="button"
+              onClick={exportSelectedTemplate}
+              disabled={saved.length === 0}
+              className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+            >
+              Download template
+            </button>
+          </div>
         </div>
       </section>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <button
           type="button"
+          onClick={() => setPreviewFormat("json")}
+          disabled={saved.length === 0}
+          className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+        >
+          Preview JSON
+        </button>
+        <button
+          type="button"
+          onClick={() => setPreviewFormat("markdown")}
+          disabled={saved.length === 0}
+          className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+        >
+          Preview Markdown
+        </button>
+        <button
+          type="button"
           onClick={exportJson}
           disabled={saved.length === 0}
-          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
+          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
         >
-          Export JSON
+          Download JSON
         </button>
         <button
           type="button"
           onClick={exportMarkdown}
           disabled={saved.length === 0}
-          className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 disabled:cursor-not-allowed disabled:text-slate-500"
+          className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
         >
-          Export Markdown
+          Download Markdown
         </button>
         <button
           type="button"
           onClick={exportCsv}
           disabled={saved.length === 0}
-          className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 disabled:cursor-not-allowed disabled:text-slate-500"
+          className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
         >
-          Export CSV
+          Download CSV
         </button>
         <button
           type="button"
           onClick={exportAttribution}
           disabled={saved.length === 0}
-          className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+          className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
         >
           Attribution Pack
         </button>
@@ -189,9 +222,12 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
 
       <div className="mt-5 max-h-[48rem] space-y-5 overflow-y-auto pr-1">
         {saved.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-white/15 p-4 text-sm text-slate-400">
-            Saved references will persist inside the active project using localStorage. You can also import a URL manually above.
-          </p>
+          <EmptyState
+            variant="subtle"
+            eyebrow="Saved board"
+            title="No saved references yet"
+            description="Save results from the grid on the left, or use the manual URL importer above to add a source. Saved items persist inside the active project in your browser."
+          />
         ) : (
           sections.map((section) => {
             const items = groupedSaved.get(section.id) ?? [];
@@ -219,6 +255,15 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
           })
         )}
       </div>
+
+      <ExportPreviewDrawer
+        open={previewFormat !== null}
+        format={previewFormat ?? "json"}
+        templateId={selectedTemplate}
+        saved={saved}
+        project={project}
+        onClose={() => setPreviewFormat(null)}
+      />
     </aside>
   );
 }

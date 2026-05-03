@@ -143,7 +143,7 @@ export interface SearchHistoryEntry {
 }
 
 export interface ResearchProject {
-  schema_version: "0.1.0-alpha.6";
+  schema_version: "0.1.0-alpha.8";
   id: string;
   name: string;
   created_at: string;
@@ -155,10 +155,22 @@ export interface ResearchProject {
 }
 
 export interface ProjectLibrary {
-  schema_version: "0.1.0-alpha.6";
+  schema_version: "0.1.0-alpha.8";
   active_project_id: string;
   projects: ResearchProject[];
   updated_at: string;
+}
+
+export interface LibraryImportSummary {
+  status: "ok" | "merged" | "rejected";
+  imported_count: number;
+  renamed_count: number;
+  remapped_count: number;
+  rejected_count: number;
+  total_projects_after_import: number;
+  active_project_changed: boolean;
+  rejected_reasons: string[];
+  message: string;
 }
 
 export interface UrlMetadataRequest {

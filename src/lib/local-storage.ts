@@ -1,8 +1,9 @@
 import type { ProjectLibrary, ResearchProject, ResearchResult } from "@/types/research";
 import { assignDefaultSection, createEmptyProject, createProjectLibrary, normalizeLibrary, normalizeProject } from "@/lib/project";
 
-const PROJECT_LIBRARY_STORAGE_KEY = "visual-research-board:project-library:v0.1.0-alpha.6";
+const PROJECT_LIBRARY_STORAGE_KEY = "visual-research-board:project-library:v0.1.0-alpha.8";
 const LEGACY_PROJECT_LIBRARY_KEYS = [
+  "visual-research-board:project-library:v0.1.0-alpha.6",
   "visual-research-board:project-library:v0.1.0-alpha.5"
 ];
 const LEGACY_ACTIVE_PROJECT_KEY = "visual-research-board:active-project:v0.1.0-alpha.4";

@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1.0-alpha.8",
+  "active_project_id": "project_fixture_alpha8_main",
+  "updated_at": "2026-05-02T01:00:00.000Z",
+  "_comment": "Incoming library used by tests/library-conflict-check.mjs. When merged into project-library-alpha8.json, this fixture exercises duplicate id remapping, duplicate name renaming, valid imports, and rejected entries.",
+  "projects": [
+    {
+      "schema_version": "0.1.0-alpha.8",
+      "id": "project_fixture_alpha8_main",
+      "name": "Fixture research project",
+      "created_at": "2026-05-02T01:00:00.000Z",
+      "updated_at": "2026-05-02T01:00:00.000Z",
+      "board_sections": [
+        { "id": "section_inbox", "name": "Inbox", "created_at": "2026-05-02T01:00:00.000Z" }
+      ],
+      "saved_results": [],
+      "search_history": [],
+      "result_snapshots": []
+    },
+    {
+      "schema_version": "0.1.0-alpha.8",
+      "id": "project_incoming_clean",
+      "name": "Brand new incoming project",
+      "created_at": "2026-05-02T01:00:00.000Z",
+      "updated_at": "2026-05-02T01:00:00.000Z",
+      "board_sections": [
+        { "id": "section_inbox", "name": "Inbox", "created_at": "2026-05-02T01:00:00.000Z" }
+      ],
+      "saved_results": [],
+      "search_history": [],
+      "result_snapshots": []
+    },
+    {
+      "id": null,
+      "name": ""
+    },
+    {
+      "schema_version": "0.1.0-alpha.8",
+      "id": "project_incoming_collision",
+      "name": "Secondary fixture project",
+      "created_at": "2026-05-02T01:00:00.000Z",
+      "updated_at": "2026-05-02T01:00:00.000Z",
+      "board_sections": [
+        { "id": "section_inbox", "name": "Inbox", "created_at": "2026-05-02T01:00:00.000Z" }
+      ],
+      "saved_results": [],
+      "search_history": [],
+      "result_snapshots": []
+    }
+  ]
+}

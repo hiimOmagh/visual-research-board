@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type {
+  LibraryImportSummary,
   ProjectLibrary,
   ProviderToggleMap,
   ResearchProject,
@@ -34,7 +35,7 @@ import {
   getActiveProject,
   MAX_RESULT_SNAPSHOTS,
   MAX_SEARCH_HISTORY,
-  normalizeLibrary,
+  mergeLibraries,
   removeProject,
   updateActiveProject,
   upsertProject
@@ -50,6 +51,7 @@ export function SearchPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
+  const [importSummary, setImportSummary] = useState<LibraryImportSummary | null>(null);
   const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
   const [diagnostics, setDiagnostics] = useState<SearchDiagnostics | null>(null);
   const [results, setResults] = useState<ResearchResult[]>([]);
@@ -238,39 +240,48 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-alpha6.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-alpha8.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
     setError(null);
     setImportNotice(null);
+    setImportSummary(null);
     try {
       const text = await file.text();
       const parsed = JSON.parse(text) as { library?: unknown } | ProjectLibrary;
-      const candidate = "library" in parsed && parsed.library ? parsed.library : parsed;
-      const normalized = normalizeLibrary(candidate as Partial<ProjectLibrary>);
-      setLibrary(normalized);
-      resetVisibleSearchState();
-      setImportNotice(`Imported ${normalized.projects.length} project(s) from ${file.name}.`);
+      const candidate = parsed && typeof parsed === "object" && "library" in parsed && parsed.library
+        ? parsed.library
+        : parsed;
+      const { library: merged, summary } = mergeLibraries(library, candidate as Partial<ProjectLibrary>);
+      setLibrary(merged);
+      setImportSummary(summary);
+      if (summary.status === "rejected") {
+        setError(summary.message);
+      } else {
+        setImportNotice(`${summary.message} Source file: ${file.name}.`);
+      }
     } catch (importError) {
       setError(importError instanceof Error ? `Library import failed: ${importError.message}` : "Library import failed.");
     }
   };
+
+  const dismissImportSummary = () => setImportSummary(null);
 
   return (
     <main className="mx-auto min-h-screen max-w-[96rem] px-4 py-6 sm:px-6 lg:px-8">
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.6</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.8</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware workspace with hardened provider diagnostics, persistent result snapshots, import/export project libraries, and stronger no-browser fixture checks.
+              A multi-project, source-aware workspace with hardened provider diagnostics, persistent result snapshots, conflict-safe library import/export, an export preview drawer, and an accessibility-aware UI.
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md">
+          <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
             License and risk labels are candidates only. Verify source pages before direct use, publication, or commercial work.
           </div>
         </div>
@@ -288,7 +299,58 @@ export function SearchPanel() {
         onImportLibraryFile={importLibraryFile}
       />
 
-      {importNotice && <p className="mb-4 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-3 text-sm text-lime-100">{importNotice}</p>}
+      {importSummary && (
+        <section
+          className="mb-4 rounded-2xl border border-lime-300/30 bg-lime-300/[0.06] p-4 text-sm text-lime-100"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-lime-300">Library import summary</p>
+              <p className="mt-1 font-semibold text-white">{importSummary.message}</p>
+              <ul className="mt-2 space-y-1 text-xs text-lime-100">
+                <li>Imported: {importSummary.imported_count}</li>
+                <li>Renamed (duplicate names): {importSummary.renamed_count}</li>
+                <li>Remapped (duplicate IDs): {importSummary.remapped_count}</li>
+                <li>Rejected (invalid entries): {importSummary.rejected_count}</li>
+                <li>Total projects after import: {importSummary.total_projects_after_import}</li>
+                {importSummary.active_project_changed && (
+                  <li>Note: the active project was reset because the previous one was missing.</li>
+                )}
+              </ul>
+              {importSummary.rejected_reasons.length > 0 && (
+                <details className="mt-2 text-xs text-amber-100">
+                  <summary className="cursor-pointer">Rejected entry details</summary>
+                  <ul className="mt-1 list-disc pl-5">
+                    {importSummary.rejected_reasons.map((reason, index) => (
+                      <li key={index}>{reason}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={dismissImportSummary}
+              className="rounded-xl border border-white/10 px-3 py-1 text-xs text-slate-200 hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60"
+              aria-label="Dismiss import summary"
+            >
+              Dismiss
+            </button>
+          </div>
+        </section>
+      )}
+
+      {importNotice && !importSummary && (
+        <p
+          className="mb-4 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-3 text-sm text-lime-100"
+          role="status"
+          aria-live="polite"
+        >
+          {importNotice}
+        </p>
+      )}
 
       <section className="mb-6 rounded-[2rem] border border-white/10 bg-slate-950/70 p-5 shadow-soft">
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr_0.5fr_auto] lg:items-end">

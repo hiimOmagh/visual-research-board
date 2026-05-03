@@ -1,7 +1,7 @@
-import type { BoardSection, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
+import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
 
-export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.6" as const;
-export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.6" as const;
+export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.8" as const;
+export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.8" as const;
 export const INBOX_SECTION_ID = "section_inbox";
 export const PUBLIC_DOMAIN_SECTION_ID = "section_public_domain";
 export const THUMBNAIL_SECTION_ID = "section_thumbnail";
@@ -260,4 +260,127 @@ export function providerSummary(health: ProviderHealth[]): string {
   return health
     .map((item) => `${item.provider}:${item.status}:${item.result_count}`)
     .join(" | ");
+}
+
+interface MergeLibrariesResult {
+  library: ProjectLibrary;
+  summary: LibraryImportSummary;
+}
+
+/**
+ * Merge an incoming (imported) library into an existing one without ever
+ * replacing the user's existing projects.
+ *
+ * - Projects whose IDs collide with existing ones are remapped to fresh IDs.
+ * - Projects whose names collide with existing ones are renamed with an
+ *   "(imported)" suffix and a numeric counter if needed.
+ * - Invalid project entries (missing id, no name, non-array projects, etc.)
+ *   are rejected and reported.
+ * - The previously active project remains active. If it is missing for some
+ *   reason, the first existing project is selected.
+ */
+export function mergeLibraries(existing: ProjectLibrary, incoming: Partial<ProjectLibrary>): MergeLibrariesResult {
+  const existingNormalized = normalizeLibrary(existing);
+  const existingIds = new Set(existingNormalized.projects.map((project) => project.id));
+  const existingNames = new Set(existingNormalized.projects.map((project) => project.name.trim().toLowerCase()));
+
+  const rejectedReasons: string[] = [];
+  const imported: ResearchProject[] = [];
+
+  let remappedCount = 0;
+  let renamedCount = 0;
+
+  const candidateProjects = Array.isArray(incoming?.projects) ? incoming.projects : [];
+
+  for (const candidate of candidateProjects) {
+    if (!candidate || typeof candidate !== "object") {
+      rejectedReasons.push("Skipped a non-object project entry.");
+      continue;
+    }
+    if (typeof (candidate as { name?: unknown }).name !== "string" || !(candidate as { name?: string }).name?.trim()) {
+      rejectedReasons.push("Skipped a project entry with no name.");
+      continue;
+    }
+
+    const normalized = normalizeProject(candidate as Partial<ResearchProject>);
+    let importedProject = normalized;
+
+    if (existingIds.has(importedProject.id)) {
+      importedProject = { ...importedProject, id: createId("project") };
+      remappedCount += 1;
+    }
+
+    let candidateName = importedProject.name.trim() || "Imported project";
+    if (existingNames.has(candidateName.toLowerCase())) {
+      let suffix = 1;
+      let attempt = `${candidateName} (imported)`;
+      while (existingNames.has(attempt.toLowerCase())) {
+        suffix += 1;
+        attempt = `${candidateName} (imported ${suffix})`;
+      }
+      importedProject = { ...importedProject, name: attempt };
+      renamedCount += 1;
+      candidateName = attempt;
+    }
+
+    existingIds.add(importedProject.id);
+    existingNames.add(candidateName.toLowerCase());
+    imported.push(importedProject);
+  }
+
+  if (imported.length === 0) {
+    return {
+      library: existingNormalized,
+      summary: {
+        status: "rejected",
+        imported_count: 0,
+        renamed_count: 0,
+        remapped_count: 0,
+        rejected_count: rejectedReasons.length,
+        total_projects_after_import: existingNormalized.projects.length,
+        active_project_changed: false,
+        rejected_reasons: rejectedReasons,
+        message: rejectedReasons.length > 0
+          ? "No projects could be imported. The existing library was not changed."
+          : "The imported file did not contain any projects."
+      }
+    };
+  }
+
+  const mergedProjects: ResearchProject[] = [...existingNormalized.projects, ...imported];
+
+  // Active project always stays as the previously active project. We never
+  // replace the user's working project from an import.
+  const activeProjectId = existingNormalized.active_project_id;
+  const activeStillValid = mergedProjects.some((project) => project.id === activeProjectId);
+
+  const merged: ProjectLibrary = {
+    schema_version: LIBRARY_SCHEMA_VERSION,
+    active_project_id: activeStillValid ? activeProjectId : mergedProjects[0].id,
+    projects: mergedProjects,
+    updated_at: nowIso()
+  };
+
+  const summary: LibraryImportSummary = {
+    status: rejectedReasons.length > 0 ? "merged" : "ok",
+    imported_count: imported.length,
+    renamed_count: renamedCount,
+    remapped_count: remappedCount,
+    rejected_count: rejectedReasons.length,
+    total_projects_after_import: merged.projects.length,
+    active_project_changed: !activeStillValid,
+    rejected_reasons: rejectedReasons,
+    message: buildImportMessage(imported.length, renamedCount, remappedCount, rejectedReasons.length)
+  };
+
+  return { library: merged, summary };
+}
+
+function buildImportMessage(imported: number, renamed: number, remapped: number, rejected: number): string {
+  const parts: string[] = [];
+  parts.push(`Imported ${imported} project${imported === 1 ? "" : "s"}`);
+  if (renamed > 0) parts.push(`renamed ${renamed}`);
+  if (remapped > 0) parts.push(`remapped ${remapped} duplicate id${remapped === 1 ? "" : "s"}`);
+  if (rejected > 0) parts.push(`skipped ${rejected} invalid entr${rejected === 1 ? "y" : "ies"}`);
+  return `${parts.join(", ")}.`;
 }

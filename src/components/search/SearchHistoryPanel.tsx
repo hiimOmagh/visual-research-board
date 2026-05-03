@@ -2,6 +2,7 @@
 
 import type { SearchHistoryEntry } from "@/types/research";
 import { providerSummary } from "@/lib/project";
+import { EmptyState } from "@/components/search/EmptyState";
 
 interface SearchHistoryPanelProps {
   history: SearchHistoryEntry[];
@@ -11,9 +12,12 @@ interface SearchHistoryPanelProps {
 export function SearchHistoryPanel({ history, onRestoreSnapshot }: SearchHistoryPanelProps) {
   if (history.length === 0) {
     return (
-      <section className="rounded-3xl border border-dashed border-white/15 bg-white/[0.03] p-5 text-sm text-slate-400">
-        Search history and persistent result snapshots will be stored inside the active project after the first search.
-      </section>
+      <EmptyState
+        variant="subtle"
+        eyebrow="Search history"
+        title="No searches recorded yet"
+        description="Once you run a search, this panel will list it and let you restore the saved snapshot of those results."
+      />
     );
   }
 
