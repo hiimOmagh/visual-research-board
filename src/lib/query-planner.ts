@@ -8,7 +8,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "interview photo reference",
     "outfit reference public domain",
     "Wikimedia Commons portrait",
-    "archive image"
+    "archive image",
+    "press conference photo",
+    "headshot profile",
+    "editorial portrait reference",
+    "historic public appearance",
+    "official website photo"
   ],
   historical_topic: [
     "historical map archive",
@@ -17,7 +22,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "primary source document",
     "timeline visual source",
     "artifact image archive",
-    "Library of Congress"
+    "Library of Congress",
+    "Wikimedia Commons image",
+    "old photograph archive",
+    "painting engraving illustration",
+    "map diagram source",
+    "museum open access"
   ],
   youtube_documentary: [
     "documentary visual references",
@@ -26,7 +36,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "archive footage still reference",
     "thumbnail composition reference",
     "public domain visuals",
-    "official source background"
+    "official source background",
+    "high resolution images",
+    "news photo reference",
+    "infographic visual source",
+    "historical image archive",
+    "editorial photo source"
   ],
   thumbnail_inspiration: [
     "thumbnail composition reference",
@@ -35,7 +50,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "cinematic poster composition",
     "before after thumbnail style",
     "face expression reference",
-    "bold background contrast"
+    "bold background contrast",
+    "YouTube thumbnail inspiration",
+    "dramatic lighting reference",
+    "poster layout reference",
+    "hero image composition",
+    "visual hook reference"
   ],
   public_domain: [
     "public domain image",
@@ -44,7 +64,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "Library of Congress public domain",
     "museum open access image",
     "government archive image",
-    "Europeana public domain"
+    "Europeana public domain",
+    "Internet Archive image",
+    "Smithsonian open access",
+    "Met Museum open access",
+    "public domain photograph",
+    "creative commons image"
   ],
   news_event: [
     "latest official source",
@@ -53,7 +78,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "agency photo reference",
     "explainer background source",
     "official statement",
-    "live updates context"
+    "live updates context",
+    "recent images",
+    "event photos",
+    "official photos",
+    "news images",
+    "background visuals"
   ],
   design_moodboard: [
     "visual style reference",
@@ -62,7 +92,12 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "composition reference",
     "typography style reference",
     "cinematic mood reference",
-    "editorial layout inspiration"
+    "editorial layout inspiration",
+    "art direction reference",
+    "texture background reference",
+    "set design reference",
+    "visual identity reference",
+    "photography style reference"
   ],
   academic_source_pack: [
     "official report pdf",
@@ -71,42 +106,66 @@ const modeQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
     "expert analysis source",
     "dataset source",
     "bibliography references",
-    "primary source document"
+    "primary source document",
+    "university source",
+    "government report",
+    "research institute source",
+    "chart data source",
+    "visual evidence source"
   ]
 };
 
+const visualQueryExpansions: Record<ResearchRequest["mode"], string[]> = {
+  person_reference: ["photos", "images", "portrait", "high resolution", "official image"],
+  historical_topic: ["images", "maps", "illustrations", "photographs", "archive visuals"],
+  youtube_documentary: ["images", "visual references", "thumbnail references", "maps", "archive images"],
+  thumbnail_inspiration: ["images", "thumbnail", "composition", "high contrast", "poster"],
+  public_domain: ["public domain images", "open access images", "CC0", "creative commons", "archive images"],
+  news_event: ["images", "photos", "official photos", "news images", "press images"],
+  design_moodboard: ["moodboard", "images", "style reference", "lighting reference", "composition"],
+  academic_source_pack: ["figures", "charts", "source images", "official visuals", "documents"]
+};
+
 const depthCounts: Record<ResearchRequest["depth"], number> = {
-  quick: 4,
-  standard: 6,
-  deep: 9
+  quick: 6,
+  standard: 10,
+  deep: 16
 };
 
 function uniqueQueries(queries: string[]): string[] {
   const seen = new Set<string>();
-  return queries.filter((query) => {
-    const key = query.toLowerCase().replace(/\s+/g, " ").trim();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  return queries
+    .map((query) => query.replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .filter((query) => {
+      const key = query.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
 }
 
 export function createSearchPlan(request: ResearchRequest): SearchPlan {
   const topic = request.topic.trim();
   const expansions = modeQueryExpansions[request.mode] ?? [];
-  const baseQueries = uniqueQueries([
-    topic,
-    ...expansions.map((term) => `${topic} ${term}`)
-  ]);
-
+  const visualExpansions = visualQueryExpansions[request.mode] ?? [];
   const sourceTargets: SearchPlan["source_targets"] = (() => {
     if (request.mode === "public_domain") return ["commons", "archive", "image", "web"];
     if (request.mode === "news_event") return ["news", "image", "web", "archive"];
-    if (request.mode === "academic_source_pack") return ["web", "archive", "commons"];
+    if (request.mode === "academic_source_pack") return ["web", "archive", "commons", "image"];
     if (request.mode === "historical_topic") return ["commons", "archive", "image", "web"];
     if (request.mode === "thumbnail_inspiration" || request.mode === "design_moodboard") return ["image", "web", "commons"];
     return ["image", "web", "commons", "archive"];
   })();
+
+  const baseQueries = uniqueQueries([
+    topic,
+    ...visualExpansions.map((term) => `${topic} ${term}`),
+    ...expansions.map((term) => `${topic} ${term}`),
+    ...(sourceTargets.includes("commons") ? [`${topic} Wikimedia Commons`, `${topic} Creative Commons`] : []),
+    ...(sourceTargets.includes("archive") ? [`${topic} archive images`, `${topic} museum archive`] : []),
+    ...(sourceTargets.includes("web") ? [`${topic} source reference`, `${topic} visual source`] : [])
+  ]);
 
   return {
     original_topic: topic,
