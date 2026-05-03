@@ -4,6 +4,7 @@ import { createSearchPlan } from "@/lib/query-planner";
 import { normalizeResults } from "@/lib/result-normalizer";
 import { searchMockProvider } from "@/lib/providers/mock";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
+import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
@@ -85,6 +86,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     provider_toggles: providerToggles,
     mock_only: true,
     retrieval_evidence: buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth }),
+    quality_calibration: buildRetrievalQualityCalibration({ mode: searchPlan.mode, depth: searchPlan.depth, results: normalized.results, providerHealth }),
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,
       staticDemo: true,

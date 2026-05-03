@@ -43,6 +43,15 @@ export type RetrievalEvidenceVerdict =
   | "needs_better_ranking"
   | "needs_review";
 
+export type RetrievalQualityVerdict =
+  | "passes_creator_gate"
+  | "needs_more_relevance"
+  | "needs_more_visuals"
+  | "needs_stronger_sources"
+  | "needs_license_clarity"
+  | "needs_real_provider_evidence"
+  | "needs_manual_review";
+
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
@@ -163,6 +172,37 @@ export interface RetrievalEvidence {
   warnings: string[];
 }
 
+export interface RetrievalQualityCalibrationExpectations {
+  relevant_target: number;
+  strong_candidate_target: number;
+  image_share_target: number;
+  source_diversity_target: number;
+  real_provider_share_target: number;
+}
+
+export interface RetrievalQualityCalibration {
+  target_relevant_candidates: number;
+  relevant_candidates: number;
+  high_visual_candidates: number;
+  strong_source_candidates: number;
+  clear_license_candidates: number;
+  low_risk_candidates: number;
+  strong_candidates: number;
+  top10_average_overall: number;
+  top10_average_relevance: number;
+  top10_average_visual_quality: number;
+  top10_source_diversity: number;
+  real_provider_result_count: number;
+  mock_result_count: number;
+  real_provider_share: number;
+  image_share: number;
+  calibration_score: number;
+  verdict: RetrievalQualityVerdict;
+  warnings: string[];
+  top_candidate_ids: string[];
+  expectations: RetrievalQualityCalibrationExpectations;
+}
+
 export interface SearchDiagnostics {
   generated_at: string;
   total_raw_results: number;
@@ -173,6 +213,7 @@ export interface SearchDiagnostics {
   provider_toggles: ProviderToggleMap;
   mock_only: boolean;
   retrieval_evidence: RetrievalEvidence;
+  quality_calibration?: RetrievalQualityCalibration;
   runtime_report?: ProviderRuntimeReport;
 }
 

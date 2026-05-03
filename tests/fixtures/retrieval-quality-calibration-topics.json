@@ -1,0 +1,26 @@
+[
+  {
+    "id": "historical-documentary-deep",
+    "topic": "Hannibal crossing the Alps",
+    "mode": "youtube_documentary",
+    "depth": "deep"
+  },
+  {
+    "id": "public-domain-standard",
+    "topic": "Carthage ruins public domain archive images",
+    "mode": "public_domain",
+    "depth": "standard"
+  },
+  {
+    "id": "thumbnail-inspiration-standard",
+    "topic": "ancient empire documentary thumbnail inspiration",
+    "mode": "thumbnail_inspiration",
+    "depth": "standard"
+  },
+  {
+    "id": "academic-source-pack-deep",
+    "topic": "Mediterranean trade routes ancient history maps",
+    "mode": "academic_source_pack",
+    "depth": "deep"
+  }
+]
