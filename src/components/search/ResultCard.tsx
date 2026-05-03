@@ -2,6 +2,7 @@
 
 import type { ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
+import { buildQualityReasons, classifySourceDomain, qualityBucket, sourceGroupLabel } from "@/lib/result-quality";
 
 interface ResultCardProps {
   result: ResearchResult;
@@ -18,13 +19,24 @@ const riskClass: Record<ResearchResult["risk_level"], string> = {
   avoid: "border-zinc-400/40 bg-zinc-400/10 text-zinc-100"
 };
 
+const bucketLabel = {
+  strong: "Strong candidate",
+  usable: "Usable candidate",
+  review: "Needs review",
+  risky: "Risky / low signal"
+};
+
 export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardProps) {
+  const sourceGroup = result.source_group ?? classifySourceDomain(result.source_domain);
+  const reasons = result.quality_reasons?.length ? result.quality_reasons : buildQualityReasons({ ...result, source_group: sourceGroup });
+  const bucket = qualityBucket(result);
+
   return (
     <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-soft transition hover:border-lime-300/50">
       <button
         type="button"
         onClick={() => onInspect(result)}
-        className="block h-44 w-full bg-slate-950 text-left"
+        className="block h-44 w-full bg-slate-950 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-300/40"
         aria-label={`Inspect ${result.title}`}
       >
         {result.thumbnail_url ? (
@@ -44,8 +56,12 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
 
       <div className="space-y-3 p-4">
         <div>
+          <div className="mb-2 flex flex-wrap gap-2 text-[11px]">
+            <span className="rounded-full border border-lime-300/20 bg-lime-300/10 px-2 py-1 text-lime-100">{bucketLabel[bucket]}</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-200">{sourceGroupLabel(sourceGroup)}</span>
+          </div>
           <h3 className="line-clamp-2 text-sm font-semibold text-white">{result.title}</h3>
-          <p className="mt-1 text-xs text-slate-400">{result.source_domain} · {result.provider}</p>
+          <p className="mt-1 text-xs text-slate-400">{result.source_domain} · {result.provider} · {result.type}</p>
         </div>
 
         <div className="flex flex-wrap gap-2 text-[11px]">
@@ -61,7 +77,12 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
           <Score label="Overall" value={result.scores.overall} />
           <Score label="Rel" value={result.scores.relevance} />
           <Score label="Visual" value={result.scores.visual_quality} />
-          <Score label="Use" value={result.scores.production_usefulness} />
+          <Score label="Source" value={result.scores.source_credibility} />
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Why this result</p>
+          <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">{reasons[0]}</p>
         </div>
 
         <div className="flex gap-2">

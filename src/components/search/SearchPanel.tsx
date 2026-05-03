@@ -81,15 +81,28 @@ export function SearchPanel() {
 
   const filteredResults = useMemo(() => {
     const sourceNeedle = filters.source.trim().toLowerCase();
+    const scoreForSort = (result: ResearchResult): number => {
+      if (filters.sortBy === "newest") return new Date(result.collected_at).getTime() || 0;
+      return result.scores[filters.sortBy] ?? result.scores.overall;
+    };
+
     return results
       .filter((result) => filters.type === "all" || result.type === filters.type)
       .filter((result) => filters.provider === "all" || result.provider === filters.provider)
       .filter((result) => filters.risk === "all" || result.risk_level === filters.risk)
       .filter((result) => filters.license === "all" || result.license_detected === filters.license)
-      .filter((result) => !sourceNeedle || result.source_domain.toLowerCase().includes(sourceNeedle) || result.source_url.toLowerCase().includes(sourceNeedle))
+      .filter((result) => !sourceNeedle || result.source_domain.toLowerCase().includes(sourceNeedle) || result.source_url.toLowerCase().includes(sourceNeedle) || (result.source_group ?? "").toLowerCase().includes(sourceNeedle))
       .filter((result) => !filters.savedOnly || savedIds.has(result.id))
       .filter((result) => result.scores.overall >= filters.minOverall)
-      .sort((a, b) => b.scores.overall - a.scores.overall);
+      .sort((a, b) => {
+        if (filters.savedFirst) {
+          const savedDelta = Number(savedIds.has(b.id)) - Number(savedIds.has(a.id));
+          if (savedDelta !== 0) return savedDelta;
+        }
+        const scoreDelta = scoreForSort(b) - scoreForSort(a);
+        if (scoreDelta !== 0) return scoreDelta;
+        return b.scores.overall - a.scores.overall;
+      });
   }, [filters, results, savedIds]);
 
   const resetVisibleSearchState = () => {
@@ -240,7 +253,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-alpha8.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-alpha10.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -273,12 +286,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.8</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.1.0-alpha.10</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware workspace with hardened provider diagnostics, persistent result snapshots, conflict-safe library import/export, an export preview drawer, and an accessibility-aware UI.
+              A multi-project, source-aware workspace with improved relevance scoring, source grouping, deduplication, saved-first sorting, and export-ready source packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -443,6 +456,7 @@ function SearchPlanPanel({ plan, diagnostics }: { plan: SearchPlan; diagnostics:
           {diagnostics && (
             <p className="mt-2 text-xs text-slate-400">
               {diagnostics.total_raw_results} raw · {diagnostics.total_deduped_results} deduped · {diagnostics.duplicate_count} duplicates removed
+              {diagnostics.mock_only ? " · mock-only safe mode" : ""}
             </p>
           )}
         </div>

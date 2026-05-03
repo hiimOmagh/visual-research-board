@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import type { LicenseDetected, ProviderName, ResultType, RiskLevel } from "@/types/research";
+import type { LicenseDetected, ProviderName, ResultSortMode, ResultType, RiskLevel } from "@/types/research";
 import { LICENSE_TYPES, PROVIDERS, RESULT_TYPES, RISK_LEVELS } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 
@@ -12,7 +12,9 @@ export interface ResultFilterState {
   license: "all" | LicenseDetected;
   source: string;
   savedOnly: boolean;
+  savedFirst: boolean;
   minOverall: number;
+  sortBy: ResultSortMode;
 }
 
 interface ResultFiltersProps {
@@ -29,8 +31,20 @@ export const defaultResultFilters: ResultFilterState = {
   license: "all",
   source: "",
   savedOnly: false,
-  minOverall: 0
+  savedFirst: true,
+  minOverall: 0,
+  sortBy: "overall"
 };
+
+const SORT_OPTIONS: Array<{ value: ResultSortMode; label: string }> = [
+  { value: "overall", label: "Overall quality" },
+  { value: "production_usefulness", label: "Production usefulness" },
+  { value: "relevance", label: "Topic relevance" },
+  { value: "visual_quality", label: "Visual quality" },
+  { value: "source_credibility", label: "Source credibility" },
+  { value: "license_clarity", label: "License clarity" },
+  { value: "newest", label: "Newest collected" }
+];
 
 export function ResultFilters({ filters, onChange, totalCount, visibleCount }: ResultFiltersProps) {
   const update = <K extends keyof ResultFilterState>(key: K, value: ResultFilterState[K]) => {
@@ -53,7 +67,7 @@ export function ResultFilters({ filters, onChange, totalCount, visibleCount }: R
         </button>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-7">
         <FilterSelect label="Type" value={filters.type} onChange={(value) => update("type", value as ResultFilterState["type"])}>
           <option value="all">All types</option>
           {RESULT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
@@ -84,30 +98,38 @@ export function ResultFilters({ filters, onChange, totalCount, visibleCount }: R
           />
         </label>
 
-        <label className="block">
-          <span className="mb-2 block text-xs font-semibold text-slate-300">Min score</span>
-          <select
-            value={filters.minOverall}
-            onChange={(event) => update("minOverall", Number(event.target.value))}
-            className="w-full rounded-2xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white outline-none ring-lime-300/40 focus:ring-4"
-          >
-            <option value={0}>Any score</option>
-            <option value={0.6}>60%+</option>
-            <option value={0.7}>70%+</option>
-            <option value={0.8}>80%+</option>
-          </select>
-        </label>
+        <FilterSelect label="Min score" value={String(filters.minOverall)} onChange={(value) => update("minOverall", Number(value))}>
+          <option value={0}>Any score</option>
+          <option value={0.6}>60%+</option>
+          <option value={0.7}>70%+</option>
+          <option value={0.8}>80%+</option>
+        </FilterSelect>
+
+        <FilterSelect label="Sort by" value={filters.sortBy} onChange={(value) => update("sortBy", value as ResultSortMode)}>
+          {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+        </FilterSelect>
       </div>
 
-      <label className="mt-4 flex items-center gap-2 text-sm text-slate-300">
-        <input
-          type="checkbox"
-          checked={filters.savedOnly}
-          onChange={(event) => update("savedOnly", event.target.checked)}
-          className="h-4 w-4 accent-lime-300"
-        />
-        Show saved items only
-      </label>
+      <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-300">
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={filters.savedOnly}
+            onChange={(event) => update("savedOnly", event.target.checked)}
+            className="h-4 w-4 accent-lime-300"
+          />
+          Show saved items only
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={filters.savedFirst}
+            onChange={(event) => update("savedFirst", event.target.checked)}
+            className="h-4 w-4 accent-lime-300"
+          />
+          Saved items first
+        </label>
+      </div>
     </section>
   );
 }

@@ -6,6 +6,7 @@ import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research"
 import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
+import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { INBOX_SECTION_ID } from "@/lib/project";
 import { EmptyState } from "@/components/search/EmptyState";
 import { ExportPreviewDrawer, type ExportPreviewFormat } from "@/components/search/ExportPreviewDrawer";
@@ -301,6 +302,7 @@ function SavedItem({
         <span className="rounded-full bg-white/5 px-2 py-1">{licenseLabel(item.license_detected)}</span>
         <span className="rounded-full bg-white/5 px-2 py-1">{riskLabel(item.risk_level)}</span>
         <span className="rounded-full bg-white/5 px-2 py-1">{item.provider}</span>
+        <span className="rounded-full bg-white/5 px-2 py-1">{sourceGroupLabel(item.source_group ?? classifySourceDomain(item.source_domain))}</span>
       </div>
 
       <label className="mt-3 block">
