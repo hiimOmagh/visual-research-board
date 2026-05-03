@@ -1,0 +1,238 @@
+{
+  "schema_version": "0.1.0-alpha.10",
+  "active_project_id": "project_fixture_alpha10_main",
+  "updated_at": "2026-05-02T00:00:00.000Z",
+  "projects": [
+    {
+      "schema_version": "0.1.0-alpha.10",
+      "id": "project_fixture_alpha10_main",
+      "name": "Fixture research project",
+      "created_at": "2026-05-02T00:00:00.000Z",
+      "updated_at": "2026-05-02T00:00:00.000Z",
+      "board_sections": [
+        {
+          "id": "section_inbox",
+          "name": "Inbox",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        },
+        {
+          "id": "section_thumbnail",
+          "name": "Thumbnail / production ideas",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        }
+      ],
+      "saved_results": [
+        {
+          "id": "manual_example",
+          "type": "web",
+          "title": "Manual source example",
+          "description": "Fixture metadata description.",
+          "source_url": "https://example.com/source",
+          "source_domain": "example.com",
+          "provider": "manual",
+          "license_detected": "unknown",
+          "license_confidence": 0.2,
+          "risk_level": "reference_only",
+          "tags": [
+            "manual-import",
+            "source-check-needed"
+          ],
+          "scores": {
+            "relevance": 0.55,
+            "visual_quality": 0.2,
+            "source_credibility": 0.45,
+            "license_clarity": 0.2,
+            "uniqueness": 0.7,
+            "production_usefulness": 0.5,
+            "overall": 0.43
+          },
+          "notes": "Fixture note",
+          "section_id": "section_inbox",
+          "collected_at": "2026-05-02T00:00:00.000Z",
+          "source_group": "general_web",
+          "duplicate_group_key": "https://example.com/source",
+          "quality_reasons": [
+            "Useful as reference material only unless rights and usage terms are verified."
+          ]
+        }
+      ],
+      "search_history": [
+        {
+          "id": "search_fixture",
+          "snapshot_id": "snapshot_fixture_001",
+          "topic": "Hannibal crossing the Alps",
+          "mode": "youtube_documentary",
+          "depth": "standard",
+          "generated_at": "2026-05-02T00:00:00.000Z",
+          "query_count": 6,
+          "result_count": 1,
+          "duplicate_count": 2,
+          "provider_toggles": {
+            "mock": true,
+            "wikimedia": true,
+            "brave": false,
+            "tavily": false
+          },
+          "provider_health": [
+            {
+              "provider": "mock",
+              "status": "active",
+              "enabled": true,
+              "result_count": 1,
+              "duration_ms": 1,
+              "queries_used": 2,
+              "query_sample": [
+                "Hannibal crossing the Alps documentary visuals",
+                "Hannibal crossing the Alps map"
+              ],
+              "result_type_counts": {
+                "image": 1
+              },
+              "endpoint_sample": [
+                "local/mock"
+              ]
+            },
+            {
+              "provider": "brave",
+              "status": "missing_key",
+              "enabled": false,
+              "result_count": 0,
+              "duration_ms": 0,
+              "queries_used": 0,
+              "query_sample": [
+                "Hannibal crossing the Alps documentary visuals"
+              ],
+              "result_type_counts": {},
+              "endpoint_sample": [
+                "api.search.brave.com/res/v1/images/search",
+                "api.search.brave.com/res/v1/web/search"
+              ]
+            }
+          ]
+        }
+      ],
+      "result_snapshots": [
+        {
+          "id": "snapshot_fixture_001",
+          "created_at": "2026-05-02T00:00:00.000Z",
+          "label": "Hannibal crossing the Alps \u00b7 youtube_documentary \u00b7 standard",
+          "request": {
+            "topic": "Hannibal crossing the Alps",
+            "mode": "youtube_documentary",
+            "depth": "standard",
+            "provider_toggles": {
+              "mock": true,
+              "wikimedia": true,
+              "brave": false,
+              "tavily": false
+            }
+          },
+          "search_plan": {
+            "original_topic": "Hannibal crossing the Alps",
+            "mode": "youtube_documentary",
+            "depth": "standard",
+            "queries": [
+              "Hannibal crossing the Alps documentary visuals",
+              "Hannibal crossing the Alps map"
+            ],
+            "source_targets": [
+              "web",
+              "image",
+              "commons"
+            ]
+          },
+          "diagnostics": {
+            "generated_at": "2026-05-02T00:00:00.000Z",
+            "total_raw_results": 3,
+            "total_normalized_results": 3,
+            "total_deduped_results": 1,
+            "duplicate_count": 2,
+            "provider_toggles": {
+              "mock": true,
+              "wikimedia": true,
+              "brave": false,
+              "tavily": false
+            },
+            "provider_health": [
+              {
+                "provider": "mock",
+                "status": "active",
+                "enabled": true,
+                "result_count": 1,
+                "duration_ms": 1,
+                "queries_used": 2,
+                "query_sample": [
+                  "Hannibal crossing the Alps documentary visuals",
+                  "Hannibal crossing the Alps map"
+                ],
+                "result_type_counts": {
+                  "image": 1
+                },
+                "endpoint_sample": [
+                  "local/mock"
+                ]
+              }
+            ],
+            "mock_only": false
+          },
+          "results": [
+            {
+              "id": "fixture_result_001",
+              "type": "image",
+              "title": "Hannibal crossing the Alps map",
+              "description": "Fixture snapshot result.",
+              "thumbnail_url": "https://example.com/thumb.jpg",
+              "image_url": "https://example.com/image.jpg",
+              "source_url": "https://example.com/source",
+              "source_domain": "example.com",
+              "provider": "mock",
+              "width": 1600,
+              "height": 900,
+              "license_detected": "unknown",
+              "license_confidence": 0.2,
+              "risk_level": "reference_only",
+              "tags": [
+                "snapshot",
+                "fixture"
+              ],
+              "scores": {
+                "relevance": 0.8,
+                "visual_quality": 0.8,
+                "source_credibility": 0.5,
+                "license_clarity": 0.2,
+                "uniqueness": 0.7,
+                "production_usefulness": 0.8,
+                "overall": 0.62
+              },
+              "section_id": "section_thumbnail",
+              "collected_at": "2026-05-02T00:00:00.000Z",
+              "source_group": "general_web",
+              "duplicate_group_key": "https://example.com/source",
+              "quality_reasons": [
+                "Strong topic/mode match from title, tags, or source context.",
+                "Useful as reference material only unless rights and usage terms are verified."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "schema_version": "0.1.0-alpha.10",
+      "id": "project_fixture_alpha10_secondary",
+      "name": "Secondary fixture project",
+      "created_at": "2026-05-02T00:00:00.000Z",
+      "updated_at": "2026-05-02T00:00:00.000Z",
+      "board_sections": [
+        {
+          "id": "section_inbox",
+          "name": "Inbox",
+          "created_at": "2026-05-02T00:00:00.000Z"
+        }
+      ],
+      "saved_results": [],
+      "search_history": [],
+      "result_snapshots": []
+    }
+  ]
+}
