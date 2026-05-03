@@ -162,7 +162,7 @@ export interface SearchHistoryEntry {
 }
 
 export interface ResearchProject {
-  schema_version: "0.1.0-alpha.10";
+  schema_version: "0.1.0";
   id: string;
   name: string;
   created_at: string;
@@ -174,7 +174,7 @@ export interface ResearchProject {
 }
 
 export interface ProjectLibrary {
-  schema_version: "0.1.0-alpha.10";
+  schema_version: "0.1.0";
   active_project_id: string;
   projects: ResearchProject[];
   updated_at: string;
