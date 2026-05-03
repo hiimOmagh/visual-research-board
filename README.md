@@ -1,20 +1,23 @@
 # Visual Research Board
 
-`v0.1.0-alpha.9`
+`v0.1.0-alpha.10`
 
 A creator-focused, source-aware visual research board for collecting image/web references, preserving source links, organizing local projects, restoring result snapshots, previewing exports, and exporting production-ready research packs.
 
-## Alpha.9 additions
+## Alpha.10 additions
 
-Provider-validation patch. No login, database, browser automation, full crawling, AI image generation, or team workspace.
+Result-quality patch. No login, database, browser automation, full crawling, AI image generation, or team workspace.
 
-- Expanded `.env.example` with `VISUAL_RESEARCH_BOARD_MOCK_ONLY`, `BRAVE_SEARCH_API_KEY`, and `TAVILY_API_KEY`.
-- Added server-side mock-only safe mode.
-- Hardened provider fetch diagnostics so HTTP/network failures surface as `error` and aborts surface as `timeout`.
-- Improved missing-key diagnostics for Brave and Tavily.
-- Added endpoint samples and typed result counts to provider health.
-- Improved provider toggle UI with explicit API-key requirements and a one-click mock-only safe-mode toggle.
-- Added `docs/provider-setup.md`.
+- Improved mode-aware query expansion for creator workflows.
+- Added source-group classification for Commons/open-access, institutional archives, official/academic sources, news/media, commercial stock, search/social discovery, general web, and unknown sources.
+- Strengthened scoring with topic relevance, visual-resolution/aspect-ratio heuristics, source credibility tiers, license clarity, production usefulness, and mode-specific weights.
+- Strengthened deduplication with URL canonicalization, image-asset keys, normalized title keys, and quality-first representative selection.
+- Added “Why this result” explanations to result cards, result detail, and exports.
+- Added source-grouped result display.
+- Added sort controls for overall quality, production usefulness, relevance, visual quality, source credibility, license clarity, and newest collected.
+- Added saved-first result sorting.
+- Added quality metadata hydration for migrated alpha.9 and older saved results.
+- Added source-group and quality-reason fields to exports and fixture checks.
 
 ## Install and run
 
@@ -48,7 +51,7 @@ npm run test:ci:no-browser
 
 ## Storage model
 
-Alpha.9 stores local projects under `visual-research-board:project-library:v0.1.0-alpha.9` and migrates alpha.8, alpha.6, alpha.5, alpha.4, and alpha.1-alpha.3 saved-result keys.
+Alpha.10 stores local projects under `visual-research-board:project-library:v0.1.0-alpha.10` and migrates alpha.9, alpha.8, alpha.6, alpha.5, alpha.4, and alpha.1-alpha.3 saved-result keys.
 
 ## Provider behavior
 
@@ -58,15 +61,17 @@ Provider health reports `active`, `no_results`, `missing_key`, `skipped`, `error
 
 The app uses cautious labels and does **not** claim commercial-use safety. Always verify source pages and license terms before publication.
 
-## Acceptance criteria for alpha.9
+## Acceptance criteria for alpha.10
 
 - App runs without API keys using mock provider data.
-- Wikimedia can run without an API key when the mode targets Commons.
-- Brave reports `missing_key` unless `BRAVE_SEARCH_API_KEY` is present.
-- Tavily reports `missing_key` unless `TAVILY_API_KEY` is present.
-- `VISUAL_RESEARCH_BOARD_MOCK_ONLY=true` forces mock-only execution server-side.
 - Existing project library import/export, snapshots, manual import, notes, sections, and export preview behavior remain intact.
+- Results are grouped by source class rather than displayed as a flat grid only.
+- Each normalized result can carry `source_group`, `duplicate_group_key`, and `quality_reasons`.
+- Sorting supports saved-first and quality-dimension selection.
+- Deduplication removes repeated source/image/title candidates while preferring the stronger scored representative.
+- Export outputs include source-group and why-this-result context.
+- QA fixture suite passes.
 
 ## Next logical build
 
-`v0.1.0-alpha.10 — result quality pass.`
+`v0.1.0-beta.1 — MVP stabilization and scope freeze.`
