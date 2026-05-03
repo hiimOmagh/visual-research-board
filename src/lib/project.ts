@@ -1,6 +1,7 @@
 import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
+import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 
 export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
 export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
@@ -112,6 +113,8 @@ function normalizeProviderHealth(health: ProviderHealth[]): ProviderHealth[] {
 
 function normalizeSnapshot(snapshot: Partial<SearchResultSnapshot>): SearchResultSnapshot | null {
   if (!snapshot || !snapshot.request || !snapshot.search_plan || !snapshot.diagnostics || !Array.isArray(snapshot.results)) return null;
+  const results = snapshot.results.map(ensureResultQuality);
+  const provider_health = normalizeProviderHealth(snapshot.diagnostics.provider_health ?? []);
   return {
     id: snapshot.id || createId("snapshot"),
     request: snapshot.request,
@@ -120,9 +123,10 @@ function normalizeSnapshot(snapshot: Partial<SearchResultSnapshot>): SearchResul
       ...snapshot.diagnostics,
       provider_toggles: snapshot.diagnostics.provider_toggles ?? snapshot.request.provider_toggles ?? { mock: true, wikimedia: true, brave: true, tavily: true },
       mock_only: snapshot.diagnostics.mock_only ?? false,
-      provider_health: normalizeProviderHealth(snapshot.diagnostics.provider_health ?? [])
+      provider_health,
+      retrieval_evidence: snapshot.diagnostics.retrieval_evidence ?? buildRetrievalEvidence({ plan: snapshot.search_plan, results, providerHealth: provider_health })
     },
-    results: snapshot.results.map(ensureResultQuality),
+    results,
     created_at: snapshot.created_at || snapshot.diagnostics.generated_at || nowIso(),
     label: snapshot.label || snapshot.request.topic
   };

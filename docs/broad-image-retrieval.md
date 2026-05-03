@@ -1,4 +1,4 @@
-# Broad Image Retrieval — Visual Research Board v0.2.0
+# Broad Image Retrieval — Visual Research Board v0.2.1
 
 ## What changed
 

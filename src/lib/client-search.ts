@@ -3,6 +3,7 @@ import { DEFAULT_PROVIDER_TOGGLES } from "@/types/research";
 import { createSearchPlan } from "@/lib/query-planner";
 import { normalizeResults } from "@/lib/result-normalizer";
 import { searchMockProvider } from "@/lib/providers/mock";
+import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -64,20 +65,23 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     message: "Client-side mock search is active. This mode works on static hosts such as GitHub Pages but does not call real provider APIs."
   };
 
+  const providerHealth = [
+    mockHealth,
+    skippedHealth("wikimedia", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Wikimedia provider calls."),
+    skippedHealth("brave", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Brave provider calls."),
+    skippedHealth("tavily", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Tavily provider calls.")
+  ];
+
   const diagnostics: SearchDiagnostics = {
     generated_at: new Date().toISOString(),
     total_raw_results: normalized.stats.raw_count,
     total_normalized_results: normalized.stats.normalized_count,
     total_deduped_results: normalized.stats.deduped_count,
     duplicate_count: normalized.stats.duplicate_count,
-    provider_health: [
-      mockHealth,
-      skippedHealth("wikimedia", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Wikimedia provider calls."),
-      skippedHealth("brave", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Brave provider calls."),
-      skippedHealth("tavily", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Tavily provider calls.")
-    ],
+    provider_health: providerHealth,
     provider_toggles: providerToggles,
-    mock_only: true
+    mock_only: true,
+    retrieval_evidence: buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth })
   };
 
   return {

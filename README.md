@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.0 stable`
+`v0.2.1 stable`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -169,4 +169,4 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.0` is the finished broad-retrieval local MVP. Future work should start as a post-MVP roadmap, not as unfinished core work.
+`v0.2.1` is the finished broad-retrieval local MVP. Future work should start as a post-MVP roadmap, not as unfinished core work.

@@ -1,4 +1,4 @@
-# Validation Report — Visual Research Board v0.2.0
+# Validation Report — Visual Research Board v0.2.1
 
 Executed in the packaging workspace.
 
@@ -13,12 +13,12 @@ npm run lint
 The executable QA suite passed:
 
 ```text
-QA checks passed for v0.2.0.
+QA checks passed for v0.2.1.
 Normalization checks passed for v0.1.0.
 E2E fixture checks passed for v0.1.0.
 Provider smoke fixture checks passed for v0.1.0.
 Library conflict checks passed for v0.1.0.
-Broad retrieval checks passed for v0.2.0.
+Broad retrieval checks passed for v0.2.1.
 ```
 
 ## Build status
@@ -43,4 +43,4 @@ npm run build:static:repo
 
 ## Final status
 
-`v0.2.0` is a broad-retrieval local MVP package. The validation gates that completed successfully were QA, TypeScript, and lint. Runtime/static production build should be verified in the deployment environment before public release.
+`v0.2.1` is a broad-retrieval local MVP package. The validation gates that completed successfully were QA, TypeScript, and lint. Runtime/static production build should be verified in the deployment environment before public release.

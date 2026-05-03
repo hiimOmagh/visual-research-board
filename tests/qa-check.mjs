@@ -51,7 +51,7 @@ const requiredFiles = [
 requiredFiles.forEach((file) => assert(existsSync(join(root, file)), `Missing required file: ${file}`));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.0", "package.json version must be 0.2.0");
+assert(pkg.version === "0.2.1", "package.json version must be 0.2.1");
 assert(Boolean(pkg.scripts?.qa), "package.json must define npm run qa");
 assert(Boolean(pkg.scripts?.["normalization:test"]), "package.json must define npm run normalization:test");
 assert(Boolean(pkg.scripts?.["e2e:fixtures"]), "package.json must define npm run e2e:fixtures");
@@ -60,6 +60,7 @@ assert(Boolean(pkg.scripts?.["provider:smoke"]), "package.json must define npm r
 assert(Boolean(pkg.scripts?.["build:static"]), "package.json must define npm run build:static");
 assert(Boolean(pkg.scripts?.["build:static:pages"]), "package.json must define npm run build:static:pages");
 assert(Boolean(pkg.scripts?.["broad:retrieval:test"]), "package.json must define npm run broad:retrieval:test");
+assert(Boolean(pkg.scripts?.["retrieval:evidence:test"]), "package.json must define npm run retrieval:evidence:test");
 assert(Boolean(pkg.scripts?.["validate:deploy"]), "package.json must define npm run validate:deploy");
 assert(Boolean(pkg.scripts?.validate), "package.json must define npm run validate");
 
@@ -75,6 +76,8 @@ assert(types.includes("SourceGroup"), "types must include SourceGroup");
 assert(types.includes("ResultSortMode"), "types must include ResultSortMode");
 assert(types.includes("quality_reasons"), "ResearchResult must include quality_reasons");
 assert(types.includes("source_group"), "ResearchResult must include source_group");
+assert(types.includes("RetrievalEvidence"), "types must include RetrievalEvidence");
+assert(types.includes("retrieval_evidence"), "SearchDiagnostics must include retrieval_evidence");
 assert(types.includes('schema_version: "0.1.0"'), "Project schema must be stable");
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
@@ -84,7 +87,7 @@ assert(searchPanel.includes("createProjectLibraryExport"), "SearchPanel must exp
 assert(searchPanel.includes("importLibraryFile"), "SearchPanel must import project libraries");
 assert(searchPanel.includes("mergeLibraries"), "SearchPanel must use conflict-safe library merge import");
 assert(searchPanel.includes("provider_toggles"), "SearchPanel must send provider_toggles to API");
-assert(searchPanel.includes("v0.2.0"), "SearchPanel header must show v0.2.0");
+assert(searchPanel.includes("v0.2.1"), "SearchPanel header must show v0.2.1");
 assert(searchPanel.includes("importSummary"), "SearchPanel must surface import summary state");
 assert(searchPanel.includes("aria-live"), "SearchPanel must announce import status to assistive tech");
 assert(searchPanel.includes("filters.savedFirst"), "SearchPanel must support saved-first result sorting");
@@ -121,6 +124,9 @@ assert(resultFilters.includes("Saved items first"), "ResultFilters must expose s
 const providerHealthPanel = read("src/components/search/ProviderHealthPanel.tsx");
 assert(providerHealthPanel.includes("no_results"), "ProviderHealthPanel must render no_results status");
 assert(providerHealthPanel.includes("query_sample"), "ProviderHealthPanel must show query samples");
+const retrievalEvidencePanel = read("src/components/search/RetrievalEvidencePanel.tsx");
+assert(retrievalEvidencePanel.includes("Broad retrieval gate"), "RetrievalEvidencePanel must expose the broad retrieval gate");
+assert(retrievalEvidencePanel.includes("source_group_counts"), "RetrievalEvidencePanel must display source group evidence");
 
 const emptyState = read("src/components/search/EmptyState.tsx");
 assert(emptyState.includes("role=\"region\""), "EmptyState must render as a region");
@@ -144,6 +150,7 @@ const searchRoute = read("src/app/api/search/route.ts");
 assert(searchRoute.includes("no_results"), "search route must return no_results status for empty provider responses");
 assert(searchRoute.includes("provider_toggles: runtimeToggles"), "search route diagnostics must persist provider toggles");
 assert(searchRoute.includes("query_sample"), "search route provider health must include query samples");
+assert(searchRoute.includes("buildRetrievalEvidence"), "search route must build retrieval evidence diagnostics");
 
 const localStorage = read("src/lib/local-storage.ts");
 assert(localStorage.includes("project-library:v0.1.0"), "localStorage key must be stable project library key");
@@ -154,6 +161,9 @@ assert(localStorage.includes("project-library:v0.1.0-alpha.6"), "localStorage mu
 assert(localStorage.includes("project-library:v0.1.0-alpha.5"), "localStorage must migrate alpha.5 project library key");
 assert(localStorage.includes("active-project:v0.1.0-alpha.4"), "localStorage must migrate alpha.4 active project key");
 
+const retrievalEvidence = read("src/lib/retrieval-evidence.ts");
+assert(retrievalEvidence.includes("passes_mvp_gate"), "retrieval evidence must define the MVP gate verdict");
+assert(retrievalEvidence.includes("target_candidate_count"), "retrieval evidence must track target candidate counts");
 const project = read("src/lib/project.ts");
 assert(project.includes("createSearchSnapshot"), "project.ts must create search snapshots");
 assert(project.includes("MAX_RESULT_SNAPSHOTS"), "project.ts must cap result snapshots");
@@ -218,4 +228,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("QA checks passed for v0.2.0.");
+console.log("QA checks passed for v0.2.1.");

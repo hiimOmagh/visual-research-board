@@ -36,6 +36,13 @@ export type SourceGroup =
 export type ResultSortMode = "overall" | "relevance" | "visual_quality" | "source_credibility" | "license_clarity" | "production_usefulness" | "newest";
 export type SearchProviderName = Exclude<ProviderName, "manual">;
 
+export type RetrievalEvidenceVerdict =
+  | "passes_mvp_gate"
+  | "needs_more_results"
+  | "needs_more_source_diversity"
+  | "needs_better_ranking"
+  | "needs_review";
+
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderToggleMap = Record<SearchProviderName, boolean>;
@@ -112,6 +119,22 @@ export interface ProviderHealth {
   message?: string;
 }
 
+export interface RetrievalEvidence {
+  target_candidate_count: number;
+  total_candidates: number;
+  image_candidates: number;
+  web_context_candidates: number;
+  saveable_candidates: number;
+  active_provider_count: number;
+  source_group_diversity: number;
+  source_group_counts: Partial<Record<SourceGroup, number>>;
+  query_count: number;
+  depth_branch_count: number;
+  broad_retrieval_score: number;
+  verdict: RetrievalEvidenceVerdict;
+  warnings: string[];
+}
+
 export interface SearchDiagnostics {
   generated_at: string;
   total_raw_results: number;
@@ -121,6 +144,7 @@ export interface SearchDiagnostics {
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
   mock_only: boolean;
+  retrieval_evidence: RetrievalEvidence;
 }
 
 export interface ResearchResponse {
