@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.3 stable`
+`v0.2.4 stable`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -23,7 +23,7 @@ Implemented:
 - Deployment workflows for CI and GitHub Pages static demo.
 - Provider runtime readiness endpoint and runtime smoke script for deployed evidence capture.
 - Live retrieval quality calibration with creator-gate scoring and runtime artifact capture.
-
+- Retrieval weak-case auto-tuning with tuned query branches, provider/source/license weighting, and diversity-aware reranking.
 
 ## Broad image retrieval boundary
 
@@ -123,6 +123,7 @@ npm run provider:runtime:test
 npm run provider:runtime:check
 npm run retrieval:quality:test
 npm run retrieval:calibration:check
+npm run retrieval:autotune:check
 npm run library:conflict:test
 npm run typecheck
 npm run lint
@@ -153,7 +154,7 @@ Provider health reports:
 active | no_results | missing_key | skipped | error | timeout
 ```
 
-Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, mock-only state, retrieval evidence, live quality calibration, and provider runtime readiness.
+Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, mock-only state, retrieval evidence, live quality calibration, auto-tuning trace, and provider runtime readiness.
 
 ## Risk and license warning
 
@@ -175,8 +176,8 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 - `/api/provider-runtime` reports key readiness without exposing secrets.
 - `npm run provider:runtime:test` can capture `artifacts/provider-runtime-evidence.json` against localhost or a deployed runtime.
 - `npm run retrieval:quality:test` can capture `artifacts/retrieval-quality-calibration.json` against localhost or a deployed runtime.
-- Search diagnostics include `quality_calibration` with `passes_creator_gate` and failure-specific verdicts.
+- Search diagnostics include `quality_calibration` with `passes_creator_gate`, failure-specific verdicts, and `auto_tuning` with candidate/calibration deltas.
 
 ## Release status
 
-`v0.2.3` is the live retrieval quality calibration MVP. Future work should use real provider keys, inspect calibration artifacts, and tune retrieval/ranking behavior from observed weak cases.
+`v0.2.4` is the retrieval weak-case auto-tuning MVP. Future work should validate live provider keys, inspect calibration and auto-tuning traces, then tune source/ranking policies from real-world weak cases.

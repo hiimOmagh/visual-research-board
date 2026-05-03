@@ -1,4 +1,4 @@
-# Browser QA Checklist — v0.2.3
+# Browser QA Checklist — v0.2.4
 
 This checklist is the manual companion to the automated `npm run qa` /
 `npm run typecheck` / `npm run lint` pipeline. The automated checks confirm
@@ -74,7 +74,7 @@ browser-driven workflow. Run through this checklist before publishing the stable
 
 ## Project library import / export
 
-- [ ] **Export library** — Saves a JSON file `visual-research-board-library-v0.2.3.json`.
+- [ ] **Export library** — Saves a JSON file `visual-research-board-library-v0.2.4.json`.
       Open it in a text editor, confirm `schema_version` is `0.1.0`
       and the audit block lists all your projects.
 - [ ] **Re-import the same file** — Click "Import library", choose the file
@@ -153,4 +153,4 @@ browser-driven workflow. Run through this checklist before publishing the stable
 
 If every box above is ticked and `npm run test:ci:no-browser` passes,
 the build is ready to package as
-`visual-research-board-v0.2.3.zip`.
+`visual-research-board-v0.2.4.zip`.

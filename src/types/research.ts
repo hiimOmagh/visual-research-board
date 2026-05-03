@@ -52,6 +52,16 @@ export type RetrievalQualityVerdict =
   | "needs_real_provider_evidence"
   | "needs_manual_review";
 
+export type RetrievalAutoTuningAction =
+  | "expand_queries"
+  | "increase_visual_branches"
+  | "increase_commons_archive_bias"
+  | "increase_source_diversity"
+  | "increase_license_clarity_bias"
+  | "increase_relevance_precision"
+  | "increase_real_provider_bias"
+  | "apply_diversity_rerank";
+
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
@@ -203,6 +213,28 @@ export interface RetrievalQualityCalibration {
   expectations: RetrievalQualityCalibrationExpectations;
 }
 
+export interface RetrievalAutoTuningTrace {
+  enabled: boolean;
+  applied: boolean;
+  reason: string;
+  initial_evidence_verdict?: RetrievalEvidenceVerdict;
+  initial_quality_verdict?: RetrievalQualityVerdict;
+  final_evidence_verdict?: RetrievalEvidenceVerdict;
+  final_quality_verdict?: RetrievalQualityVerdict;
+  actions: RetrievalAutoTuningAction[];
+  added_queries: string[];
+  provider_weights: Record<SearchProviderName, number>;
+  rerank_profile: string;
+  initial_candidate_count: number;
+  final_candidate_count: number;
+  candidate_delta: number;
+  initial_calibration_score?: number;
+  final_calibration_score?: number;
+  calibration_delta?: number;
+  source_targets: SearchPlan["source_targets"];
+  warnings: string[];
+}
+
 export interface SearchDiagnostics {
   generated_at: string;
   total_raw_results: number;
@@ -214,6 +246,7 @@ export interface SearchDiagnostics {
   mock_only: boolean;
   retrieval_evidence: RetrievalEvidence;
   quality_calibration?: RetrievalQualityCalibration;
+  auto_tuning?: RetrievalAutoTuningTrace;
   runtime_report?: ProviderRuntimeReport;
 }
 

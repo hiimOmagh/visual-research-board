@@ -6,6 +6,7 @@ import { searchMockProvider } from "@/lib/providers/mock";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
+import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -75,18 +76,46 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
   ];
 
   const generatedAt = new Date().toISOString();
+  const initialEvidence = buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth });
+  const initialCalibration = buildRetrievalQualityCalibration({ mode: searchPlan.mode, depth: searchPlan.depth, results: normalized.results, providerHealth });
+  const { plan: tunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
+    plan: searchPlan,
+    evidence: initialEvidence,
+    calibration: initialCalibration,
+    providerHealth
+  });
+  const rankedResults = applyAutoTunedRanking(normalized.results, {
+    ...initialAutoTuneTrace,
+    applied: initialAutoTuneTrace.applied,
+    reason: initialAutoTuneTrace.applied
+      ? "Static demo mode cannot call live providers, so auto-tuning is limited to client-side reranking and weak-case query visibility."
+      : initialAutoTuneTrace.reason
+  });
+  const finalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
+  const finalCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
+  const autoTuning = completeAutoTuningTrace({
+    trace: {
+      ...initialAutoTuneTrace,
+      reason: initialAutoTuneTrace.applied
+        ? "Static demo mode cannot call live providers, so auto-tuning is limited to client-side reranking and weak-case query visibility."
+        : initialAutoTuneTrace.reason
+    },
+    finalEvidence,
+    finalCalibration
+  });
 
   const diagnostics: SearchDiagnostics = {
     generated_at: generatedAt,
     total_raw_results: normalized.stats.raw_count,
     total_normalized_results: normalized.stats.normalized_count,
-    total_deduped_results: normalized.stats.deduped_count,
+    total_deduped_results: rankedResults.length,
     duplicate_count: normalized.stats.duplicate_count,
     provider_health: providerHealth,
     provider_toggles: providerToggles,
     mock_only: true,
-    retrieval_evidence: buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth }),
-    quality_calibration: buildRetrievalQualityCalibration({ mode: searchPlan.mode, depth: searchPlan.depth, results: normalized.results, providerHealth }),
+    retrieval_evidence: finalEvidence,
+    quality_calibration: finalCalibration,
+    auto_tuning: autoTuning,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,
       staticDemo: true,
@@ -98,8 +127,8 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
 
   return {
     request: { ...request, provider_toggles: providerToggles },
-    search_plan: searchPlan,
-    results: normalized.results,
+    search_plan: tunedPlan,
+    results: rankedResults,
     diagnostics
   };
 }

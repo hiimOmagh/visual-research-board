@@ -51,7 +51,7 @@ const requiredFiles = [
 requiredFiles.forEach((file) => assert(existsSync(join(root, file)), `Missing required file: ${file}`));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.3", "package.json version must be 0.2.3");
+assert(pkg.version === "0.2.4", "package.json version must be 0.2.4");
 assert(Boolean(pkg.scripts?.qa), "package.json must define npm run qa");
 assert(Boolean(pkg.scripts?.["normalization:test"]), "package.json must define npm run normalization:test");
 assert(Boolean(pkg.scripts?.["e2e:fixtures"]), "package.json must define npm run e2e:fixtures");
@@ -87,7 +87,7 @@ assert(searchPanel.includes("createProjectLibraryExport"), "SearchPanel must exp
 assert(searchPanel.includes("importLibraryFile"), "SearchPanel must import project libraries");
 assert(searchPanel.includes("mergeLibraries"), "SearchPanel must use conflict-safe library merge import");
 assert(searchPanel.includes("provider_toggles"), "SearchPanel must send provider_toggles to API");
-assert(searchPanel.includes("v0.2.3"), "SearchPanel header must show v0.2.3");
+assert(searchPanel.includes("v0.2.4"), "SearchPanel header must show v0.2.4");
 assert(searchPanel.includes("importSummary"), "SearchPanel must surface import summary state");
 assert(searchPanel.includes("aria-live"), "SearchPanel must announce import status to assistive tech");
 assert(searchPanel.includes("filters.savedFirst"), "SearchPanel must support saved-first result sorting");
@@ -228,4 +228,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("QA checks passed for v0.2.3.");
+console.log("QA checks passed for v0.2.4.");

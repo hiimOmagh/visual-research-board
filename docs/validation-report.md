@@ -1,9 +1,9 @@
-# Validation Report — Visual Research Board v0.2.3
+# Validation Report — Visual Research Board v0.2.4
 
 ## Package
 
 ```text
-visual-research-board-v0.2.3.zip
+visual-research-board-v0.2.4.zip
 ```
 
 ## Validation run
@@ -20,6 +20,7 @@ broad retrieval checks
 retrieval evidence checks
 provider runtime pack checks
 retrieval calibration checks
+retrieval auto-tuning checks
 ```
 
 Expected command:
@@ -61,4 +62,4 @@ artifacts/retrieval-quality-calibration.json
 
 ## Status
 
-`v0.2.3` is a live retrieval quality calibration package. It does not claim literal all-web crawling. It measures whether broad multi-provider search results are sufficiently relevant, visual, source-diverse, and useful for creator curation.
+`v0.2.4` is a retrieval weak-case auto-tuning package. It does not claim literal all-web crawling. It measures whether broad multi-provider search results are sufficiently relevant, visual, source-diverse, and useful for creator curation, then applies a tuned second pass and diversity-aware rerank when weak cases are detected.
