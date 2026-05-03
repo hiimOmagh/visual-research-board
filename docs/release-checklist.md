@@ -1,4 +1,4 @@
-# Release Checklist — v0.2.1 stable
+# Release Checklist — v0.2.2 stable
 
 Run before publishing or deploying.
 

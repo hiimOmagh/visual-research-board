@@ -45,6 +45,15 @@ export type RetrievalEvidenceVerdict =
 
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
+export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
+
+export type ProviderRuntimeReadiness =
+  | "configured"
+  | "missing_key"
+  | "available_no_key_needed"
+  | "forced_mock_disabled"
+  | "static_demo_disabled";
+
 export type ProviderToggleMap = Record<SearchProviderName, boolean>;
 
 export type ExportTemplateId =
@@ -119,6 +128,25 @@ export interface ProviderHealth {
   message?: string;
 }
 
+export interface ProviderRuntimeEntry {
+  provider: SearchProviderName;
+  readiness: ProviderRuntimeReadiness;
+  requires_key: boolean;
+  required_env?: string;
+  endpoint_sample: string[];
+  message: string;
+}
+
+export interface ProviderRuntimeReport {
+  app_version: string;
+  generated_at: string;
+  runtime_host: ProviderRuntimeHost;
+  mock_only: boolean;
+  live_provider_ready_count: number;
+  providers: ProviderRuntimeEntry[];
+  recommended_next_steps: string[];
+}
+
 export interface RetrievalEvidence {
   target_candidate_count: number;
   total_candidates: number;
@@ -145,6 +173,7 @@ export interface SearchDiagnostics {
   provider_toggles: ProviderToggleMap;
   mock_only: boolean;
   retrieval_evidence: RetrievalEvidence;
+  runtime_report?: ProviderRuntimeReport;
 }
 
 export interface ResearchResponse {

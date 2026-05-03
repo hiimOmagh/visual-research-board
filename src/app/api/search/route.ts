@@ -10,6 +10,7 @@ import type { ProviderHealth, ResearchMode, ResearchRequest, ResultType, SearchD
 import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
+import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -73,6 +74,14 @@ export async function POST(request: Request) {
   const rawResults = providerRuns.flatMap((entry) => entry.results);
   const normalized = normalizeResults(rawResults, { topic: searchPlan.original_topic, mode: searchPlan.mode });
   const providerHealth = providerRuns.map((entry) => entry.health);
+  const generatedAt = new Date().toISOString();
   const retrievalEvidence = buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth });
-  return NextResponse.json({ request: effectiveRequest, search_plan: searchPlan, results: normalized.results, diagnostics: { generated_at: new Date().toISOString(), total_raw_results: normalized.stats.raw_count, total_normalized_results: normalized.stats.normalized_count, total_deduped_results: normalized.stats.deduped_count, duplicate_count: normalized.stats.duplicate_count, provider_health: providerHealth, provider_toggles: runtimeToggles, mock_only: mockOnly, retrieval_evidence: retrievalEvidence } });
+  const runtimeReport = buildProviderRuntimeReport({
+    mockOnly,
+    staticDemo: false,
+    braveKeyPresent: Boolean(process.env.BRAVE_SEARCH_API_KEY),
+    tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY),
+    generatedAt
+  });
+  return NextResponse.json({ request: effectiveRequest, search_plan: searchPlan, results: normalized.results, diagnostics: { generated_at: generatedAt, total_raw_results: normalized.stats.raw_count, total_normalized_results: normalized.stats.normalized_count, total_deduped_results: normalized.stats.deduped_count, duplicate_count: normalized.stats.duplicate_count, provider_health: providerHealth, provider_toggles: runtimeToggles, mock_only: mockOnly, retrieval_evidence: retrievalEvidence, runtime_report: runtimeReport } });
 }

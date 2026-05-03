@@ -4,6 +4,7 @@ import { createSearchPlan } from "@/lib/query-planner";
 import { normalizeResults } from "@/lib/result-normalizer";
 import { searchMockProvider } from "@/lib/providers/mock";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
+import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -72,8 +73,10 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     skippedHealth("tavily", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Tavily provider calls.")
   ];
 
+  const generatedAt = new Date().toISOString();
+
   const diagnostics: SearchDiagnostics = {
-    generated_at: new Date().toISOString(),
+    generated_at: generatedAt,
     total_raw_results: normalized.stats.raw_count,
     total_normalized_results: normalized.stats.normalized_count,
     total_deduped_results: normalized.stats.deduped_count,
@@ -81,7 +84,14 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     provider_health: providerHealth,
     provider_toggles: providerToggles,
     mock_only: true,
-    retrieval_evidence: buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth })
+    retrieval_evidence: buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth }),
+    runtime_report: buildProviderRuntimeReport({
+      mockOnly: true,
+      staticDemo: true,
+      braveKeyPresent: false,
+      tavilyKeyPresent: false,
+      generatedAt
+    })
   };
 
   return {

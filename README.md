@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.1 stable`
+`v0.2.2 stable`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -21,6 +21,7 @@ Implemented:
 - Export preview drawer and JSON, Markdown, CSV, attribution, source-audit, production-brief, and moodboard exports.
 - Executable QA fixtures for normalization, provider smoke shape, project snapshots, library conflict import, and source invariants.
 - Deployment workflows for CI and GitHub Pages static demo.
+- Provider runtime readiness endpoint and runtime smoke script for deployed evidence capture.
 
 
 ## Broad image retrieval boundary
@@ -117,6 +118,8 @@ npm run qa
 npm run normalization:test
 npm run e2e:fixtures
 npm run provider:smoke
+npm run provider:runtime:test
+npm run provider:runtime:check
 npm run library:conflict:test
 npm run typecheck
 npm run lint
@@ -147,7 +150,7 @@ Provider health reports:
 active | no_results | missing_key | skipped | error | timeout
 ```
 
-Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, and mock-only state.
+Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, mock-only state, retrieval evidence, and provider runtime readiness.
 
 ## Risk and license warning
 
@@ -166,7 +169,9 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 - Deduplication removes repeated source/image/title candidates while preferring the stronger scored representative.
 - Export outputs include source-group and why-this-result context.
 - QA fixture suite passes.
+- `/api/provider-runtime` reports key readiness without exposing secrets.
+- `npm run provider:runtime:test` can capture `artifacts/provider-runtime-evidence.json` against localhost or a deployed runtime.
 
 ## Release status
 
-`v0.2.1` is the finished broad-retrieval local MVP. Future work should start as a post-MVP roadmap, not as unfinished core work.
+`v0.2.2` is the provider-runtime validation MVP. Future work should focus on live-key evidence quality and creator workflow testing, not generic feature expansion.

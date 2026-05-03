@@ -1,15 +1,15 @@
 {
   "name": "visual-research-board",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
-  "description": "Real-retrieval validation MVP for a source-aware visual research board with wider multi-provider image/web coverage, retrieval evidence diagnostics, Next.js runtime deployment, and GitHub Pages static-demo deployment.",
+  "description": "Provider-runtime validation MVP for a source-aware visual research board with broad multi-provider visual retrieval diagnostics, live-key test tooling, Next.js runtime deployment, and GitHub Pages static-demo deployment.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
@@ -23,7 +23,9 @@
     "validate:deploy": "npm run qa && npm run typecheck && npm run lint && npm run build && npm run build:static",
     "release:check": "npm run validate:deploy",
     "broad:retrieval:test": "node tests/broad-retrieval-check.mjs",
-    "retrieval:evidence:test": "node tests/retrieval-evidence-check.mjs"
+    "retrieval:evidence:test": "node tests/retrieval-evidence-check.mjs",
+    "provider:runtime:test": "node scripts/provider-runtime-smoke.mjs",
+    "provider:runtime:check": "node tests/provider-runtime-pack-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

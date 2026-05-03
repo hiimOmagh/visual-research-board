@@ -1,0 +1,26 @@
+[
+  {
+    "id": "historical-figure",
+    "topic": "Hannibal crossing the Alps",
+    "mode": "youtube_documentary",
+    "depth": "deep"
+  },
+  {
+    "id": "public-domain-pack",
+    "topic": "Carthage ancient ruins public domain archive images",
+    "mode": "public_domain",
+    "depth": "standard"
+  },
+  {
+    "id": "thumbnail-inspiration",
+    "topic": "geopolitical documentary thumbnail Mediterranean power",
+    "mode": "thumbnail_inspiration",
+    "depth": "standard"
+  },
+  {
+    "id": "academic-source-pack",
+    "topic": "ancient Carthage archaeological evidence maps artifacts",
+    "mode": "academic_source_pack",
+    "depth": "standard"
+  }
+]

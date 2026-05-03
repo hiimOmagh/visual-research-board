@@ -1,4 +1,4 @@
-# Deployment — Visual Research Board v0.2.1
+# Deployment — Visual Research Board v0.2.2
 
 Visual Research Board has two valid deployment modes.
 
@@ -25,6 +25,25 @@ Runtime features:
 - Brave provider when `BRAVE_SEARCH_API_KEY` is set
 - Tavily provider when `TAVILY_API_KEY` is set
 - server-side mock-only mode via `VISUAL_RESEARCH_BOARD_MOCK_ONLY=true`
+- `/api/provider-runtime` for safe provider readiness diagnostics
+
+## Runtime provider evidence
+
+After deployment, capture runtime evidence:
+
+```bash
+VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=https://your-deployment.example npm run provider:runtime:test
+```
+
+After adding Brave/Tavily keys, strict mode should pass:
+
+```bash
+VISUAL_RESEARCH_BOARD_REQUIRE_REAL_PROVIDERS=true \
+VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=https://your-deployment.example \
+npm run provider:runtime:test
+```
+
+Review `artifacts/provider-runtime-evidence.json`.
 
 ## 2. GitHub Pages static demo
 
