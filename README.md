@@ -1,40 +1,105 @@
 # Visual Research Board
 
-`v0.1.0-alpha.10`
+`v0.1.0 stable`
 
-A creator-focused, source-aware visual research board for collecting image/web references, preserving source links, organizing local projects, restoring result snapshots, previewing exports, and exporting production-ready research packs.
+A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
-## Alpha.10 additions
+## Stable MVP scope
 
-Result-quality patch. No login, database, browser automation, full crawling, AI image generation, or team workspace.
+This release finishes the local MVP. It deliberately avoids login, database, browser automation, full crawling, AI image generation, and team workspace features.
 
-- Improved mode-aware query expansion for creator workflows.
-- Added source-group classification for Commons/open-access, institutional archives, official/academic sources, news/media, commercial stock, search/social discovery, general web, and unknown sources.
-- Strengthened scoring with topic relevance, visual-resolution/aspect-ratio heuristics, source credibility tiers, license clarity, production usefulness, and mode-specific weights.
-- Strengthened deduplication with URL canonicalization, image-asset keys, normalized title keys, and quality-first representative selection.
-- Added “Why this result” explanations to result cards, result detail, and exports.
-- Added source-grouped result display.
-- Added sort controls for overall quality, production usefulness, relevance, visual quality, source credibility, license clarity, and newest collected.
-- Added saved-first result sorting.
-- Added quality metadata hydration for migrated alpha.9 and older saved results.
-- Added source-group and quality-reason fields to exports and fixture checks.
+Implemented:
 
-## Install and run
+- Next.js App Router, TypeScript, Tailwind dark editorial UI.
+- Local project library with create, rename, duplicate, delete, switch, import, and export.
+- Search workflow with mode/depth selection, provider toggles, query planning, diagnostics, and result snapshots.
+- Mock-first operation with no API keys required.
+- Optional Wikimedia, Brave, and Tavily provider adapters for Next.js runtime deployments.
+- GitHub Pages static-demo mode using client-side mock search and local metadata fallback.
+- Result quality layer: source grouping, scoring, deduplication, saved-first sorting, and “Why this result” explanations.
+- Saved board with notes, board sections, manual URL import, metadata fetch/fallback, and persistence.
+- Export preview drawer and JSON, Markdown, CSV, attribution, source-audit, production-brief, and moodboard exports.
+- Executable QA fixtures for normalization, provider smoke shape, project snapshots, library conflict import, and source invariants.
+- Deployment workflows for CI and GitHub Pages static demo.
+
+## Install and run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-The app works without API keys because mock data is enabled by default.
+Open the local Next.js URL printed by the terminal. The app works without API keys because mock data is enabled by default.
+
+## Validate before deployment
+
+```bash
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Full runtime validation:
+
+```bash
+npm run validate:full
+```
+
+Full deployment validation, including static export:
+
+```bash
+npm run validate:deploy
+```
 
 ## Optional API keys
+
+Create `.env.local` when using real providers in a Next.js runtime deployment:
 
 ```bash
 VISUAL_RESEARCH_BOARD_MOCK_ONLY=false
 BRAVE_SEARCH_API_KEY=
 TAVILY_API_KEY=
 ```
+
+No key is needed for Wikimedia.
+
+## GitHub Pages static demo
+
+GitHub Pages cannot run Next.js API routes. Use the included static-demo build when deploying to GitHub Pages:
+
+```bash
+npm run build:static:repo
+```
+
+This exports `out/` and uses `/visual-research-board` as the base path. For a different repository name, run:
+
+```bash
+VISUAL_RESEARCH_BOARD_BASE_PATH=/your-repo-name npm run build:static:pages
+```
+
+For a root/custom-domain Pages site, omit the base path:
+
+```bash
+npm run build:static
+```
+
+Static demo mode keeps the UI, mock search, local project library, saved board, snapshots, manual import fallback, and exports. It intentionally disables real provider calls and server-side metadata extraction.
+
+## Vercel / Next.js runtime deployment
+
+Use Vercel or another Next.js-compatible runtime for real provider-backed behavior.
+
+Recommended settings:
+
+```text
+Framework: Next.js
+Install command: npm install
+Build command: npm run build
+Output directory: default
+```
+
+Add provider keys as environment variables only when needed.
 
 ## Scripts
 
@@ -46,32 +111,52 @@ npm run provider:smoke
 npm run library:conflict:test
 npm run typecheck
 npm run lint
+npm run build
+npm run build:static
+npm run build:static:repo
+npm run validate
+npm run validate:full
+npm run validate:deploy
 npm run test:ci:no-browser
 ```
 
 ## Storage model
 
-Alpha.10 stores local projects under `visual-research-board:project-library:v0.1.0-alpha.10` and migrates alpha.9, alpha.8, alpha.6, alpha.5, alpha.4, and alpha.1-alpha.3 saved-result keys.
+Stable stores local projects under:
+
+```text
+visual-research-board:project-library:v0.1.0
+```
+
+It migrates beta.1, alpha.10, alpha.9, alpha.8, alpha.6, alpha.5, alpha.4, and alpha.1-alpha.3 saved-result keys.
 
 ## Provider behavior
 
-Provider health reports `active`, `no_results`, `missing_key`, `skipped`, `error`, and `timeout`, plus result count, typed result counts, query samples, endpoint samples, missing environment variable, and provider-specific message.
+Provider health reports:
+
+```text
+active | no_results | missing_key | skipped | error | timeout
+```
+
+Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, and mock-only state.
 
 ## Risk and license warning
 
-The app uses cautious labels and does **not** claim commercial-use safety. Always verify source pages and license terms before publication.
+The app uses cautious labels and does **not** claim commercial-use safety. License labels are candidates. Verify source pages and license terms before publication or commercial use.
 
-## Acceptance criteria for alpha.10
+## Stable acceptance criteria
 
-- App runs without API keys using mock provider data.
-- Existing project library import/export, snapshots, manual import, notes, sections, and export preview behavior remain intact.
-- Results are grouped by source class rather than displayed as a flat grid only.
-- Each normalized result can carry `source_group`, `duplicate_group_key`, and `quality_reasons`.
+- App runs locally without API keys using mock provider data.
+- App degrades to client-side mock search if API routes are unavailable.
+- GitHub Pages static demo can be exported while clearly disabling real providers.
+- Next.js runtime deployment keeps API routes for search, export, metadata, and real provider validation.
+- Project library import/export, conflict-safe merge, snapshots, manual import, notes, sections, and export preview behavior remain intact.
+- Results are grouped by source class and each result can carry `source_group`, `duplicate_group_key`, and `quality_reasons`.
 - Sorting supports saved-first and quality-dimension selection.
 - Deduplication removes repeated source/image/title candidates while preferring the stronger scored representative.
 - Export outputs include source-group and why-this-result context.
 - QA fixture suite passes.
 
-## Next logical build
+## Release status
 
-`v0.1.0-beta.1 — MVP stabilization and scope freeze.`
+`v0.1.0` is the finished stable local MVP. Future work should start as a new roadmap, not as unfinished MVP work.

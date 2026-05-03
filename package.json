@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.1.0-alpha.10",
+  "version": "0.1.0",
   "private": true,
-  "description": "A creator-focused source-aware visual research board with result-quality scoring, source grouping, why-this-result explanations, provider diagnostics, persistent snapshots, conflict-safe project-library import/export, and fixture-driven QA.",
+  "description": "Stable local MVP for a source-aware visual research board with Next.js runtime deployment and GitHub Pages static-demo deployment.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +14,14 @@
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
     "provider:smoke": "node tests/provider-smoke-check.mjs",
-    "library:conflict:test": "node tests/library-conflict-check.mjs"
+    "library:conflict:test": "node tests/library-conflict-check.mjs",
+    "build:static": "node scripts/build-static-demo.mjs",
+    "build:static:repo": "node scripts/build-static-demo.mjs --base-path=/visual-research-board",
+    "validate": "npm run qa && npm run typecheck && npm run lint",
+    "validate:full": "npm run qa && npm run typecheck && npm run lint && npm run build",
+    "build:static:pages": "node scripts/build-static-demo.mjs",
+    "validate:deploy": "npm run qa && npm run typecheck && npm run lint && npm run build && npm run build:static",
+    "release:check": "npm run validate:deploy"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
