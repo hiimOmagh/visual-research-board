@@ -1,10 +1,10 @@
 # Visual Research Board
 
-`v0.1.0 stable`
+`v0.2.0 stable`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
-## Stable MVP scope
+## Stable broad-retrieval scope
 
 This release finishes the local MVP. It deliberately avoids login, database, browser automation, full crawling, AI image generation, and team workspace features.
 
@@ -12,15 +12,24 @@ Implemented:
 
 - Next.js App Router, TypeScript, Tailwind dark editorial UI.
 - Local project library with create, rename, duplicate, delete, switch, import, and export.
-- Search workflow with mode/depth selection, provider toggles, query planning, diagnostics, and result snapshots.
+- Search workflow with mode/depth selection, provider toggles, broad image-first query planning, diagnostics, and result snapshots.
 - Mock-first operation with no API keys required.
-- Optional Wikimedia, Brave, and Tavily provider adapters for Next.js runtime deployments.
+- Optional Wikimedia, Brave, and Tavily provider adapters for Next.js runtime deployments, with broader multi-query image/web retrieval.
 - GitHub Pages static-demo mode using client-side mock search and local metadata fallback.
-- Result quality layer: source grouping, scoring, deduplication, saved-first sorting, and “Why this result” explanations.
+- Result quality layer: source grouping, scoring, broad-result deduplication, saved-first sorting, and “Why this result” explanations.
 - Saved board with notes, board sections, manual URL import, metadata fetch/fallback, and persistence.
 - Export preview drawer and JSON, Markdown, CSV, attribution, source-audit, production-brief, and moodboard exports.
 - Executable QA fixtures for normalization, provider smoke shape, project snapshots, library conflict import, and source invariants.
 - Deployment workflows for CI and GitHub Pages static demo.
+
+
+## Broad image retrieval boundary
+
+This release is designed to retrieve many more relevant visual/source candidates than the original MVP. It uses broader query planning, multiple query branches, larger provider result windows, Wikimedia multi-query retrieval, Brave image/web expansion, and Tavily image candidates.
+
+It still cannot literally fetch every image on the web. That would require operating a full search-engine crawler and index. The target is broad multi-provider retrieval with source preservation, deduplication, and risk/license labeling.
+
+See `docs/broad-image-retrieval.md`.
 
 ## Install and run locally
 
@@ -122,7 +131,7 @@ npm run test:ci:no-browser
 
 ## Storage model
 
-Stable stores local projects under:
+The project schema remains compatible and stores local projects under:
 
 ```text
 visual-research-board:project-library:v0.1.0
@@ -147,6 +156,7 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 ## Stable acceptance criteria
 
 - App runs locally without API keys using mock provider data.
+- Runtime provider mode retrieves broad visual/source candidates across multiple query branches rather than a small single-query sample.
 - App degrades to client-side mock search if API routes are unavailable.
 - GitHub Pages static demo can be exported while clearly disabling real providers.
 - Next.js runtime deployment keeps API routes for search, export, metadata, and real provider validation.
@@ -159,4 +169,4 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.1.0` is the finished stable local MVP. Future work should start as a new roadmap, not as unfinished MVP work.
+`v0.2.0` is the finished broad-retrieval local MVP. Future work should start as a post-MVP roadmap, not as unfinished core work.
