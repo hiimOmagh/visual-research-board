@@ -281,9 +281,9 @@ export const RESEARCH_MODES: Array<{ value: ResearchMode; label: string; descrip
 ];
 
 export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; description: string }> = [
-  { value: "quick", label: "Quick", description: "Small, fast result set." },
-  { value: "standard", label: "Standard", description: "Balanced breadth and speed." },
-  { value: "deep", label: "Deep", description: "More query branches and sources." }
+  { value: "quick", label: "Quick", description: "Fast broad sample: fewer branches, still image-first." },
+  { value: "standard", label: "Standard", description: "Balanced broad retrieval across several query branches." },
+  { value: "deep", label: "Deep", description: "Maximum local breadth: more query branches, larger provider result windows, stronger dedupe." }
 ];
 
 export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "brave", "tavily"];
