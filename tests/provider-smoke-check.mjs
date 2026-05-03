@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/provider-smoke-alpha8.json"), "utf8"));
+const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/provider-smoke-alpha9.json"), "utf8"));
 const failures = [];
 function assert(condition, message) {
   if (!condition) failures.push(message);
@@ -91,4 +91,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Provider smoke fixture checks passed for v0.1.0-alpha.8.");
+console.log("Provider smoke fixture checks passed for v0.1.0-alpha.9.");

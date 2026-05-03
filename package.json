@@ -1,6 +1,6 @@
 {
   "name": "visual-research-board",
-  "version": "0.1.0-alpha.8",
+  "version": "0.1.0-alpha.9",
   "private": true,
   "description": "A creator-focused source-aware visual research board with hardened provider diagnostics, persistent result snapshots, conflict-safe project-library import/export, an export preview drawer, an accessibility-aware UI, and fixture-driven QA.",
   "scripts": {

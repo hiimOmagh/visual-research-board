@@ -7,16 +7,16 @@ function assert(condition, message) {
   if (!condition) failures.push(message);
 }
 
-const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-alpha8.json"), "utf8"));
+const fixture = JSON.parse(readFileSync(join(root, "tests/fixtures/project-library-alpha9.json"), "utf8"));
 
 // --- Library shape ---------------------------------------------------------
 
-assert(fixture.schema_version === "0.1.0-alpha.8", "project library fixture must be alpha.8");
+assert(fixture.schema_version === "0.1.0-alpha.9", "project library fixture must be alpha.8");
 assert(Array.isArray(fixture.projects) && fixture.projects.length >= 2, "fixture must include multiple projects");
 assert(fixture.projects.some((project) => project.id === fixture.active_project_id), "active project id must resolve to a fixture project");
 
 const active = fixture.projects.find((project) => project.id === fixture.active_project_id);
-assert(active.schema_version === "0.1.0-alpha.8", "active project schema must be alpha.8");
+assert(active.schema_version === "0.1.0-alpha.9", "active project schema must be alpha.8");
 assert(Array.isArray(active.result_snapshots) && active.result_snapshots.length > 0, "active project must include persistent result snapshots");
 assert(Array.isArray(active.search_history) && active.search_history.length > 0, "active project must include search history");
 
@@ -32,7 +32,7 @@ assert(active.saved_results[0].section_id === "section_inbox", "fixture saved re
 // --- Export round-trip -----------------------------------------------------
 
 const exported = {
-  export_schema_version: "0.1.0-alpha.8",
+  export_schema_version: "0.1.0-alpha.9",
   exported_at: new Date("2026-05-02T00:00:00.000Z").toISOString(),
   library: fixture
 };
@@ -76,4 +76,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("E2E fixture checks passed for v0.1.0-alpha.8.");
+console.log("E2E fixture checks passed for v0.1.0-alpha.9.");

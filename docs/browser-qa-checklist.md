@@ -1,10 +1,10 @@
-# Browser QA Checklist — v0.1.0-alpha.8
+# Browser QA Checklist — v0.1.0-alpha.9
 
 This checklist is the manual companion to the automated `npm run qa` /
 `npm run typecheck` / `npm run lint` pipeline. The automated checks confirm
 shape, schema, and structural invariants, but they cannot exercise the
 browser-driven workflow. Run through this checklist before tagging a
-release candidate.
+release candidate. Alpha.9 additionally validates provider setup states and mock-only safe mode.
 
 ## Setup
 
@@ -57,7 +57,7 @@ release candidate.
 ## Direct exports (no preview)
 
 - [ ] **Download JSON** — File contains an `export_schema_version` of
-      `0.1.0-alpha.8` and an `audit` block.
+      `0.1.0-alpha.9` and an `audit` block.
 - [ ] **Download Markdown** — Markdown opens in a Markdown viewer.
 - [ ] **Download CSV** — CSV opens in a spreadsheet with one row per saved
       result.
@@ -66,8 +66,8 @@ release candidate.
 
 ## Project library import / export
 
-- [ ] **Export library** — Saves a JSON file `visual-research-board-library-alpha8.json`.
-      Open it in a text editor, confirm `schema_version` is `0.1.0-alpha.8`
+- [ ] **Export library** — Saves a JSON file `visual-research-board-library-alpha9.json`.
+      Open it in a text editor, confirm `schema_version` is `0.1.0-alpha.9`
       and the audit block lists all your projects.
 - [ ] **Re-import the same file** — Click "Import library", choose the file
       you just exported. The import summary panel appears showing
@@ -99,7 +99,7 @@ release candidate.
 - [ ] **Refresh the page** — All state is recreated: active project,
       saved items, sections, search history, snapshots.
 - [ ] **localStorage migration** — In dev tools, locate the key
-      `visual-research-board:project-library:v0.1.0-alpha.8`. There must
+      `visual-research-board:project-library:v0.1.0-alpha.9`. There must
       be no orphaned alpha.5 / alpha.6 keys after a successful migration
       (those keys are cleaned up only when present at startup).
 
@@ -125,6 +125,14 @@ release candidate.
       cycles through actionable controls and eventually lets you reach
       Close.
 
+## Provider validation — alpha.9
+
+- [ ] **No keys** — With no `.env.local`, run a search. Mock returns results. Brave/Tavily show `missing_key` when enabled and targeted.
+- [ ] **Mock-only UI toggle** — Click "Mock-only safe mode" in the provider toggle panel. Only Mock remains on in the browser state.
+- [ ] **Server mock-only env** — Start dev with `VISUAL_RESEARCH_BOARD_MOCK_ONLY=true npm run dev`. Search diagnostics show mock-only mode and non-mock providers are skipped server-side.
+- [ ] **Invalid key behavior** — With an intentionally invalid key, the provider card shows `error`; mock results and the page remain usable.
+- [ ] **Provider counts** — Provider health shows total result count and typed result counts such as `image` / `web`.
+
 ## Risk / license safety
 
 - [ ] **Amber warning visible** — The header has the "License and risk
@@ -137,4 +145,4 @@ release candidate.
 
 If every box above is ticked and `npm run test:ci:no-browser` passes,
 the build is ready to package as
-`visual-research-board-v0.1.0-alpha.8.zip`.
+`visual-research-board-v0.1.0-alpha.9.zip`.
