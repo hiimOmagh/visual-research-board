@@ -15,7 +15,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing auto-tuning file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.5", "package.json version must be 0.2.5");
+assert(pkg.version === "0.2.6", "package.json version must be 0.2.6");
 assert(Boolean(pkg.scripts?.["retrieval:autotune:check"]), "package.json must define npm run retrieval:autotune:check");
 assert(pkg.scripts?.qa?.includes("retrieval-autotuning-check"), "npm run qa must include retrieval-autotuning-check");
 
@@ -55,11 +55,11 @@ assert(panel.includes("Signals used for tuning"), "auto-tuning panel must show t
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("RetrievalAutoTuningPanel"), "SearchPanel must render RetrievalAutoTuningPanel");
-assert(searchPanel.includes("v0.2.5"), "SearchPanel header must show v0.2.5");
-assert(searchPanel.includes("visual-research-board-library-v0.2.5.json"), "library export filename must use v0.2.5");
+assert(searchPanel.includes("v0.2.6"), "SearchPanel header must show v0.2.6");
+assert(searchPanel.includes("visual-research-board-library-v0.2.6.json"), "library export filename must use v0.2.6");
 
 const docs = read("docs/retrieval-weak-case-auto-tuning.md");
-assert(docs.includes("v0.2.5"), "auto-tuning docs must identify v0.2.5");
+assert(docs.includes("v0.2.6"), "auto-tuning docs must identify v0.2.6");
 assert(docs.includes("VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING"), "auto-tuning docs must document disable env var");
 assert(docs.includes("apply_diversity_rerank"), "auto-tuning docs must document diversity reranking action");
 
@@ -69,4 +69,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Retrieval auto-tuning checks passed for v0.2.5.");
+console.log("Retrieval auto-tuning checks passed for v0.2.6.");

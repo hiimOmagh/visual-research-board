@@ -7,6 +7,7 @@ import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
+import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -78,19 +79,31 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
   const generatedAt = new Date().toISOString();
   const initialEvidence = buildRetrievalEvidence({ plan: searchPlan, results: normalized.results, providerHealth });
   const initialCalibration = buildRetrievalQualityCalibration({ mode: searchPlan.mode, depth: searchPlan.depth, results: normalized.results, providerHealth });
-  const { plan: tunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
+  const { plan: autoTunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
     plan: searchPlan,
     evidence: initialEvidence,
     calibration: initialCalibration,
     providerHealth
   });
-  const rankedResults = applyAutoTunedRanking(normalized.results, {
+  const { plan: tunedPlan, trace: initialEvidenceTuningTrace } = buildEvidenceDrivenTuningPlan({
+    plan: autoTunedPlan,
+    evidence: initialEvidence,
+    calibration: initialCalibration,
+    providerHealth
+  });
+  const autoRankedResults = applyAutoTunedRanking(normalized.results, {
     ...initialAutoTuneTrace,
     applied: initialAutoTuneTrace.applied,
     reason: initialAutoTuneTrace.applied
       ? "Static demo mode cannot call live providers, so auto-tuning is limited to client-side reranking and weak-case query visibility."
       : initialAutoTuneTrace.reason
   });
+  const rankedResults = applyEvidenceDrivenRanking(autoRankedResults, {
+    ...initialEvidenceTuningTrace,
+    reason: initialEvidenceTuningTrace.applied
+      ? "Static demo mode cannot call live providers, so evidence-driven tuning is limited to client-side reranking and query-hint visibility."
+      : initialEvidenceTuningTrace.reason
+  }, tunedPlan.original_topic);
   const finalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
   const finalCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
   const autoTuning = completeAutoTuningTrace({
@@ -99,6 +112,16 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       reason: initialAutoTuneTrace.applied
         ? "Static demo mode cannot call live providers, so auto-tuning is limited to client-side reranking and weak-case query visibility."
         : initialAutoTuneTrace.reason
+    },
+    finalEvidence,
+    finalCalibration
+  });
+  const evidenceTuning = completeEvidenceDrivenTuningTrace({
+    trace: {
+      ...initialEvidenceTuningTrace,
+      reason: initialEvidenceTuningTrace.applied
+        ? "Static demo mode cannot call live providers, so evidence-driven tuning is limited to client-side reranking and query-hint visibility."
+        : initialEvidenceTuningTrace.reason
     },
     finalEvidence,
     finalCalibration
@@ -116,6 +139,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     retrieval_evidence: finalEvidence,
     quality_calibration: finalCalibration,
     auto_tuning: autoTuning,
+    evidence_tuning: evidenceTuning,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,
       staticDemo: true,

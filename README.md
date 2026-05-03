@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.5 deployed-evidence package`
+`v0.2.6 deployed-evidence package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -147,6 +147,8 @@ npm run provider:runtime:check
 npm run retrieval:quality:test
 npm run retrieval:calibration:check
 npm run retrieval:autotune:check
+npm run evidence:tuning:test
+npm run evidence:tuning:check
 npm run library:conflict:test
 npm run typecheck
 npm run lint
@@ -177,7 +179,7 @@ Provider health reports:
 active | no_results | missing_key | skipped | error | timeout
 ```
 
-Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, mock-only state, retrieval evidence, live quality calibration, auto-tuning trace, and provider runtime readiness.
+Diagnostics include result counts, typed result counts, query samples, endpoint samples, missing environment variables, provider toggle state, mock-only state, retrieval evidence, live quality calibration, auto-tuning trace, evidence-driven tuning trace, and provider runtime readiness.
 
 ## Risk and license warning
 
@@ -202,7 +204,9 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 - Search diagnostics include `quality_calibration` with `passes_creator_gate`, failure-specific verdicts, and `auto_tuning` with candidate/calibration deltas.
 - `npm run deployed:browser:test` can prove whether a hosted URL is a Next.js runtime, GitHub Pages static demo, or broken/unknown deployment surface.
 - `npm run topic:matrix:test` can run the real-topic matrix and capture retrieval evidence across eight creator-relevant scenarios.
+- `npm run evidence:tuning:test` can consume topic-matrix artifacts and produce `artifacts/evidence-driven-tuning-report.json`.
+- Search diagnostics include `evidence_tuning` with query hints, score weights, provider bias, weak metrics, and before/after metric snapshots.
 
 ## Release status
 
-`v0.2.5` is the deployed evidence and real-topic matrix package. Future work should use the produced artifacts to tune provider coverage, ranking weights, and UI workflow from observed weak cases rather than adding speculative features.
+`v0.2.6` is the evidence-driven ranking/query tuning package. Future work should use live provider outputs and the topic-matrix artifacts to calibrate actual retrieval quality, not add speculative infrastructure.

@@ -1,6 +1,6 @@
-# Real Topic Test Matrix — v0.2.5
+# Real Topic Test Matrix — v0.2.6
 
-`v0.2.5` adds a real-topic test matrix for proving that broad retrieval works across creator-relevant scenarios rather than only one cherry-picked topic.
+`v0.2.6` adds a real-topic test matrix for proving that broad retrieval works across creator-relevant scenarios rather than only one cherry-picked topic.
 
 The matrix lives at `tests/fixtures/real-topic-test-matrix.json` and covers historical figure, ancient civilization, YouTube documentary topic, thumbnail inspiration topic, public-domain archive pack, news event visual pack, design moodboard, and academic source pack.
 

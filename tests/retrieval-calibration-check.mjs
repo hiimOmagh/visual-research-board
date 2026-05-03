@@ -17,7 +17,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing retrieval calibration file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.5", "package.json version must be 0.2.5");
+assert(pkg.version === "0.2.6", "package.json version must be 0.2.6");
 assert(Boolean(pkg.scripts?.["retrieval:quality:test"]), "package.json must define npm run retrieval:quality:test");
 assert(Boolean(pkg.scripts?.["retrieval:calibration:check"]), "package.json must define npm run retrieval:calibration:check");
 assert(pkg.scripts?.qa?.includes("retrieval-calibration-check"), "npm run qa must include retrieval-calibration-check");
@@ -49,7 +49,7 @@ assert(panel.includes("Calibration failure signals"), "quality calibration panel
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("LiveQualityCalibrationPanel"), "SearchPanel must render LiveQualityCalibrationPanel");
-assert(searchPanel.includes("v0.2.5"), "SearchPanel header must show v0.2.5");
+assert(searchPanel.includes("v0.2.6"), "SearchPanel header must show v0.2.6");
 
 const script = read("scripts/retrieval-quality-calibration.mjs");
 assert(script.includes("VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL"), "retrieval quality script must support runtime base URL env");
@@ -64,7 +64,7 @@ assert(topics.some((item) => item.mode === "public_domain"), "retrieval quality 
 assert(topics.every((item) => item.topic && item.mode && item.depth), "retrieval quality fixture cases must include topic, mode, and depth");
 
 const docs = read("docs/live-retrieval-quality-calibration.md");
-assert(docs.includes("v0.2.5"), "live retrieval calibration docs must identify v0.2.5");
+assert(docs.includes("v0.2.6"), "live retrieval calibration docs must identify v0.2.6");
 assert(docs.includes("npm run retrieval:quality:test"), "live retrieval calibration docs must document the quality test command");
 assert(docs.includes("passes_creator_gate"), "live retrieval calibration docs must document the creator gate verdict");
 
@@ -74,4 +74,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Retrieval calibration checks passed for v0.2.5.");
+console.log("Retrieval calibration checks passed for v0.2.6.");

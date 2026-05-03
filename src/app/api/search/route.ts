@@ -13,11 +13,13 @@ import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 import { buildRetrievalQualityCalibration } from "@/lib/retrieval-calibration";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
+import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
 const MOCK_ONLY_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 const DISABLE_AUTOTUNE_VALUES = new Set(["1", "true", "yes", "on"]);
+const DISABLE_EVIDENCE_TUNING_VALUES = new Set(["1", "true", "yes", "on"]);
 
 function isMockOnlyMode(): boolean {
   return MOCK_ONLY_ENV_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_MOCK_ONLY ?? "").trim().toLowerCase());
@@ -25,6 +27,10 @@ function isMockOnlyMode(): boolean {
 
 function isAutoTuneDisabled(): boolean {
   return DISABLE_AUTOTUNE_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING ?? "").trim().toLowerCase());
+}
+
+function isEvidenceTuningDisabled(): boolean {
+  return DISABLE_EVIDENCE_TUNING_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING ?? "").trim().toLowerCase());
 }
 
 function validateResearchRequest(body: unknown): ResearchRequest | null {
@@ -268,14 +274,21 @@ export async function POST(request: Request) {
   const firstNormalized = normalizeResults(firstRawResults, { topic: baseSearchPlan.original_topic, mode: baseSearchPlan.mode });
   const firstEvidence = buildRetrievalEvidence({ plan: baseSearchPlan, results: firstNormalized.results, providerHealth: firstProviderHealth });
   const firstCalibration = buildRetrievalQualityCalibration({ mode: baseSearchPlan.mode, depth: baseSearchPlan.depth, results: firstNormalized.results, providerHealth: firstProviderHealth });
-  const { plan: tunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
+  const { plan: autoTunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
     plan: baseSearchPlan,
     evidence: firstEvidence,
     calibration: firstCalibration,
     providerHealth: firstProviderHealth
   });
+  const { plan: evidenceTunedPlan, trace: initialEvidenceTuningTrace } = buildEvidenceDrivenTuningPlan({
+    plan: autoTunedPlan,
+    evidence: firstEvidence,
+    calibration: firstCalibration,
+    providerHealth: firstProviderHealth
+  });
 
-  const shouldRunTunedPass = initialAutoTuneTrace.applied && !isAutoTuneDisabled();
+  const shouldRunTunedPass = (initialAutoTuneTrace.applied && !isAutoTuneDisabled()) || (initialEvidenceTuningTrace.applied && !isEvidenceTuningDisabled());
+  const tunedPlan = shouldRunTunedPass ? evidenceTunedPlan : baseSearchPlan;
   const secondProviderRuns = shouldRunTunedPass
     ? await executeProviderRuns({ searchPlan: tunedPlan, runtimeToggles, mockOnly })
     : [];
@@ -287,7 +300,8 @@ export async function POST(request: Request) {
     : firstProviderHealth;
 
   const normalized = normalizeResults(rawResults, { topic: tunedPlan.original_topic, mode: tunedPlan.mode });
-  const rankedResults = applyAutoTunedRanking(normalized.results, initialAutoTuneTrace);
+  const autoRankedResults = applyAutoTunedRanking(normalized.results, initialAutoTuneTrace);
+  const rankedResults = applyEvidenceDrivenRanking(autoRankedResults, initialEvidenceTuningTrace, tunedPlan.original_topic);
   const generatedAt = new Date().toISOString();
   const retrievalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
   const qualityCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
@@ -295,6 +309,13 @@ export async function POST(request: Request) {
     trace: shouldRunTunedPass
       ? initialAutoTuneTrace
       : { ...initialAutoTuneTrace, applied: false, reason: isAutoTuneDisabled() ? "Auto-tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING." : initialAutoTuneTrace.reason },
+    finalEvidence: retrievalEvidence,
+    finalCalibration: qualityCalibration
+  });
+  const evidenceTuning = completeEvidenceDrivenTuningTrace({
+    trace: shouldRunTunedPass
+      ? initialEvidenceTuningTrace
+      : { ...initialEvidenceTuningTrace, applied: false, reason: isEvidenceTuningDisabled() ? "Evidence-driven tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING." : initialEvidenceTuningTrace.reason },
     finalEvidence: retrievalEvidence,
     finalCalibration: qualityCalibration
   });
@@ -322,6 +343,7 @@ export async function POST(request: Request) {
       retrieval_evidence: retrievalEvidence,
       quality_calibration: qualityCalibration,
       auto_tuning: autoTuning,
+      evidence_tuning: evidenceTuning,
       runtime_report: runtimeReport
     }
   });

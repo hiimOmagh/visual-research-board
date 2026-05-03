@@ -1,15 +1,15 @@
 {
   "name": "visual-research-board",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
-  "description": "Deployed browser evidence and real-topic test matrix package for a source-aware visual research board with broad multi-provider retrieval diagnostics, provider runtime evidence, creator-gate scoring, adaptive reranking, and deployment proof artifacts.",
+  "description": "Evidence-driven ranking and query tuning package for a source-aware visual research board with broad retrieval diagnostics, provider runtime evidence, real-topic matrix capture, and calibrated creator-gate ranking.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
@@ -34,7 +34,9 @@
     "topic:matrix:test": "node scripts/real-topic-test-matrix.mjs",
     "topic:matrix:check": "node tests/real-topic-matrix-check.mjs",
     "evidence:deploy": "npm run deployed:browser:test && npm run topic:matrix:test",
-    "validate:evidence": "npm run qa && npm run typecheck && npm run lint && npm run evidence:deploy"
+    "validate:evidence": "npm run qa && npm run typecheck && npm run lint && npm run evidence:deploy && npm run evidence:tuning:test",
+    "evidence:tuning:test": "node scripts/evidence-driven-tuning-report.mjs",
+    "evidence:tuning:check": "node tests/evidence-driven-tuning-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

@@ -62,6 +62,21 @@ export type RetrievalAutoTuningAction =
   | "increase_real_provider_bias"
   | "apply_diversity_rerank";
 
+export type EvidenceDrivenTuningAction =
+  | "boost_topic_exactness"
+  | "boost_image_density"
+  | "boost_open_license_sources"
+  | "boost_institutional_sources"
+  | "penalize_stock_and_social"
+  | "penalize_mock_when_real_available"
+  | "rebalance_top_results_by_source"
+  | "add_precision_query_hints";
+
+export type EvidenceDrivenTuningVerdict =
+  | "evidence_tuned"
+  | "evidence_observed_no_change"
+  | "needs_live_matrix_artifact";
+
 export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped" | "error" | "timeout";
 
 export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
@@ -213,6 +228,42 @@ export interface RetrievalQualityCalibration {
   expectations: RetrievalQualityCalibrationExpectations;
 }
 
+export interface EvidenceDrivenTuningTrace {
+  enabled: boolean;
+  applied: boolean;
+  verdict: EvidenceDrivenTuningVerdict;
+  reason: string;
+  actions: EvidenceDrivenTuningAction[];
+  mode_profile: ResearchMode;
+  depth_profile: SearchDepth;
+  query_hints: string[];
+  score_weight_profile: {
+    relevance: number;
+    visual_quality: number;
+    source_credibility: number;
+    license_clarity: number;
+    production_usefulness: number;
+    diversity: number;
+  };
+  weak_metrics: string[];
+  provider_bias: Partial<Record<SearchProviderName, number>>;
+  before: {
+    candidate_count: number;
+    calibration_score?: number;
+    source_diversity: number;
+    image_share?: number;
+    real_provider_share?: number;
+  };
+  after: {
+    candidate_count: number;
+    calibration_score?: number;
+    source_diversity: number;
+    image_share?: number;
+    real_provider_share?: number;
+  };
+  warnings: string[];
+}
+
 export interface RetrievalAutoTuningTrace {
   enabled: boolean;
   applied: boolean;
@@ -247,6 +298,7 @@ export interface SearchDiagnostics {
   retrieval_evidence: RetrievalEvidence;
   quality_calibration?: RetrievalQualityCalibration;
   auto_tuning?: RetrievalAutoTuningTrace;
+  evidence_tuning?: EvidenceDrivenTuningTrace;
   runtime_report?: ProviderRuntimeReport;
 }
 
