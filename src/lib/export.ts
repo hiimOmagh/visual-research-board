@@ -1,5 +1,6 @@
 import type { ExportTemplateId, ProjectLibrary, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
+import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -35,7 +36,7 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
 export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.8",
+      export_schema_version: "0.1.0-alpha.10",
       exported_at: new Date().toISOString(),
       project: project ? {
         id: project.id,
@@ -51,6 +52,7 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         by_risk: countBy(results, (item) => item.risk_level),
         by_license: countBy(results, (item) => item.license_detected),
         by_section: countBy(results, (item) => item.section_id ?? "unassigned"),
+        by_source_group: countBy(results, (item) => item.source_group ?? classifySourceDomain(item.source_domain)),
         notes_count: results.filter((item) => Boolean(item.notes?.trim())).length,
         manual_import_count: results.filter((item) => item.provider === "manual").length
       },
@@ -92,11 +94,13 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
   lines.push(`- Source: ${result.source_domain}`);
   lines.push(`- URL: ${result.source_url}`);
   lines.push(`- Provider: ${result.provider}`);
+  lines.push(`- Source group: ${sourceGroupLabel(result.source_group ?? classifySourceDomain(result.source_domain))}`);
   lines.push(`- License label: ${licenseLabel(result.license_detected)}`);
   lines.push(`- License confidence: ${Math.round(result.license_confidence * 100)}%`);
   if (result.license_url) lines.push(`- License URL: ${result.license_url}`);
   lines.push(`- Risk label: ${riskLabel(result.risk_level)}`);
   lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
+  if (result.quality_reasons?.length) lines.push(`- Why this result: ${result.quality_reasons.join(" | ")}`);
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
   if (result.description) lines.push(`- Description: ${result.description}`);
   if (result.notes) lines.push(`- Notes: ${result.notes}`);
@@ -161,7 +165,8 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
       .forEach((item) => {
         lines.push(`### ${item.title}`);
         lines.push(`- Production usefulness: ${Math.round(item.scores.production_usefulness * 100)}%`);
-        lines.push(`- Source/risk: ${item.source_domain} · ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+        lines.push(`- Source/risk: ${item.source_domain} · ${sourceGroupLabel(item.source_group ?? classifySourceDomain(item.source_domain))} · ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+        if (item.quality_reasons?.length) lines.push(`- Why: ${item.quality_reasons[0]}`);
         lines.push(`- Source URL: ${item.source_url}`);
         if (item.notes) lines.push(`- Production note: ${item.notes}`);
         lines.push("");
@@ -190,7 +195,9 @@ export function createVisualMoodboardExport(results: ResearchResult[], project?:
       if (item.thumbnail_url || item.image_url) lines.push(`![${item.title}](${item.thumbnail_url ?? item.image_url})`);
       lines.push(`- Source: ${item.source_url}`);
       lines.push(`- Tags: ${item.tags.join(", ") || "none"}`);
+      lines.push(`- Source group: ${sourceGroupLabel(item.source_group ?? classifySourceDomain(item.source_domain))}`);
       lines.push(`- Risk/license: ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
+      if (item.quality_reasons?.length) lines.push(`- Why: ${item.quality_reasons[0]}`);
       if (item.notes) lines.push(`- Note: ${item.notes}`);
       lines.push("");
     });
@@ -219,12 +226,14 @@ export function createCsvExport(results: ResearchResult[]): string {
     "type",
     "provider",
     "source_domain",
+    "source_group",
     "source_url",
     "license_detected",
     "license_confidence",
     "risk_level",
     "overall_score",
     "production_usefulness",
+    "quality_reasons",
     "tags",
     "notes"
   ];
@@ -235,12 +244,14 @@ export function createCsvExport(results: ResearchResult[]): string {
     result.type,
     result.provider,
     result.source_domain,
+    result.source_group ?? classifySourceDomain(result.source_domain),
     result.source_url,
     result.license_detected,
     Math.round(result.license_confidence * 100),
     result.risk_level,
     Math.round(result.scores.overall * 100),
     Math.round(result.scores.production_usefulness * 100),
+    result.quality_reasons?.join(";") ?? "",
     result.tags.join(";"),
     result.notes ?? ""
   ].map(csvEscape).join(","));
@@ -251,7 +262,7 @@ export function createCsvExport(results: ResearchResult[]): string {
 export function createProjectLibraryExport(library: ProjectLibrary): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0-alpha.8",
+      export_schema_version: "0.1.0-alpha.10",
       exported_at: new Date().toISOString(),
       warning: "Local project-library export. License labels and attribution lines remain candidates requiring manual verification.",
       audit: {

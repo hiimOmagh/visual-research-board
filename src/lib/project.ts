@@ -1,7 +1,9 @@
 import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
+import { scoreResult } from "@/lib/scoring";
+import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 
-export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.8" as const;
-export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.8" as const;
+export const PROJECT_SCHEMA_VERSION = "0.1.0-alpha.10" as const;
+export const LIBRARY_SCHEMA_VERSION = "0.1.0-alpha.10" as const;
 export const INBOX_SECTION_ID = "section_inbox";
 export const PUBLIC_DOMAIN_SECTION_ID = "section_public_domain";
 export const THUMBNAIL_SECTION_ID = "section_thumbnail";
@@ -72,21 +74,39 @@ export function createSection(name: string): BoardSection {
   };
 }
 
+export function ensureResultQuality(result: ResearchResult): ResearchResult {
+  const source_group = result.source_group ?? classifySourceDomain(result.source_domain);
+  const scores = result.scores ?? scoreResult(result);
+  const enriched = {
+    ...result,
+    source_group,
+    scores,
+    duplicate_group_key: result.duplicate_group_key ?? result.source_url.toLowerCase()
+  };
+  return {
+    ...enriched,
+    quality_reasons: result.quality_reasons?.length ? result.quality_reasons : buildQualityReasons(enriched)
+  };
+}
+
 export function assignDefaultSection(result: ResearchResult): ResearchResult {
-  if (result.section_id) return result;
-  if (result.license_detected === "public_domain" || result.license_detected === "creative_commons") {
-    return { ...result, section_id: PUBLIC_DOMAIN_SECTION_ID };
+  const enriched = ensureResultQuality(result);
+  if (enriched.section_id) return enriched;
+  if (enriched.license_detected === "public_domain" || enriched.license_detected === "creative_commons") {
+    return { ...enriched, section_id: PUBLIC_DOMAIN_SECTION_ID };
   }
-  if (result.tags.some((tag) => tag.includes("thumbnail") || tag.includes("composition"))) {
-    return { ...result, section_id: THUMBNAIL_SECTION_ID };
+  if (enriched.tags.some((tag) => tag.includes("thumbnail") || tag.includes("composition"))) {
+    return { ...enriched, section_id: THUMBNAIL_SECTION_ID };
   }
-  return { ...result, section_id: INBOX_SECTION_ID };
+  return { ...enriched, section_id: INBOX_SECTION_ID };
 }
 
 function normalizeProviderHealth(health: ProviderHealth[]): ProviderHealth[] {
   return health.map((item) => ({
     ...item,
-    query_sample: item.query_sample ?? []
+    result_type_counts: item.result_type_counts ?? {},
+    query_sample: item.query_sample ?? [],
+    endpoint_sample: item.endpoint_sample ?? []
   }));
 }
 
@@ -99,9 +119,10 @@ function normalizeSnapshot(snapshot: Partial<SearchResultSnapshot>): SearchResul
     diagnostics: {
       ...snapshot.diagnostics,
       provider_toggles: snapshot.diagnostics.provider_toggles ?? snapshot.request.provider_toggles ?? { mock: true, wikimedia: true, brave: true, tavily: true },
+      mock_only: snapshot.diagnostics.mock_only ?? false,
       provider_health: normalizeProviderHealth(snapshot.diagnostics.provider_health ?? [])
     },
-    results: snapshot.results,
+    results: snapshot.results.map(ensureResultQuality),
     created_at: snapshot.created_at || snapshot.diagnostics.generated_at || nowIso(),
     label: snapshot.label || snapshot.request.topic
   };

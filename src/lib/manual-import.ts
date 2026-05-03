@@ -1,6 +1,7 @@
 import type { LicenseDetected, ResearchResult, ResultType } from "@/types/research";
 import { inferRiskLevel } from "@/lib/risk";
 import { scoreResult } from "@/lib/scoring";
+import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 
 export interface ManualImportInput {
   sourceUrl: string;
@@ -42,6 +43,7 @@ export function createManualUrlResult(input: ManualImportInput): ResearchResult 
   const sourceDomain = domainFromUrl(sourceUrl);
   const title = input.title?.trim() || sourceDomain || "Manual source";
   const licenseConfidence = input.licenseDetected === "unknown" ? 0.18 : input.licenseDetected === "unclear" ? 0.35 : 0.58;
+  const sourceGroup = classifySourceDomain(sourceDomain);
   const riskLevel = inferRiskLevel({
     license: input.licenseDetected,
     sourceDomain,
@@ -64,13 +66,20 @@ export function createManualUrlResult(input: ManualImportInput): ResearchResult 
     license_confidence: licenseConfidence,
     risk_level: riskLevel,
     tags: ["manual-import", "source-check-needed"],
+    source_group: sourceGroup,
     notes: input.notes?.trim() || undefined,
     collected_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   } satisfies Omit<ResearchResult, "scores">;
 
-  return {
+  const scored = {
     ...resultCore,
-    scores: scoreResult(resultCore)
+    scores: scoreResult(resultCore),
+    duplicate_group_key: sourceUrl.toLowerCase()
+  };
+
+  return {
+    ...scored,
+    quality_reasons: buildQualityReasons(scored)
   };
 }

@@ -1,6 +1,7 @@
-import type { LicenseDetected, ProviderName, ResearchResult, ResultType } from "@/types/research";
+import type { LicenseDetected, ProviderName, ResearchMode, ResearchResult, ResultType } from "@/types/research";
 import { inferRiskLevel } from "@/lib/risk";
 import { scoreResult } from "@/lib/scoring";
+import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 
 export interface RawProviderResult {
   id?: string;
@@ -18,6 +19,11 @@ export interface RawProviderResult {
   license_confidence?: number;
   license_url?: string;
   tags?: string[];
+}
+
+export interface NormalizeContext {
+  topic?: string;
+  mode?: ResearchMode;
 }
 
 export interface NormalizeStats {
@@ -49,26 +55,72 @@ function normalizeKey(value: string): string {
     .replace(/^https?:\/\//, "")
     .replace(/^www\./, "")
     .replace(/[?#].*$/, "")
+    .replace(/\/index\.(html?|php)$/i, "")
     .replace(/\/$/, "")
     .trim();
 }
 
-export function normalizeResult(raw: RawProviderResult, index: number): ResearchResult {
+function normalizeTitle(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/^file:/, "")
+    .replace(/\.[a-z0-9]{2,5}$/i, "")
+    .replace(/[^a-z0-9\u00c0-\u024f]+/g, " ")
+    .split(/\s+/)
+    .filter((token) => token.length >= 3 && !["the", "and", "for", "with", "from", "image", "photo", "picture", "wiki"].includes(token))
+    .join(" ")
+    .trim();
+}
+
+function imageAssetKey(url?: string): string {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    const path = decodeURIComponent(parsed.pathname).toLowerCase();
+    const file = path.split("/").filter(Boolean).at(-1) ?? "";
+    return file.replace(/^[0-9]+px-/, "").replace(/[?#].*$/, "").trim();
+  } catch {
+    return "";
+  }
+}
+
+function dedupeCandidates(result: ResearchResult): string[] {
+  const titleKey = normalizeTitle(result.title);
+  const imageKey = imageAssetKey(result.image_url || result.thumbnail_url);
+  const candidates = [
+    normalizeKey(result.source_url),
+    result.image_url ? normalizeKey(result.image_url) : "",
+    result.thumbnail_url && !result.thumbnail_url.startsWith("data:") ? normalizeKey(result.thumbnail_url) : "",
+    titleKey ? `${result.source_domain}|${titleKey}` : "",
+    imageKey ? `image-asset|${imageKey}` : "",
+    titleKey && result.width && result.height ? `visual-shape|${titleKey}|${result.width}x${result.height}` : ""
+  ];
+  return Array.from(new Set(candidates.filter(Boolean)));
+}
+
+function primaryDuplicateKey(result: ResearchResult): string {
+  return dedupeCandidates(result)[0] ?? `${result.source_domain}|${normalizeTitle(result.title)}`;
+}
+
+export function normalizeResult(raw: RawProviderResult, index: number, context: NormalizeContext = {}): ResearchResult {
   const sourceDomain = raw.source_domain ?? domainFromUrl(raw.source_url);
+  const sourceGroup = classifySourceDomain(sourceDomain);
   const license = raw.license_detected ?? "unknown";
   const licenseConfidence = raw.license_confidence ?? 0.2;
+  const cleanTags = Array.from(new Set(raw.tags ?? []));
+  const title = raw.title.trim() || "Untitled result";
   const riskLevel = inferRiskLevel({
     license,
     sourceDomain,
     type: raw.type,
-    title: raw.title,
+    title,
     licenseConfidence
   });
 
   const resultCore = {
-    id: raw.id ?? `${raw.provider}_${index}_${stableId(`${raw.title}|${raw.source_url}|${raw.image_url ?? ""}`)}`,
+    id: raw.id ?? `${raw.provider}_${index}_${stableId(`${title}|${raw.source_url}|${raw.image_url ?? ""}`)}`,
     type: raw.type,
-    title: raw.title.trim() || "Untitled result",
+    title,
     description: raw.description,
     thumbnail_url: raw.thumbnail_url,
     image_url: raw.image_url,
@@ -81,28 +133,36 @@ export function normalizeResult(raw: RawProviderResult, index: number): Research
     license_confidence: licenseConfidence,
     license_url: raw.license_url,
     risk_level: riskLevel,
-    tags: Array.from(new Set(raw.tags ?? [])),
+    tags: cleanTags,
+    source_group: sourceGroup,
     collected_at: new Date().toISOString()
-  } satisfies Omit<ResearchResult, "scores">;
+  } satisfies Omit<ResearchResult, "scores" | "quality_reasons" | "duplicate_group_key">;
+
+  const scored = {
+    ...resultCore,
+    scores: scoreResult(resultCore, context),
+    duplicate_group_key: primaryDuplicateKey(resultCore as ResearchResult)
+  } satisfies ResearchResult;
 
   return {
-    ...resultCore,
-    scores: scoreResult(resultCore)
+    ...scored,
+    quality_reasons: buildQualityReasons(scored)
   };
 }
 
-export function normalizeResults(rawResults: RawProviderResult[]): { results: ResearchResult[]; stats: NormalizeStats } {
+export function normalizeResults(rawResults: RawProviderResult[], context: NormalizeContext = {}): { results: ResearchResult[]; stats: NormalizeStats } {
   const seen = new Set<string>();
   const normalized = rawResults
     .filter((raw) => raw.source_url && raw.title)
-    .map((raw, index) => normalizeResult(raw, index));
+    .map((raw, index) => normalizeResult(raw, index, context));
 
-  const deduped = normalized.filter((result) => {
-    const candidates = [
-      normalizeKey(result.source_url),
-      result.image_url ? normalizeKey(result.image_url) : "",
-      `${result.source_domain}|${result.title.toLowerCase().replace(/\s+/g, " ")}`
-    ].filter(Boolean);
+  const qualityOrdered = [...normalized].sort((a, b) => {
+    if (b.scores.overall !== a.scores.overall) return b.scores.overall - a.scores.overall;
+    return b.scores.source_credibility - a.scores.source_credibility;
+  });
+
+  const deduped = qualityOrdered.filter((result) => {
+    const candidates = dedupeCandidates(result);
 
     if (candidates.some((candidate) => seen.has(candidate))) return false;
     candidates.forEach((candidate) => seen.add(candidate));
