@@ -70,6 +70,6 @@ export async function POST(request: Request) {
     runProvider({ provider: "tavily", enabled: Boolean(runtimeToggles.tavily) && searchPlan.source_targets.includes("web"), skippedMessage: mockOnly ? "Mock-only safe mode is active; Tavily was intentionally skipped." : "Tavily is disabled or this mode did not request web targets.", missingEnv: runtimeToggles.tavily && !process.env.TAVILY_API_KEY ? "TAVILY_API_KEY" : undefined, missingKeyMessage: "Tavily is enabled but TAVILY_API_KEY is missing. Add it to .env.local, disable Tavily, or enable VISUAL_RESEARCH_BOARD_MOCK_ONLY=true.", endpointSample: ["api.tavily.com/search"], plan: searchPlan, run: () => searchTavily(searchPlan) })
   ]);
   const rawResults = providerRuns.flatMap((entry) => entry.results);
-  const normalized = normalizeResults(rawResults);
+  const normalized = normalizeResults(rawResults, { topic: searchPlan.original_topic, mode: searchPlan.mode });
   return NextResponse.json({ request: effectiveRequest, search_plan: searchPlan, results: normalized.results, diagnostics: { generated_at: new Date().toISOString(), total_raw_results: normalized.stats.raw_count, total_normalized_results: normalized.stats.normalized_count, total_deduped_results: normalized.stats.deduped_count, duplicate_count: normalized.stats.duplicate_count, provider_health: providerRuns.map((entry) => entry.health), provider_toggles: runtimeToggles, mock_only: mockOnly } });
 }
