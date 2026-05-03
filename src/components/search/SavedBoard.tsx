@@ -5,7 +5,7 @@ import type { BoardSection, ExportTemplateId, LicenseDetected, ResearchProject, 
 import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research";
 import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
-import { createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
+import { createFallbackMetadata, createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { INBOX_SECTION_ID } from "@/lib/project";
 import { EmptyState } from "@/components/search/EmptyState";
@@ -391,7 +391,11 @@ function ManualImportForm({ onManualImport }: { onManualImport: (result: Researc
       if (metadata.thumbnail_url && !thumbnailUrl.trim()) setThumbnailUrl(metadata.thumbnail_url);
       setMetadataStatus(metadata.status === "error" ? `Metadata fallback: ${metadata.message ?? "source unavailable"}` : "Metadata extracted. Verify it before publishing.");
     } catch (metadataError) {
-      setError(metadataError instanceof Error ? metadataError.message : "Unknown metadata extraction error.");
+      const fallback = createFallbackMetadata(cleanUrl);
+      if (!title.trim()) setTitle(fallback.title);
+      setMetadataStatus(metadataError instanceof Error
+        ? `Server metadata unavailable (${metadataError.message}). Used local URL fallback.`
+        : "Server metadata unavailable. Used local URL fallback.");
     } finally {
       setIsFetchingMetadata(false);
     }
