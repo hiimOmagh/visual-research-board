@@ -1,0 +1,44 @@
+name: Deployed Evidence
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Deployed Visual Research Board URL"
+        required: true
+        type: string
+      require_next_runtime:
+        description: "Fail if deployment is not a Next.js runtime"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+      require_topic_matrix_pass:
+        description: "Fail on any topic-matrix warning"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+jobs:
+  deployed-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Run deployed browser evidence
+        run: npm run deployed:browser:test
+        env:
+          VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL: ${{ inputs.base_url }}
+          VISUAL_RESEARCH_BOARD_REQUIRE_NEXT_RUNTIME: ${{ inputs.require_next_runtime }}
+      - name: Run real topic test matrix
+        run: npm run topic:matrix:test
+        env:
+          VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL: ${{ inputs.base_url }}
+          VISUAL_RESEARCH_BOARD_REQUIRE_TOPIC_MATRIX_PASS: ${{ inputs.require_topic_matrix_pass }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visual-research-board-deployed-evidence
+          path: artifacts/*.json

@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.4 stable`
+`v0.2.5 deployed-evidence package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -24,6 +24,9 @@ Implemented:
 - Provider runtime readiness endpoint and runtime smoke script for deployed evidence capture.
 - Live retrieval quality calibration with creator-gate scoring and runtime artifact capture.
 - Retrieval weak-case auto-tuning with tuned query branches, provider/source/license weighting, and diversity-aware reranking.
+- Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
+- Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
+
 
 ## Broad image retrieval boundary
 
@@ -112,6 +115,26 @@ Output directory: default
 
 Add provider keys as environment variables only when needed.
 
+## Deployed evidence and real-topic matrix
+
+After deploying to Vercel, GitHub Pages, or another host, capture evidence with:
+
+```bash
+VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=https://your-deployed-url.example npm run deployed:browser:test
+VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=https://your-deployed-url.example npm run topic:matrix:test
+```
+
+The first command writes `artifacts/deployed-browser-evidence.json` and classifies the deployment surface as `next_runtime`, `static_demo`, or `unknown_or_broken`. The second command writes `artifacts/real-topic-test-matrix.json` and checks whether real creator topics meet candidate, image, source-diversity, and saveable-result thresholds.
+
+Strict gates are available:
+
+```bash
+VISUAL_RESEARCH_BOARD_REQUIRE_NEXT_RUNTIME=true npm run deployed:browser:test
+VISUAL_RESEARCH_BOARD_REQUIRE_TOPIC_MATRIX_PASS=true npm run topic:matrix:test
+```
+
+See `docs/deployed-browser-evidence.md` and `docs/real-topic-test-matrix.md`.
+
 ## Scripts
 
 ```bash
@@ -177,7 +200,9 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 - `npm run provider:runtime:test` can capture `artifacts/provider-runtime-evidence.json` against localhost or a deployed runtime.
 - `npm run retrieval:quality:test` can capture `artifacts/retrieval-quality-calibration.json` against localhost or a deployed runtime.
 - Search diagnostics include `quality_calibration` with `passes_creator_gate`, failure-specific verdicts, and `auto_tuning` with candidate/calibration deltas.
+- `npm run deployed:browser:test` can prove whether a hosted URL is a Next.js runtime, GitHub Pages static demo, or broken/unknown deployment surface.
+- `npm run topic:matrix:test` can run the real-topic matrix and capture retrieval evidence across eight creator-relevant scenarios.
 
 ## Release status
 
-`v0.2.4` is the retrieval weak-case auto-tuning MVP. Future work should validate live provider keys, inspect calibration and auto-tuning traces, then tune source/ranking policies from real-world weak cases.
+`v0.2.5` is the deployed evidence and real-topic matrix package. Future work should use the produced artifacts to tune provider coverage, ranking weights, and UI workflow from observed weak cases rather than adding speculative features.
