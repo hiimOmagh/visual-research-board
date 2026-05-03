@@ -39,7 +39,7 @@ export function ProviderHealthPanel({ health }: { health: ProviderHealth[] }) {
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider health</p>
           <h2 className="mt-1 text-xl font-bold text-white">Search adapters</h2>
         </div>
-        <p className="text-xs text-slate-400">Alpha.9 records endpoint samples, missing keys, typed counts, and provider-specific failures.</p>
+        <p className="text-xs text-slate-400">Broad retrieval records endpoint samples, missing keys, typed counts, query breadth, and provider-specific failures.</p>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {health.map((item) => (

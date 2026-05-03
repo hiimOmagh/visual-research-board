@@ -5,9 +5,9 @@ import { SEARCH_PROVIDERS } from "@/types/research";
 
 const providerCopy: Record<SearchProviderName, { label: string; description: string; env?: string }> = {
   mock: { label: "Mock", description: "Always available deterministic demo results. Keep this on for safe local validation." },
-  wikimedia: { label: "Wikimedia", description: "Commons-oriented public-domain / CC candidates. No API key required." },
-  brave: { label: "Brave", description: "Image and web search when the Brave Search API key is present.", env: "BRAVE_SEARCH_API_KEY" },
-  tavily: { label: "Tavily", description: "Research/web extraction provider when the Tavily API key is present.", env: "TAVILY_API_KEY" }
+  wikimedia: { label: "Wikimedia", description: "Commons-oriented public-domain / CC candidates across multiple query branches. No API key required." },
+  brave: { label: "Brave", description: "Broad image and web search across multiple query branches when the Brave Search API key is present.", env: "BRAVE_SEARCH_API_KEY" },
+  tavily: { label: "Tavily", description: "Research/web provider with image candidates enabled when the Tavily API key is present.", env: "TAVILY_API_KEY" }
 };
 
 interface ProviderTogglePanelProps { toggles: ProviderToggleMap; onChange: (next: ProviderToggleMap) => void; }
@@ -25,7 +25,7 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider toggles</p>
           <h2 className="mt-1 text-xl font-bold text-white">Search sources</h2>
-          <p className="mt-2 text-xs leading-5 text-slate-400">Disable noisy providers while testing. If every provider is switched off, mock is re-enabled so the workflow remains usable.</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">Use several providers for broader visual coverage. If every provider is switched off, mock is re-enabled so the workflow remains usable.</p>
         </div>
         <button type="button" onClick={enableMockOnly} className="rounded-2xl border border-lime-300/30 bg-lime-300/10 px-4 py-2 text-xs font-semibold text-lime-100 transition hover:border-lime-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Mock-only safe mode</button>
       </div>
