@@ -1,4 +1,4 @@
-# Provider Setup — v0.1.0-alpha.10
+# Provider Setup — v0.1.0
 
 Visual Research Board must remain usable without API keys. Real providers are optional local integrations.
 
