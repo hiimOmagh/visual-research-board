@@ -1,6 +1,6 @@
-# Evidence-Driven Ranking / Query Tuning — v0.2.8
+# Evidence-Driven Ranking / Query Tuning — v0.2.9
 
-`v0.2.8` turns the runtime evidence layer into an explicit ranking and query-tuning layer.
+`v0.2.9` turns the runtime evidence layer into an explicit ranking and query-tuning layer.
 
 The previous versions could measure weak retrieval cases. This version uses those weak signals to tune:
 
@@ -90,7 +90,7 @@ Strict mode fails when only fixture data exists and no runtime topic-matrix arti
 
 ## Acceptance target
 
-A good v0.2.8 run should show:
+A good v0.2.9 run should show:
 
 - evidence tuning trace present in search diagnostics
 - weak metrics clearly listed

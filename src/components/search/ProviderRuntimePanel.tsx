@@ -7,7 +7,9 @@ type RuntimeReadiness = ProviderRuntimeReport["providers"][number]["readiness"];
 const readinessClass: Record<RuntimeReadiness, string> = {
   configured: "border-emerald-300/30 bg-emerald-300/10 text-emerald-100",
   available_no_key_needed: "border-blue-300/30 bg-blue-300/10 text-blue-100",
+  free_reference_launcher: "border-cyan-300/30 bg-cyan-300/10 text-cyan-100",
   missing_key: "border-amber-300/30 bg-amber-300/10 text-amber-100",
+  optional_paid_disabled: "border-zinc-300/20 bg-zinc-300/5 text-zinc-300",
   forced_mock_disabled: "border-slate-300/20 bg-slate-300/5 text-slate-300",
   static_demo_disabled: "border-slate-300/20 bg-slate-300/5 text-slate-300"
 };
@@ -16,7 +18,9 @@ function readinessLabel(readiness: RuntimeReadiness): string {
   const labels: Record<RuntimeReadiness, string> = {
     configured: "Configured",
     available_no_key_needed: "No key needed",
+    free_reference_launcher: "Launcher only",
     missing_key: "Missing key",
+    optional_paid_disabled: "Optional off",
     forced_mock_disabled: "Mock-only disabled",
     static_demo_disabled: "Static demo disabled"
   };
@@ -29,9 +33,9 @@ export function ProviderRuntimePanel({ report }: { report: ProviderRuntimeReport
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Runtime validation</p>
-          <h2 className="mt-1 text-xl font-bold text-white">Real provider readiness</h2>
+          <h2 className="mt-1 text-xl font-bold text-white">Free provider readiness</h2>
           <p className="mt-2 text-xs leading-5 text-slate-400">
-            Shows whether this running surface can execute live provider calls. Static GitHub Pages is mock-only; Vercel or another Next.js runtime is required for Brave, Tavily, and Wikimedia validation.
+            Shows whether this running surface can execute live provider calls. Static GitHub Pages is mock/reference-only; a Next.js runtime is required for live free backend providers. Brave/Tavily are optional and disabled by default in v0.2.9.
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-slate-300">

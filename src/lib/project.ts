@@ -1,4 +1,5 @@
 import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
+import { DEFAULT_PROVIDER_TOGGLES } from "@/types/research";
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
@@ -79,8 +80,12 @@ export function createSection(name: string): BoardSection {
 export function ensureResultQuality(result: ResearchResult): ResearchResult {
   const source_group = result.source_group ?? classifySourceDomain(result.source_domain);
   const scores = result.scores ?? scoreResult(result);
+  const rights_status = result.rights_status ?? (result.license_detected === "public_domain" ? "public_domain" : result.license_detected === "creative_commons" ? "open_license" : result.risk_level === "reference_only" ? "reference_only" : "check_required");
   const enriched = {
     ...result,
+    source_access_mode: result.source_access_mode ?? (result.provider === "manual" ? "manual_reference_only" : "rights_check_required"),
+    rights_status,
+    reuse_risk: result.reuse_risk ?? (rights_status === "public_domain" ? "low" : rights_status === "restricted" ? "high" : "medium"),
     manual_review: result.manual_review ? normalizeManualReview(result.manual_review) : undefined,
     source_group,
     scores,
@@ -123,7 +128,7 @@ function normalizeSnapshot(snapshot: Partial<SearchResultSnapshot>): SearchResul
     search_plan: snapshot.search_plan,
     diagnostics: {
       ...snapshot.diagnostics,
-      provider_toggles: snapshot.diagnostics.provider_toggles ?? snapshot.request.provider_toggles ?? { mock: true, wikimedia: true, brave: true, tavily: true },
+      provider_toggles: snapshot.diagnostics.provider_toggles ?? snapshot.request.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES,
       mock_only: snapshot.diagnostics.mock_only ?? false,
       provider_health,
       retrieval_evidence: snapshot.diagnostics.retrieval_evidence ?? buildRetrievalEvidence({ plan: snapshot.search_plan, results, providerHealth: provider_health })
@@ -147,12 +152,7 @@ function normalizeHistoryEntry(entry: Partial<SearchHistoryEntry>): SearchHistor
     result_count: entry.result_count ?? 0,
     duplicate_count: entry.duplicate_count ?? 0,
     provider_health: normalizeProviderHealth(entry.provider_health ?? []),
-    provider_toggles: entry.provider_toggles ?? {
-      mock: true,
-      wikimedia: true,
-      brave: true,
-      tavily: true
-    }
+    provider_toggles: entry.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES
   };
 }
 

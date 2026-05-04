@@ -18,6 +18,10 @@ const lowRiskDomainHints = [
   "nasa.gov",
   "archives.gov",
   "archive.org",
+  "openverse.org",
+  "images.nasa.gov",
+  "nasa.gov",
+  "si.edu",
   "metmuseum.org",
   "si.edu",
   "europeana.eu"

@@ -29,6 +29,7 @@ import { RetrievalAutoTuningPanel } from "@/components/search/RetrievalAutoTunin
 import { EvidenceDrivenTuningPanel } from "@/components/search/EvidenceDrivenTuningPanel";
 import { ProviderResultInspectorPanel } from "@/components/search/ProviderResultInspectorPanel";
 import { ReviewEvidenceFeedbackPanel } from "@/components/search/ReviewEvidenceFeedbackPanel";
+import { ReferenceSearchHub } from "@/components/search/ReferenceSearchHub";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -286,7 +287,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.2.8.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.2.9.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -319,12 +320,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.8</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.9</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware MVP workspace with broad retrieval diagnostics, provider runtime validation, weak-case auto-tuning, provider result inspection, manual quality review loops, source grouping, saved-first sorting, and export-ready production packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, rights/risk labels, provider runtime validation, review-based ranking calibration, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -455,6 +456,7 @@ export function SearchPanel() {
       <div className="grid gap-6 lg:grid-cols-[1fr_26rem]">
         <div className="space-y-6">
           <ProviderTogglePanel toggles={providerToggles} onChange={setProviderToggles} />
+          <ReferenceSearchHub topic={topic} links={diagnostics?.reference_searches} />
           {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
           {diagnostics?.retrieval_evidence && <RetrievalEvidencePanel evidence={diagnostics.retrieval_evidence} />}
           {diagnostics?.quality_calibration && <LiveQualityCalibrationPanel calibration={diagnostics.quality_calibration} />}

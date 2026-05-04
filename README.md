@@ -1,12 +1,12 @@
 # Visual Research Board
 
-`v0.2.8 review-evidence feedback calibration package`
+`v0.2.9 free image retrieval + reference search hub package`
 
-A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
+A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
 
-## Stable broad-retrieval scope
+## Stable free-source scope
 
-This release finishes the local MVP. It deliberately avoids login, database, browser automation, full crawling, AI image generation, and team workspace features.
+This release keeps the local MVP usable without paid APIs. It deliberately avoids login, database, browser automation, search-engine scraping, full crawling, AI image generation, and team workspace features.
 
 Implemented:
 
@@ -14,34 +14,36 @@ Implemented:
 - Local project library with create, rename, duplicate, delete, switch, import, and export.
 - Search workflow with mode/depth selection, provider toggles, broad image-first query planning, diagnostics, and result snapshots.
 - Mock-first operation with no API keys required.
-- Optional Wikimedia, Brave, and Tavily provider adapters for Next.js runtime deployments, with broader multi-query image/web retrieval.
-- GitHub Pages static-demo mode using client-side mock search and local metadata fallback.
+- Free/no-key backend image providers: Wikimedia Commons, Openverse, Library of Congress, Internet Archive, and NASA Images.
+- Free-key open-access providers: Smithsonian Open Access and Europeana, disabled until keys are supplied.
+- Optional legacy/API providers: Brave and Tavily, disabled by default and not part of the free-only core.
+- Reference Search Hub for Google Images, Bing Images, DuckDuckGo Images, Yandex Images, Startpage Images, Qwant Images, Mojeek, Pinterest, and YouTube. These are launcher-only; the app does not scrape search-result pages.
+- GitHub Pages static-demo mode using client-side mock search, reference launchers, local project library, and local metadata fallback.
 - Result quality layer: source grouping, scoring, broad-result deduplication, saved-first sorting, and “Why this result” explanations.
 - Saved board with notes, board sections, manual URL import, metadata fetch/fallback, and persistence.
+- Manual quality review loop for saved references with relevance, visual usefulness, source trust, license status, final verdict, reviewer note, and Quality Review export.
+- Review-evidence feedback calibration that converts saved-board reviews into conservative ranking signals for repeated domains, source groups, providers, and exact sources.
+- Rights/access labeling on normalized results: source access mode, rights status, and reuse risk.
 - Export preview drawer and JSON, Markdown, CSV, attribution, source-audit, production-brief, and moodboard exports.
-- Executable QA fixtures for normalization, provider smoke shape, project snapshots, library conflict import, and source invariants.
+- Executable QA fixtures for normalization, provider smoke shape, project snapshots, library conflict import, source invariants, review feedback, and free-image retrieval behavior.
 - Deployment workflows for CI and GitHub Pages static demo.
 - Provider runtime readiness endpoint and runtime smoke script for deployed evidence capture.
 - Live retrieval quality calibration with creator-gate scoring and runtime artifact capture.
 - Retrieval weak-case auto-tuning with tuned query branches, provider/source/license weighting, and diversity-aware reranking.
 - Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
-- Provider result inspector with provider-level warnings, review candidate IDs, and visual/source/license quality signals.
-- Manual quality review loop for saved references with relevance, visual usefulness, source trust, license status, final verdict, reviewer note, and Quality Review export.
-- Review-evidence feedback calibration that converts saved-board reviews into conservative ranking signals for repeated domains, source groups, providers, and exact sources.
 
+## v0.2.9 focus
 
-## v0.2.8 focus
+This package expands image discovery through free/open backend sources and a manual Reference Search Hub. Search engines such as Google, Bing, DuckDuckGo, Yandex, Startpage, Qwant, and Mojeek are treated as user-opened reference launchers, not automated scraping targets. Results now carry source-access, rights-status, and reuse-risk labels across backend, manual, and exported data paths.
 
-This package connects human review evidence back into ranking calibration. Saved-board reviews now produce a compact feedback profile that influences the next search through exact-source, domain, source-group, and provider signals while exposing confidence, deltas, and warnings in diagnostics.
+## Free image retrieval boundary
 
-## Broad image retrieval boundary
+This release is designed to retrieve more relevant visual/source candidates without paid APIs. It uses free/no-key providers where possible, free-key open-access providers where needed, strict provider toggles, manual reference launchers, source preservation, deduplication, and rights/risk labeling.
 
-This release is designed to retrieve many more relevant visual/source candidates than the original MVP. It uses broader query planning, multiple query branches, larger provider result windows, Wikimedia multi-query retrieval, Brave image/web expansion, and Tavily image candidates.
+It still cannot literally fetch every image on the web. The target is broad, legal, source-aware retrieval with manual reference import for search-engine discoveries.
 
-It still cannot literally fetch every image on the web. That would require operating a full search-engine crawler and index. The target is broad multi-provider retrieval with source preservation, deduplication, and risk/license labeling.
-
-See `docs/broad-image-retrieval.md`.
+See `docs/free-image-retrieval-reference-hub.md` and `docs/provider-setup.md`.
 
 ## Install and run locally
 
@@ -75,15 +77,17 @@ npm run validate:deploy
 
 ## Optional API keys
 
-Create `.env.local` when using real providers in a Next.js runtime deployment:
+Create `.env.local` only when enabling optional providers in a Next.js runtime deployment:
 
 ```bash
 VISUAL_RESEARCH_BOARD_MOCK_ONLY=false
+SMITHSONIAN_API_KEY=
+EUROPEANA_API_KEY=
 BRAVE_SEARCH_API_KEY=
 TAVILY_API_KEY=
 ```
 
-No key is needed for Wikimedia.
+No key is needed for Wikimedia Commons, Openverse, Library of Congress, Internet Archive, NASA Images, mock search, or the Reference Search Hub. Brave and Tavily are disabled by default and are not part of the free-only core.
 
 ## GitHub Pages static demo
 
@@ -105,7 +109,7 @@ For a root/custom-domain Pages site, omit the base path:
 npm run build:static
 ```
 
-Static demo mode keeps the UI, mock search, local project library, saved board, snapshots, manual import fallback, and exports. It intentionally disables real provider calls and server-side metadata extraction.
+Static demo mode keeps the UI, mock search, Reference Search Hub, local project library, saved board, snapshots, manual import fallback, and exports. It intentionally disables real provider calls and server-side metadata extraction.
 
 ## Vercel / Next.js runtime deployment
 
@@ -218,4 +222,4 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.8` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
+`v0.2.9` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.

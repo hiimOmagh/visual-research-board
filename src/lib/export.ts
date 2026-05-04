@@ -52,6 +52,9 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         by_type: countBy(results, (item) => item.type),
         by_provider: countBy(results, (item) => item.provider),
         by_risk: countBy(results, (item) => item.risk_level),
+        by_rights_status: countBy(results, (item) => item.rights_status),
+        by_source_access_mode: countBy(results, (item) => item.source_access_mode),
+        by_reuse_risk: countBy(results, (item) => item.reuse_risk),
         by_license: countBy(results, (item) => item.license_detected),
         by_section: countBy(results, (item) => item.section_id ?? "unassigned"),
         by_source_group: countBy(results, (item) => item.source_group ?? classifySourceDomain(item.source_domain)),
@@ -102,6 +105,9 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
   lines.push(`- License confidence: ${Math.round(result.license_confidence * 100)}%`);
   if (result.license_url) lines.push(`- License URL: ${result.license_url}`);
   lines.push(`- Risk label: ${riskLabel(result.risk_level)}`);
+  lines.push(`- Rights status: ${result.rights_status}`);
+  lines.push(`- Source access mode: ${result.source_access_mode}`);
+  lines.push(`- Reuse risk: ${result.reuse_risk}`);
   lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
   if (result.quality_reasons?.length) lines.push(`- Why this result: ${result.quality_reasons.join(" | ")}`);
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
@@ -292,6 +298,9 @@ export function createCsvExport(results: ResearchResult[]): string {
     "license_detected",
     "license_confidence",
     "risk_level",
+    "rights_status",
+    "source_access_mode",
+    "reuse_risk",
     "overall_score",
     "production_usefulness",
     "quality_reasons",
@@ -317,6 +326,9 @@ export function createCsvExport(results: ResearchResult[]): string {
     result.license_detected,
     Math.round(result.license_confidence * 100),
     result.risk_level,
+    result.rights_status,
+    result.source_access_mode,
+    result.reuse_risk,
     Math.round(result.scores.overall * 100),
     Math.round(result.scores.production_usefulness * 100),
     result.quality_reasons?.join(";") ?? "",

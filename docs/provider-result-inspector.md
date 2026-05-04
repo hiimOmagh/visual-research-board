@@ -1,6 +1,6 @@
-# Provider Result Inspector — v0.2.8
+# Provider Result Inspector — v0.2.9
 
-`v0.2.8` adds a real provider result inspector to make retrieval quality auditable before more ranking work is added.
+`v0.2.9` adds a real provider result inspector to make retrieval quality auditable before more ranking work is added.
 
 ## Purpose
 

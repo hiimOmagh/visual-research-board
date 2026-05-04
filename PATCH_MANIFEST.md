@@ -1,55 +1,51 @@
-# v0.2.8 Patch Manifest — Review-Evidence Feedback into Ranking Calibration
+# v0.2.9 Patch Manifest — Free Image Retrieval + Reference Search Hub
 
-Apply this package over `visual-research-board-v0.2.7`. It contains only files changed or added for v0.2.8.
+Apply this package over `visual-research-board-v0.2.8-review-evidence-feedback`. It contains only files changed or added for v0.2.9.
 
 ## Added files
 
-- `docs/review-evidence-feedback-calibration.md`
-- `src/components/search/ReviewEvidenceFeedbackPanel.tsx`
-- `src/lib/review-evidence-feedback.ts`
-- `tests/review-evidence-feedback-check.mjs`
+- `docs/free-image-retrieval-reference-hub.md`
+- `src/components/search/ReferenceSearchHub.tsx`
+- `src/lib/providers/europeana.ts`
+- `src/lib/providers/internet-archive.ts`
+- `src/lib/providers/loc.ts`
+- `src/lib/providers/nasa.ts`
+- `src/lib/providers/openverse.ts`
+- `src/lib/providers/smithsonian.ts`
+- `src/lib/reference-search.ts`
+- `tests/free-image-retrieval-check.mjs`
 
 ## Modified files
 
 - `.env.example`
 - `README.md`
-- `docs/broad-image-retrieval.md`
-- `docs/browser-qa-checklist.md`
-- `docs/deployed-browser-evidence.md`
-- `docs/deployment.md`
-- `docs/evidence-driven-ranking-query-tuning.md`
-- `docs/live-retrieval-quality-calibration.md`
-- `docs/manual-quality-review-loop.md`
-- `docs/provider-result-inspector.md`
-- `docs/provider-runtime-test-pack.md`
 - `docs/provider-setup.md`
-- `docs/real-retrieval-validation.md`
-- `docs/real-topic-test-matrix.md`
-- `docs/release-checklist.md`
-- `docs/retrieval-weak-case-auto-tuning.md`
-- `docs/validation-report.md`
+- `PATCH_MANIFEST.md`
 - `package-lock.json`
 - `package.json`
-- `scripts/deployed-browser-evidence.mjs`
-- `scripts/evidence-driven-tuning-report.mjs`
-- `scripts/real-topic-test-matrix.mjs`
+- `src/app/api/provider-runtime/route.ts`
 - `src/app/api/search/route.ts`
+- `src/components/search/ProviderRuntimePanel.tsx`
+- `src/components/search/ProviderTogglePanel.tsx`
+- `src/components/search/ResultCard.tsx`
 - `src/components/search/SearchPanel.tsx`
 - `src/lib/client-search.ts`
+- `src/lib/evidence-driven-tuning.ts`
 - `src/lib/export.ts`
+- `src/lib/manual-import.ts`
+- `src/lib/project.ts`
 - `src/lib/provider-runtime.ts`
+- `src/lib/result-normalizer.ts`
+- `src/lib/result-quality.ts`
+- `src/lib/retrieval-autotuning.ts`
+- `src/lib/review-evidence-feedback.ts`
+- `src/lib/risk.ts`
 - `src/types/research.ts`
-- `tests/broad-retrieval-check.mjs`
-- `tests/deployed-browser-evidence-check.mjs`
-- `tests/evidence-driven-tuning-check.mjs`
-- `tests/manual-quality-review-check.mjs`
-- `tests/provider-result-inspector-check.mjs`
+- `tests/fixtures/provider-smoke-stable.json`
 - `tests/provider-runtime-pack-check.mjs`
+- `tests/provider-smoke-check.mjs`
 - `tests/qa-check.mjs`
-- `tests/real-topic-matrix-check.mjs`
-- `tests/retrieval-autotuning-check.mjs`
-- `tests/retrieval-calibration-check.mjs`
-- `tests/retrieval-evidence-check.mjs`
+- other version-aligned validation/documentation files touched by the v0.2.9 version bump
 
 ## Deleted files
 
@@ -57,7 +53,8 @@ Apply this package over `visual-research-board-v0.2.7`. It contains only files c
 
 ## Validation performed
 
-- `npm run review:evidence:check` — passed
+- `npm run free:image:check` — passed
 - `npm run qa` — passed
-- `npm run typecheck` — not completed in this container because dependency installation for Next.js timed out / remained incomplete.
-- `npm run lint` — not completed for the same dependency-installation reason.
+- `node tests/provider-smoke-check.mjs` — passed
+- `node tests/provider-runtime-pack-check.mjs` — passed
+- `npm run typecheck` — attempted but not completed because `node_modules` is absent in this container; failures were missing Next/React/Node/Tailwind type dependencies, not a confirmed source-level failure.

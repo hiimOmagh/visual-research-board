@@ -12,6 +12,36 @@ export type SearchDepth = "quick" | "standard" | "deep";
 
 export type ResultType = "image" | "web" | "news" | "archive";
 
+export type SourceAccessMode =
+  | "backend_free_no_key"
+  | "backend_free_key_required"
+  | "manual_reference_only"
+  | "stock_illustrative"
+  | "archive_open_access"
+  | "rights_check_required";
+
+export type RightsStatus =
+  | "public_domain"
+  | "open_license"
+  | "likely_reusable"
+  | "reference_only"
+  | "check_required"
+  | "restricted"
+  | "unknown";
+
+export type ReuseRisk = "low" | "medium" | "high";
+
+export type ReferenceSearchEngine =
+  | "google_images"
+  | "bing_images"
+  | "duckduckgo_images"
+  | "yandex_images"
+  | "startpage_images"
+  | "qwant_images"
+  | "mojeek_images"
+  | "pinterest"
+  | "youtube";
+
 export type RiskLevel = "low" | "medium" | "high" | "reference_only" | "avoid";
 
 export type LicenseDetected =
@@ -21,7 +51,18 @@ export type LicenseDetected =
   | "unknown"
   | "unclear";
 
-export type ProviderName = "brave" | "tavily" | "wikimedia" | "mock" | "manual";
+export type ProviderName =
+  | "mock"
+  | "manual"
+  | "wikimedia"
+  | "openverse"
+  | "loc"
+  | "internet_archive"
+  | "smithsonian"
+  | "nasa"
+  | "europeana"
+  | "brave"
+  | "tavily";
 
 export type SourceGroup =
   | "commons_open_access"
@@ -115,7 +156,7 @@ export interface ReviewEvidenceSourceSignal {
 }
 
 export interface ReviewEvidenceFeedback {
-  schema_version: "0.2.8";
+  schema_version: "0.2.9";
   generated_at: string;
   reviewed_result_count: number;
   approved_count: number;
@@ -203,8 +244,10 @@ export type ProviderRuntimeReadiness =
   | "configured"
   | "missing_key"
   | "available_no_key_needed"
+  | "free_reference_launcher"
   | "forced_mock_disabled"
-  | "static_demo_disabled";
+  | "static_demo_disabled"
+  | "optional_paid_disabled";
 
 export type ProviderToggleMap = Record<SearchProviderName, boolean>;
 
@@ -248,6 +291,9 @@ export interface ResearchResult {
   license_detected: LicenseDetected;
   license_confidence: number;
   license_url?: string;
+  source_access_mode: SourceAccessMode;
+  rights_status: RightsStatus;
+  reuse_risk: ReuseRisk;
   risk_level: RiskLevel;
   tags: string[];
   scores: ResultScores;
@@ -289,6 +335,7 @@ export interface ProviderRuntimeEntry {
   requires_key: boolean;
   required_env?: string;
   endpoint_sample: string[];
+  access_mode?: SourceAccessMode;
   message: string;
 }
 
@@ -415,6 +462,7 @@ export interface SearchDiagnostics {
   duplicate_count: number;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
+  reference_searches?: ReferenceSearchLink[];
   mock_only: boolean;
   retrieval_evidence: RetrievalEvidence;
   quality_calibration?: RetrievalQualityCalibration;
@@ -423,6 +471,16 @@ export interface SearchDiagnostics {
   review_evidence_calibration?: ReviewEvidenceCalibrationTrace;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
+}
+
+export interface ReferenceSearchLink {
+  engine: ReferenceSearchEngine;
+  label: string;
+  query: string;
+  search_url: string;
+  purpose: "reference_discovery";
+  fetched_by_tool: false;
+  rights_status: "reference_only";
 }
 
 export interface ResearchResponse {
@@ -461,6 +519,7 @@ export interface SearchHistoryEntry {
   duplicate_count: number;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
+  reference_searches?: ReferenceSearchLink[];
 }
 
 export interface ResearchProject {
@@ -512,8 +571,14 @@ export interface UrlMetadataResponse {
 export const DEFAULT_PROVIDER_TOGGLES: ProviderToggleMap = {
   mock: true,
   wikimedia: true,
-  brave: true,
-  tavily: true
+  openverse: true,
+  loc: true,
+  internet_archive: true,
+  nasa: true,
+  smithsonian: false,
+  europeana: false,
+  brave: false,
+  tavily: false
 };
 
 export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; description: string }> = [
@@ -593,8 +658,8 @@ export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; descripti
   { value: "deep", label: "Deep", description: "Maximum local breadth: more query branches, larger provider result windows, stronger dedupe." }
 ];
 
-export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "brave", "tavily"];
-export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "brave", "tavily"];
+export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "brave", "tavily"];
+export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "brave", "tavily"];
 export const RESULT_TYPES: ResultType[] = ["image", "web", "news", "archive"];
 export const RISK_LEVELS: RiskLevel[] = ["low", "medium", "high", "reference_only", "avoid"];
 export const LICENSE_TYPES: LicenseDetected[] = ["public_domain", "creative_commons", "copyrighted", "unknown", "unclear"];

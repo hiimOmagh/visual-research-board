@@ -14,8 +14,14 @@ import { classifySourceDomain } from "@/lib/result-quality";
 const PROVIDER_BASE_WEIGHTS: Record<SearchProviderName, number> = {
   mock: 0.62,
   wikimedia: 1,
-  brave: 0.92,
-  tavily: 0.86
+  openverse: 1.02,
+  loc: 1.04,
+  internet_archive: 0.98,
+  nasa: 0.98,
+  smithsonian: 1.06,
+  europeana: 1.03,
+  brave: 0.82,
+  tavily: 0.8
 };
 
 const IMPORTANT_SOURCE_GROUPS = new Set<SourceGroup>([
@@ -137,12 +143,17 @@ function weightsForActions(actions: RetrievalAutoTuningAction[], providerHealth:
   }
 
   if (actions.includes("increase_commons_archive_bias") || actions.includes("increase_license_clarity_bias")) {
-    weights.wikimedia = Math.min(1.15, weights.wikimedia + 0.12);
+    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "smithsonian", "europeana"] as SearchProviderName[]) {
+      weights[provider] = Math.min(1.18, weights[provider] + 0.12);
+    }
   }
 
   if (actions.includes("increase_visual_branches")) {
-    weights.brave = Math.min(1.08, weights.brave + 0.06);
-    weights.tavily = Math.min(1.02, weights.tavily + 0.04);
+    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana"] as SearchProviderName[]) {
+      weights[provider] = Math.min(1.16, weights[provider] + 0.05);
+    }
+    weights.brave = Math.min(1.02, weights.brave + 0.03);
+    weights.tavily = Math.min(0.96, weights.tavily + 0.02);
   }
 
   return weights;

@@ -126,11 +126,29 @@ function weightProfile(actions: EvidenceDrivenTuningAction[], plan: SearchPlan):
 
 function providerBias(params: { actions: EvidenceDrivenTuningAction[]; providerHealth: ProviderHealth[] }): Partial<Record<SearchProviderName, number>> {
   const active = new Set(params.providerHealth.filter((entry) => entry.status === "active").map((entry) => entry.provider));
-  const bias: Partial<Record<SearchProviderName, number>> = { mock: 0.92, wikimedia: 1, brave: 1, tavily: 1 };
+  const bias: Partial<Record<SearchProviderName, number>> = {
+    mock: 0.92,
+    wikimedia: 1,
+    openverse: 1,
+    loc: 1,
+    internet_archive: 1,
+    nasa: 1,
+    smithsonian: 1,
+    europeana: 1,
+    brave: 0.9,
+    tavily: 0.9
+  };
   if (params.actions.includes("penalize_mock_when_real_available")) bias.mock = 0.72;
-  if (params.actions.includes("boost_open_license_sources") || params.actions.includes("boost_institutional_sources")) bias.wikimedia = active.has("wikimedia") ? 1.14 : 1.04;
-  if (params.actions.includes("boost_image_density")) bias.brave = active.has("brave") ? 1.1 : 1;
-  if (params.actions.includes("boost_topic_exactness")) bias.tavily = active.has("tavily") ? 1.06 : 1;
+  if (params.actions.includes("boost_open_license_sources")) {
+    for (const provider of ["wikimedia", "openverse", "smithsonian", "europeana"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
+  }
+  if (params.actions.includes("boost_institutional_sources")) {
+    for (const provider of ["loc", "internet_archive", "nasa", "smithsonian", "europeana"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
+  }
+  if (params.actions.includes("boost_image_density")) {
+    for (const provider of ["wikimedia", "openverse", "loc", "nasa"] as SearchProviderName[]) bias[provider] = Math.max(bias[provider] ?? 1, active.has(provider) ? 1.08 : 1.02);
+  }
+  if (params.actions.includes("boost_topic_exactness")) bias.tavily = active.has("tavily") ? 1.02 : 0.92;
   return bias;
 }
 

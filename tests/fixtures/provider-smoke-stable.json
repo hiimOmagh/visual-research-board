@@ -15,7 +15,10 @@
           "provider": "mock",
           "license_detected": "public_domain",
           "license_confidence": 0.72,
-          "tags": ["public-domain-candidate", "archive"]
+          "tags": [
+            "public-domain-candidate",
+            "archive"
+          ]
         }
       ]
     },
@@ -36,7 +39,10 @@
           "license_detected": "creative_commons",
           "license_confidence": 0.7,
           "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-          "tags": ["wikimedia-commons", "license-check-needed"]
+          "tags": [
+            "wikimedia-commons",
+            "license-check-needed"
+          ]
         }
       ]
     },
@@ -56,7 +62,11 @@
           "height": 800,
           "license_detected": "unknown",
           "license_confidence": 0.15,
-          "tags": ["brave-image", "license-check-needed", "query-1"]
+          "tags": [
+            "brave-image",
+            "license-check-needed",
+            "query-1"
+          ]
         },
         {
           "id": "brave_web_0_0",
@@ -68,7 +78,11 @@
           "provider": "brave",
           "license_detected": "unknown",
           "license_confidence": 0.15,
-          "tags": ["brave-web", "source-link", "query-1"]
+          "tags": [
+            "brave-web",
+            "source-link",
+            "query-1"
+          ]
         }
       ]
     },
@@ -85,7 +99,109 @@
           "provider": "tavily",
           "license_detected": "unknown",
           "license_confidence": 0.2,
-          "tags": ["tavily-web", "source-link"]
+          "tags": [
+            "tavily-web",
+            "source-link"
+          ]
+        }
+      ]
+    },
+    "openverse": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "openverse_smoke_001",
+          "type": "image",
+          "title": "Open licensed Hannibal illustration",
+          "thumbnail_url": "https://openverse.example/thumb.jpg",
+          "image_url": "https://openverse.example/image.jpg",
+          "source_url": "https://openverse.org/image/example",
+          "source_domain": "openverse.org",
+          "provider": "openverse",
+          "width": 1400,
+          "height": 900,
+          "license_detected": "creative_commons",
+          "license_confidence": 0.78,
+          "rights_status": "open_license",
+          "reuse_risk": "medium",
+          "source_access_mode": "backend_free_no_key",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/",
+          "tags": [
+            "openverse",
+            "open-license-candidate"
+          ]
+        }
+      ]
+    },
+    "loc": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "loc_smoke_001",
+          "type": "image",
+          "title": "Library of Congress map reference",
+          "thumbnail_url": "https://www.loc.gov/static/images/favicons/open-graph-image.jpg",
+          "image_url": "https://www.loc.gov/static/images/favicons/open-graph-image.jpg",
+          "source_url": "https://www.loc.gov/item/example/",
+          "source_domain": "loc.gov",
+          "provider": "loc",
+          "license_detected": "unclear",
+          "license_confidence": 0.48,
+          "rights_status": "check_required",
+          "reuse_risk": "medium",
+          "source_access_mode": "backend_free_no_key",
+          "tags": [
+            "library-of-congress",
+            "archive-open-access"
+          ]
+        }
+      ]
+    },
+    "internet_archive": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "internet_archive_smoke_001",
+          "type": "archive",
+          "title": "Internet Archive item reference",
+          "thumbnail_url": "https://archive.org/services/img/example",
+          "image_url": "https://archive.org/services/img/example",
+          "source_url": "https://archive.org/details/example",
+          "source_domain": "archive.org",
+          "provider": "internet_archive",
+          "license_detected": "unclear",
+          "license_confidence": 0.42,
+          "rights_status": "check_required",
+          "reuse_risk": "medium",
+          "source_access_mode": "archive_open_access",
+          "tags": [
+            "internet-archive",
+            "metadata-search"
+          ]
+        }
+      ]
+    },
+    "nasa": {
+      "expected_min_count": 1,
+      "raw_results": [
+        {
+          "id": "nasa_smoke_001",
+          "type": "image",
+          "title": "NASA public agency image",
+          "thumbnail_url": "https://images-assets.nasa.gov/image/example/example~thumb.jpg",
+          "image_url": "https://images-assets.nasa.gov/image/example/example~orig.jpg",
+          "source_url": "https://images.nasa.gov/details/example",
+          "source_domain": "images.nasa.gov",
+          "provider": "nasa",
+          "license_detected": "public_domain",
+          "license_confidence": 0.68,
+          "rights_status": "likely_reusable",
+          "reuse_risk": "medium",
+          "source_access_mode": "backend_free_no_key",
+          "tags": [
+            "nasa-images",
+            "public-agency"
+          ]
         }
       ]
     }

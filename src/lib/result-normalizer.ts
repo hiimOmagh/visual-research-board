@@ -1,4 +1,4 @@
-import type { LicenseDetected, ProviderName, ResearchMode, ResearchResult, ResultType } from "@/types/research";
+import type { LicenseDetected, ProviderName, ResearchMode, ResearchResult, ResultType, ReuseRisk, RightsStatus, SourceAccessMode } from "@/types/research";
 import { inferRiskLevel } from "@/lib/risk";
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
@@ -18,6 +18,9 @@ export interface RawProviderResult {
   license_detected?: LicenseDetected;
   license_confidence?: number;
   license_url?: string;
+  source_access_mode?: SourceAccessMode;
+  rights_status?: RightsStatus;
+  reuse_risk?: ReuseRisk;
   tags?: string[];
 }
 
@@ -102,6 +105,32 @@ function primaryDuplicateKey(result: ResearchResult): string {
   return dedupeCandidates(result)[0] ?? `${result.source_domain}|${normalizeTitle(result.title)}`;
 }
 
+function defaultSourceAccessMode(provider: ProviderName, sourceDomain: string): SourceAccessMode {
+  if (provider === "manual") return "manual_reference_only";
+  if (provider === "brave" || provider === "tavily") return "rights_check_required";
+  if (provider === "loc" || provider === "internet_archive" || provider === "nasa") return "backend_free_no_key";
+  if (provider === "smithsonian" || provider === "europeana") return "backend_free_key_required";
+  if (provider === "wikimedia" || provider === "openverse" || provider === "mock") return "backend_free_no_key";
+  if (sourceDomain.includes("pexels") || sourceDomain.includes("pixabay") || sourceDomain.includes("unsplash")) return "stock_illustrative";
+  return "rights_check_required";
+}
+
+function defaultRightsStatus(license: LicenseDetected, riskLevel: ResearchResult["risk_level"], accessMode: SourceAccessMode): RightsStatus {
+  if (accessMode === "manual_reference_only" || riskLevel === "reference_only") return "reference_only";
+  if (license === "public_domain") return "public_domain";
+  if (license === "creative_commons") return "open_license";
+  if (license === "copyrighted" || riskLevel === "high" || riskLevel === "avoid") return "restricted";
+  if (license === "unclear") return "check_required";
+  return "unknown";
+}
+
+function defaultReuseRisk(rightsStatus: RightsStatus, riskLevel: ResearchResult["risk_level"]): ReuseRisk {
+  if (rightsStatus === "public_domain" || rightsStatus === "open_license") return riskLevel === "low" ? "low" : "medium";
+  if (rightsStatus === "likely_reusable") return "medium";
+  if (rightsStatus === "reference_only" || rightsStatus === "check_required" || rightsStatus === "unknown") return "medium";
+  return "high";
+}
+
 export function normalizeResult(raw: RawProviderResult, index: number, context: NormalizeContext = {}): ResearchResult {
   const sourceDomain = raw.source_domain ?? domainFromUrl(raw.source_url);
   const sourceGroup = classifySourceDomain(sourceDomain);
@@ -116,6 +145,9 @@ export function normalizeResult(raw: RawProviderResult, index: number, context: 
     title,
     licenseConfidence
   });
+  const sourceAccessMode = raw.source_access_mode ?? defaultSourceAccessMode(raw.provider, sourceDomain);
+  const rightsStatus = raw.rights_status ?? defaultRightsStatus(license, riskLevel, sourceAccessMode);
+  const reuseRisk = raw.reuse_risk ?? defaultReuseRisk(rightsStatus, riskLevel);
 
   const resultCore = {
     id: raw.id ?? `${raw.provider}_${index}_${stableId(`${title}|${raw.source_url}|${raw.image_url ?? ""}`)}`,
@@ -132,6 +164,9 @@ export function normalizeResult(raw: RawProviderResult, index: number, context: 
     license_detected: license,
     license_confidence: licenseConfidence,
     license_url: raw.license_url,
+    source_access_mode: sourceAccessMode,
+    rights_status: rightsStatus,
+    reuse_risk: reuseRisk,
     risk_level: riskLevel,
     tags: cleanTags,
     source_group: sourceGroup,

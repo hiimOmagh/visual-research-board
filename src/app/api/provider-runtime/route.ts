@@ -12,6 +12,8 @@ export async function GET() {
     mockOnly: isMockOnlyMode(),
     staticDemo: false,
     braveKeyPresent: Boolean(process.env.BRAVE_SEARCH_API_KEY),
-    tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY)
+    tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY),
+    smithsonianKeyPresent: Boolean(process.env.SMITHSONIAN_API_KEY),
+    europeanaKeyPresent: Boolean(process.env.EUROPEANA_API_KEY)
   }));
 }

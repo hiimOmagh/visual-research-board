@@ -1,6 +1,6 @@
-# Manual Quality Review Loop — v0.2.8
+# Manual Quality Review Loop — v0.2.9
 
-`v0.2.8` adds a manual quality review loop for saved references.
+`v0.2.9` adds a manual quality review loop for saved references.
 
 ## Purpose
 

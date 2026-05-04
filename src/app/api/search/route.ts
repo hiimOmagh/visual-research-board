@@ -5,6 +5,12 @@ import { searchMockProvider } from "@/lib/providers/mock";
 import { searchBraveImages, searchBraveWeb } from "@/lib/providers/brave";
 import { searchTavily } from "@/lib/providers/tavily";
 import { searchWikimediaCommons } from "@/lib/providers/wikimedia";
+import { searchOpenverse } from "@/lib/providers/openverse";
+import { searchLibraryOfCongress } from "@/lib/providers/loc";
+import { searchInternetArchive } from "@/lib/providers/internet-archive";
+import { searchNasaImages } from "@/lib/providers/nasa";
+import { searchSmithsonianOpenAccess } from "@/lib/providers/smithsonian";
+import { searchEuropeana } from "@/lib/providers/europeana";
 import { ProviderFetchError, querySlice } from "@/lib/providers/provider-utils";
 import type { ProviderHealth, ResearchMode, ResearchRequest, ResultType, SearchDepth, SearchPlan, SearchProviderName } from "@/types/research";
 import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
@@ -16,23 +22,33 @@ import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTr
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
+import { buildReferenceSearchLinks } from "@/lib/reference-search";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
-const MOCK_ONLY_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
-const DISABLE_AUTOTUNE_VALUES = new Set(["1", "true", "yes", "on"]);
-const DISABLE_EVIDENCE_TUNING_VALUES = new Set(["1", "true", "yes", "on"]);
+const ON_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 
 function isMockOnlyMode(): boolean {
-  return MOCK_ONLY_ENV_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_MOCK_ONLY ?? "").trim().toLowerCase());
+  return ON_ENV_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_MOCK_ONLY ?? "").trim().toLowerCase());
 }
 
 function isAutoTuneDisabled(): boolean {
-  return DISABLE_AUTOTUNE_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING ?? "").trim().toLowerCase());
+  return ON_ENV_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING ?? "").trim().toLowerCase());
 }
 
 function isEvidenceTuningDisabled(): boolean {
-  return DISABLE_EVIDENCE_TUNING_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING ?? "").trim().toLowerCase());
+  return ON_ENV_VALUES.has(String(process.env.VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING ?? "").trim().toLowerCase());
+}
+
+function disabledToggles(): Record<SearchProviderName, boolean> {
+  return SEARCH_PROVIDERS.reduce((acc, provider) => {
+    acc[provider] = false;
+    return acc;
+  }, {} as Record<SearchProviderName, boolean>);
+}
+
+function anyProviderEnabled(toggles: Record<SearchProviderName, boolean>): boolean {
+  return SEARCH_PROVIDERS.some((provider) => toggles[provider]);
 }
 
 function validateResearchRequest(body: unknown): ResearchRequest | null {
@@ -47,7 +63,7 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
     acc[provider] = typeof requested === "boolean" ? requested : DEFAULT_PROVIDER_TOGGLES[provider];
     return acc;
   }, { ...DEFAULT_PROVIDER_TOGGLES });
-  if (!provider_toggles.mock && !provider_toggles.wikimedia && !provider_toggles.brave && !provider_toggles.tavily) provider_toggles.mock = true;
+  if (!anyProviderEnabled(provider_toggles)) provider_toggles.mock = true;
   return {
     topic: candidate.topic.trim(),
     mode: candidate.mode,
@@ -66,10 +82,6 @@ function countResultTypes(results: RawProviderResult[]): Partial<Record<ResultTy
     acc[result.type] = (acc[result.type] ?? 0) + 1;
     return acc;
   }, {});
-}
-
-function emptyTypeCounts(): Partial<Record<ResultType, number>> {
-  return {};
 }
 
 async function runProvider(params: {
@@ -93,7 +105,7 @@ async function runProvider(params: {
         status: "skipped",
         enabled: false,
         result_count: 0,
-        result_type_counts: emptyTypeCounts(),
+        result_type_counts: {},
         duration_ms: 0,
         queries_used: 0,
         query_sample,
@@ -110,7 +122,7 @@ async function runProvider(params: {
         status: "missing_key",
         enabled: true,
         result_count: 0,
-        result_type_counts: emptyTypeCounts(),
+        result_type_counts: {},
         duration_ms: 0,
         queries_used: 0,
         query_sample,
@@ -124,35 +136,19 @@ async function runProvider(params: {
     const results = await params.run();
     const duration_ms = Date.now() - startedAt;
     const result_type_counts = countResultTypes(results);
-    if (results.length === 0) {
-      return {
-        results,
-        health: {
-          provider: params.provider,
-          status: "no_results",
-          enabled: true,
-          result_count: 0,
-          result_type_counts,
-          duration_ms,
-          queries_used: query_sample.length,
-          query_sample,
-          endpoint_sample,
-          message: "Provider responded but returned no usable normalized candidates for this plan."
-        }
-      };
-    }
     return {
       results,
       health: {
         provider: params.provider,
-        status: "active",
+        status: results.length > 0 ? "active" : "no_results",
         enabled: true,
         result_count: results.length,
         result_type_counts,
         duration_ms,
         queries_used: query_sample.length,
         query_sample,
-        endpoint_sample
+        endpoint_sample,
+        message: results.length > 0 ? undefined : "Provider responded but returned no usable normalized candidates for this plan."
       }
     };
   } catch (error) {
@@ -164,7 +160,7 @@ async function runProvider(params: {
         status: providerStatus,
         enabled: true,
         result_count: 0,
-        result_type_counts: emptyTypeCounts(),
+        result_type_counts: {},
         duration_ms: Date.now() - startedAt,
         queries_used: query_sample.length,
         query_sample,
@@ -182,52 +178,25 @@ async function executeProviderRuns(params: {
 }): Promise<Array<{ results: RawProviderResult[]; health: ProviderHealth }>> {
   const { searchPlan, runtimeToggles, mockOnly } = params;
   return Promise.all([
-    runProvider({
-      provider: "mock",
-      enabled: runtimeToggles.mock,
-      endpointSample: ["local/mock"],
-      plan: searchPlan,
-      run: () => searchMockProvider(searchPlan)
-    }),
-    runProvider({
-      provider: "wikimedia",
-      enabled: Boolean(runtimeToggles.wikimedia) && searchPlan.source_targets.includes("commons"),
-      skippedMessage: mockOnly ? "Mock-only safe mode is active; Wikimedia was intentionally skipped." : "Wikimedia is disabled or this mode did not request Commons targets.",
-      endpointSample: ["commons.wikimedia.org/w/api.php"],
-      plan: searchPlan,
-      run: () => searchWikimediaCommons(searchPlan)
-    }),
-    runProvider({
-      provider: "brave",
-      enabled: Boolean(runtimeToggles.brave) && (searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("web")),
-      skippedMessage: mockOnly ? "Mock-only safe mode is active; Brave was intentionally skipped." : "Brave is disabled or this mode did not request image/web targets.",
-      missingEnv: runtimeToggles.brave && !process.env.BRAVE_SEARCH_API_KEY ? "BRAVE_SEARCH_API_KEY" : undefined,
-      missingKeyMessage: "Brave Search is enabled but BRAVE_SEARCH_API_KEY is missing. Add it to .env.local, disable Brave, or enable VISUAL_RESEARCH_BOARD_MOCK_ONLY=true.",
-      endpointSample: ["api.search.brave.com/res/v1/images/search", "api.search.brave.com/res/v1/web/search"],
-      plan: searchPlan,
-      run: async () => {
-        const [images, web] = await Promise.all([searchBraveImages(searchPlan), searchBraveWeb(searchPlan)]);
-        return [...images, ...web];
-      }
-    }),
-    runProvider({
-      provider: "tavily",
-      enabled: Boolean(runtimeToggles.tavily) && searchPlan.source_targets.includes("web"),
-      skippedMessage: mockOnly ? "Mock-only safe mode is active; Tavily was intentionally skipped." : "Tavily is disabled or this mode did not request web targets.",
-      missingEnv: runtimeToggles.tavily && !process.env.TAVILY_API_KEY ? "TAVILY_API_KEY" : undefined,
-      missingKeyMessage: "Tavily is enabled but TAVILY_API_KEY is missing. Add it to .env.local, disable Tavily, or enable VISUAL_RESEARCH_BOARD_MOCK_ONLY=true.",
-      endpointSample: ["api.tavily.com/search"],
-      plan: searchPlan,
-      run: () => searchTavily(searchPlan)
-    })
+    runProvider({ provider: "mock", enabled: runtimeToggles.mock, endpointSample: ["local/mock"], plan: searchPlan, run: () => searchMockProvider(searchPlan) }),
+    runProvider({ provider: "wikimedia", enabled: runtimeToggles.wikimedia && searchPlan.source_targets.includes("commons"), skippedMessage: mockOnly ? "Mock-only safe mode is active; Wikimedia was intentionally skipped." : "Wikimedia is disabled or this mode did not request Commons targets.", endpointSample: ["commons.wikimedia.org/w/api.php"], plan: searchPlan, run: () => searchWikimediaCommons(searchPlan) }),
+    runProvider({ provider: "openverse", enabled: runtimeToggles.openverse && (searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("commons")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Openverse was intentionally skipped." : "Openverse is disabled or this mode did not request image/open-media targets.", endpointSample: ["api.openverse.org/v1/images"], plan: searchPlan, run: () => searchOpenverse(searchPlan) }),
+    runProvider({ provider: "loc", enabled: runtimeToggles.loc && (searchPlan.source_targets.includes("archive") || searchPlan.source_targets.includes("image")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Library of Congress was intentionally skipped." : "Library of Congress is disabled or this mode did not request archive/image targets.", endpointSample: ["loc.gov/search/?fo=json"], plan: searchPlan, run: () => searchLibraryOfCongress(searchPlan) }),
+    runProvider({ provider: "internet_archive", enabled: runtimeToggles.internet_archive && (searchPlan.source_targets.includes("archive") || searchPlan.source_targets.includes("image")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Internet Archive was intentionally skipped." : "Internet Archive is disabled or this mode did not request archive/image targets.", endpointSample: ["archive.org/advancedsearch.php"], plan: searchPlan, run: () => searchInternetArchive(searchPlan) }),
+    runProvider({ provider: "nasa", enabled: runtimeToggles.nasa && (searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("archive")), skippedMessage: mockOnly ? "Mock-only safe mode is active; NASA Images was intentionally skipped." : "NASA Images is disabled or this mode did not request image/archive targets.", endpointSample: ["images-api.nasa.gov/search"], plan: searchPlan, run: () => searchNasaImages(searchPlan) }),
+    runProvider({ provider: "smithsonian", enabled: runtimeToggles.smithsonian && (searchPlan.source_targets.includes("archive") || searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("commons")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Smithsonian was intentionally skipped." : "Smithsonian is disabled or this mode did not request museum/open-access targets.", missingEnv: runtimeToggles.smithsonian && !process.env.SMITHSONIAN_API_KEY ? "SMITHSONIAN_API_KEY" : undefined, missingKeyMessage: "Smithsonian Open Access is free-key only. Add SMITHSONIAN_API_KEY or leave the provider off.", endpointSample: ["api.si.edu/openaccess/api/v1.0/search"], plan: searchPlan, run: () => searchSmithsonianOpenAccess(searchPlan) }),
+    runProvider({ provider: "europeana", enabled: runtimeToggles.europeana && (searchPlan.source_targets.includes("archive") || searchPlan.source_targets.includes("image")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Europeana was intentionally skipped." : "Europeana is disabled or this mode did not request cultural heritage targets.", missingEnv: runtimeToggles.europeana && !process.env.EUROPEANA_API_KEY ? "EUROPEANA_API_KEY" : undefined, missingKeyMessage: "Europeana is free-key only. Add EUROPEANA_API_KEY or leave the provider off.", endpointSample: ["api.europeana.eu/record/v2/search.json"], plan: searchPlan, run: () => searchEuropeana(searchPlan) }),
+    runProvider({ provider: "brave", enabled: runtimeToggles.brave && (searchPlan.source_targets.includes("image") || searchPlan.source_targets.includes("web")), skippedMessage: mockOnly ? "Mock-only safe mode is active; Brave was intentionally skipped." : "Brave is optional and disabled by default for the free-only workflow.", missingEnv: runtimeToggles.brave && !process.env.BRAVE_SEARCH_API_KEY ? "BRAVE_SEARCH_API_KEY" : undefined, missingKeyMessage: "Brave Search is optional and requires BRAVE_SEARCH_API_KEY. It is not part of the free-only core.", endpointSample: ["api.search.brave.com/res/v1/images/search", "api.search.brave.com/res/v1/web/search"], plan: searchPlan, run: async () => {
+      const [imageResults, webResults] = await Promise.all([searchBraveImages(searchPlan), searchBraveWeb(searchPlan)]);
+      return [...imageResults, ...webResults];
+    } }),
+    runProvider({ provider: "tavily", enabled: runtimeToggles.tavily && searchPlan.source_targets.includes("web"), skippedMessage: mockOnly ? "Mock-only safe mode is active; Tavily was intentionally skipped." : "Tavily is optional and disabled by default for the free-only workflow.", missingEnv: runtimeToggles.tavily && !process.env.TAVILY_API_KEY ? "TAVILY_API_KEY" : undefined, missingKeyMessage: "Tavily is optional and requires TAVILY_API_KEY. It is not part of the free-only core.", endpointSample: ["api.tavily.com/search"], plan: searchPlan, run: () => searchTavily(searchPlan) })
   ]);
 }
 
 function mergeResultTypeCounts(a: Partial<Record<ResultType, number>>, b: Partial<Record<ResultType, number>>): Partial<Record<ResultType, number>> {
   const merged: Partial<Record<ResultType, number>> = { ...a };
-  for (const [type, count] of Object.entries(b) as Array<[ResultType, number]>) {
-    merged[type] = (merged[type] ?? 0) + count;
-  }
+  for (const [type, count] of Object.entries(b) as Array<[ResultType, number]>) merged[type] = (merged[type] ?? 0) + count;
   return merged;
 }
 
@@ -237,17 +206,7 @@ function combineHealth(first: ProviderHealth[], second: ProviderHealth[]): Provi
     const b = second.find((entry) => entry.provider === provider);
     if (!a) return b as ProviderHealth;
     if (!b) return a;
-    const status = a.status === "active" || b.status === "active"
-      ? "active"
-      : b.status === "missing_key" || a.status === "missing_key"
-        ? "missing_key"
-        : b.status === "timeout" || a.status === "timeout"
-          ? "timeout"
-          : b.status === "error" || a.status === "error"
-            ? "error"
-            : b.status === "no_results" || a.status === "no_results"
-              ? "no_results"
-              : "skipped";
+    const status = a.status === "active" || b.status === "active" ? "active" : b.status === "missing_key" || a.status === "missing_key" ? "missing_key" : b.status === "timeout" || a.status === "timeout" ? "timeout" : b.status === "error" || a.status === "error" ? "error" : b.status === "no_results" || a.status === "no_results" ? "no_results" : "skipped";
     return {
       ...b,
       status,
@@ -258,9 +217,7 @@ function combineHealth(first: ProviderHealth[], second: ProviderHealth[]): Provi
       queries_used: a.queries_used + b.queries_used,
       query_sample: Array.from(new Set([...a.query_sample, ...b.query_sample])).slice(0, 10),
       endpoint_sample: Array.from(new Set([...(a.endpoint_sample ?? []), ...(b.endpoint_sample ?? [])])),
-      message: status === "active"
-        ? "Auto-tuning merged baseline and tuned provider evidence."
-        : b.message ?? a.message
+      message: status === "active" ? "Auto-tuning merged baseline and tuned provider evidence." : b.message ?? a.message
     };
   });
 }
@@ -273,7 +230,7 @@ export async function POST(request: Request) {
   const mockOnly = isMockOnlyMode();
   const baseSearchPlan = createSearchPlan(validRequest);
   const requestedToggles = validRequest.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES;
-  const runtimeToggles = mockOnly ? { mock: true, wikimedia: false, brave: false, tavily: false } : requestedToggles;
+  const runtimeToggles = mockOnly ? { ...disabledToggles(), mock: true } : requestedToggles;
   const effectiveRequest: ResearchRequest = { ...validRequest, provider_toggles: runtimeToggles };
 
   const firstProviderRuns = await executeProviderRuns({ searchPlan: baseSearchPlan, runtimeToggles, mockOnly });
@@ -282,30 +239,14 @@ export async function POST(request: Request) {
   const firstNormalized = normalizeResults(firstRawResults, { topic: baseSearchPlan.original_topic, mode: baseSearchPlan.mode });
   const firstEvidence = buildRetrievalEvidence({ plan: baseSearchPlan, results: firstNormalized.results, providerHealth: firstProviderHealth });
   const firstCalibration = buildRetrievalQualityCalibration({ mode: baseSearchPlan.mode, depth: baseSearchPlan.depth, results: firstNormalized.results, providerHealth: firstProviderHealth });
-  const { plan: autoTunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({
-    plan: baseSearchPlan,
-    evidence: firstEvidence,
-    calibration: firstCalibration,
-    providerHealth: firstProviderHealth
-  });
-  const { plan: evidenceTunedPlan, trace: initialEvidenceTuningTrace } = buildEvidenceDrivenTuningPlan({
-    plan: autoTunedPlan,
-    evidence: firstEvidence,
-    calibration: firstCalibration,
-    providerHealth: firstProviderHealth
-  });
+  const { plan: autoTunedPlan, trace: initialAutoTuneTrace } = buildRetrievalAutoTunePlan({ plan: baseSearchPlan, evidence: firstEvidence, calibration: firstCalibration, providerHealth: firstProviderHealth });
+  const { plan: evidenceTunedPlan, trace: initialEvidenceTuningTrace } = buildEvidenceDrivenTuningPlan({ plan: autoTunedPlan, evidence: firstEvidence, calibration: firstCalibration, providerHealth: firstProviderHealth });
 
   const shouldRunTunedPass = (initialAutoTuneTrace.applied && !isAutoTuneDisabled()) || (initialEvidenceTuningTrace.applied && !isEvidenceTuningDisabled());
   const tunedPlan = shouldRunTunedPass ? evidenceTunedPlan : baseSearchPlan;
-  const secondProviderRuns = shouldRunTunedPass
-    ? await executeProviderRuns({ searchPlan: tunedPlan, runtimeToggles, mockOnly })
-    : [];
-  const rawResults = shouldRunTunedPass
-    ? [...firstRawResults, ...secondProviderRuns.flatMap((entry) => entry.results)]
-    : firstRawResults;
-  const providerHealth = shouldRunTunedPass
-    ? combineHealth(firstProviderHealth, secondProviderRuns.map((entry) => entry.health))
-    : firstProviderHealth;
+  const secondProviderRuns = shouldRunTunedPass ? await executeProviderRuns({ searchPlan: tunedPlan, runtimeToggles, mockOnly }) : [];
+  const rawResults = shouldRunTunedPass ? [...firstRawResults, ...secondProviderRuns.flatMap((entry) => entry.results)] : firstRawResults;
+  const providerHealth = shouldRunTunedPass ? combineHealth(firstProviderHealth, secondProviderRuns.map((entry) => entry.health)) : firstProviderHealth;
 
   const normalized = normalizeResults(rawResults, { topic: tunedPlan.original_topic, mode: tunedPlan.mode });
   const autoRankedResults = applyAutoTunedRanking(normalized.results, initialAutoTuneTrace);
@@ -315,32 +256,17 @@ export async function POST(request: Request) {
   const generatedAt = new Date().toISOString();
   const retrievalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
   const qualityCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
-  const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({
-    feedback: effectiveRequest.review_evidence_feedback,
-    rankedResults,
-    beforeCalibration: preReviewCalibration,
-    afterCalibration: qualityCalibration
-  });
-  const autoTuning = completeAutoTuningTrace({
-    trace: shouldRunTunedPass
-      ? initialAutoTuneTrace
-      : { ...initialAutoTuneTrace, applied: false, reason: isAutoTuneDisabled() ? "Auto-tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING." : initialAutoTuneTrace.reason },
-    finalEvidence: retrievalEvidence,
-    finalCalibration: qualityCalibration
-  });
-  const evidenceTuning = completeEvidenceDrivenTuningTrace({
-    trace: shouldRunTunedPass
-      ? initialEvidenceTuningTrace
-      : { ...initialEvidenceTuningTrace, applied: false, reason: isEvidenceTuningDisabled() ? "Evidence-driven tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING." : initialEvidenceTuningTrace.reason },
-    finalEvidence: retrievalEvidence,
-    finalCalibration: qualityCalibration
-  });
+  const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({ feedback: effectiveRequest.review_evidence_feedback, rankedResults, beforeCalibration: preReviewCalibration, afterCalibration: qualityCalibration });
+  const autoTuning = completeAutoTuningTrace({ trace: shouldRunTunedPass ? initialAutoTuneTrace : { ...initialAutoTuneTrace, applied: false, reason: isAutoTuneDisabled() ? "Auto-tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING." : initialAutoTuneTrace.reason }, finalEvidence: retrievalEvidence, finalCalibration: qualityCalibration });
+  const evidenceTuning = completeEvidenceDrivenTuningTrace({ trace: shouldRunTunedPass ? initialEvidenceTuningTrace : { ...initialEvidenceTuningTrace, applied: false, reason: isEvidenceTuningDisabled() ? "Evidence-driven tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING." : initialEvidenceTuningTrace.reason }, finalEvidence: retrievalEvidence, finalCalibration: qualityCalibration });
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
   const runtimeReport = buildProviderRuntimeReport({
     mockOnly,
     staticDemo: false,
     braveKeyPresent: Boolean(process.env.BRAVE_SEARCH_API_KEY),
     tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY),
+    smithsonianKeyPresent: Boolean(process.env.SMITHSONIAN_API_KEY),
+    europeanaKeyPresent: Boolean(process.env.EUROPEANA_API_KEY),
     generatedAt
   });
 
@@ -356,6 +282,7 @@ export async function POST(request: Request) {
       duplicate_count: normalized.stats.duplicate_count,
       provider_health: providerHealth,
       provider_toggles: runtimeToggles,
+      reference_searches: buildReferenceSearchLinks(tunedPlan.original_topic),
       mock_only: mockOnly,
       retrieval_evidence: retrievalEvidence,
       quality_calibration: qualityCalibration,

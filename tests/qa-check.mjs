@@ -53,7 +53,7 @@ const requiredFiles = [
 requiredFiles.forEach((file) => assert(existsSync(join(root, file)), `Missing required file: ${file}`));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.8", "package.json version must be 0.2.8");
+assert(pkg.version === "0.2.9", "package.json version must be 0.2.9");
 assert(Boolean(pkg.scripts?.qa), "package.json must define npm run qa");
 assert(Boolean(pkg.scripts?.["normalization:test"]), "package.json must define npm run normalization:test");
 assert(Boolean(pkg.scripts?.["e2e:fixtures"]), "package.json must define npm run e2e:fixtures");
@@ -90,7 +90,7 @@ assert(searchPanel.includes("createProjectLibraryExport"), "SearchPanel must exp
 assert(searchPanel.includes("importLibraryFile"), "SearchPanel must import project libraries");
 assert(searchPanel.includes("mergeLibraries"), "SearchPanel must use conflict-safe library merge import");
 assert(searchPanel.includes("provider_toggles"), "SearchPanel must send provider_toggles to API");
-assert(searchPanel.includes("v0.2.8"), "SearchPanel header must show v0.2.8");
+assert(searchPanel.includes("v0.2.9"), "SearchPanel header must show v0.2.9");
 assert(searchPanel.includes("buildReviewEvidenceFeedback(saved)"), "SearchPanel must build review evidence feedback from saved items");
 assert(searchPanel.includes("ReviewEvidenceFeedbackPanel"), "SearchPanel must render review evidence feedback diagnostics");
 assert(searchPanel.includes("importSummary"), "SearchPanel must surface import summary state");
@@ -225,8 +225,8 @@ assert(conflictFixture.projects.some((p) => p?.id === "project_fixture_stable_ma
 assert(conflictFixture.projects.some((p) => p?.name === "Secondary fixture project"), "conflict fixture must reuse a duplicate name");
 
 const smokeFixture = JSON.parse(read("tests/fixtures/provider-smoke-stable.json"));
-assert(Object.keys(smokeFixture.providers ?? {}).length === 4, "provider smoke fixture must cover all four providers");
-["mock", "wikimedia", "brave", "tavily"].forEach((providerName) => {
+assert(Object.keys(smokeFixture.providers ?? {}).length >= 6, "provider smoke fixture must cover the free-core providers");
+["mock", "wikimedia", "openverse", "loc", "internet_archive", "nasa"].forEach((providerName) => {
   const entry = smokeFixture.providers?.[providerName];
   assert(entry && Array.isArray(entry.raw_results) && entry.raw_results.length > 0, `provider smoke fixture must include raw results for ${providerName}`);
 });
@@ -237,4 +237,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("QA checks passed for v0.2.8.");
+console.log("QA checks passed for v0.2.9.");

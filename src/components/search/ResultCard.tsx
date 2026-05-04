@@ -71,6 +71,12 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
           <span className={`rounded-full border px-2 py-1 ${riskClass[result.risk_level]}`}>
             {riskLabel(result.risk_level)}
           </span>
+          <span className="rounded-full border border-blue-300/20 bg-blue-300/10 px-2 py-1 text-blue-100">
+            {result.rights_status.replaceAll("_", " ")}
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-300">
+            {result.source_access_mode.replaceAll("_", " ")}
+          </span>
         </div>
 
         <div className="grid grid-cols-4 gap-2 text-[11px] text-slate-300">

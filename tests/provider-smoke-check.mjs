@@ -36,11 +36,11 @@ function looksUsable(raw) {
   if (typeof raw.title !== "string" || !raw.title.trim()) return false;
   if (typeof raw.source_url !== "string" || !raw.source_url.trim()) return false;
   if (!["image", "web", "news", "archive"].includes(raw.type)) return false;
-  if (!["mock", "manual", "wikimedia", "brave", "tavily"].includes(raw.provider)) return false;
+  if (!["mock", "manual", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "brave", "tavily"].includes(raw.provider)) return false;
   return true;
 }
 
-const providerNames = ["mock", "wikimedia", "brave", "tavily"];
+const providerNames = ["mock", "wikimedia", "openverse", "loc", "internet_archive", "nasa"];
 
 for (const providerName of providerNames) {
   const providerEntry = fixture.providers?.[providerName];
@@ -91,4 +91,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Provider smoke fixture checks passed for v0.1.0.");
+console.log("Provider smoke fixture checks passed for v0.2.9.");

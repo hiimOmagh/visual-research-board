@@ -1,5 +1,5 @@
 import type { ProviderHealth, ResearchRequest, ResearchResponse, ResearchResult, SearchDiagnostics, SearchProviderName } from "@/types/research";
-import { DEFAULT_PROVIDER_TOGGLES } from "@/types/research";
+import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
 import { createSearchPlan } from "@/lib/query-planner";
 import { normalizeResults } from "@/lib/result-normalizer";
 import { searchMockProvider } from "@/lib/providers/mock";
@@ -10,6 +10,7 @@ import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTr
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
+import { buildReferenceSearchLinks } from "@/lib/reference-search";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -49,14 +50,11 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     mode: searchPlan.mode
   });
 
-  const providerToggles = {
-    ...DEFAULT_PROVIDER_TOGGLES,
-    ...request.provider_toggles,
-    mock: true,
-    wikimedia: false,
-    brave: false,
-    tavily: false
-  };
+  const providerToggles = SEARCH_PROVIDERS.reduce((acc, provider) => {
+    acc[provider] = false;
+    return acc;
+  }, { ...DEFAULT_PROVIDER_TOGGLES, ...request.provider_toggles } as Record<SearchProviderName, boolean>);
+  providerToggles.mock = true;
 
   const mockHealth: ProviderHealth = {
     provider: "mock",
@@ -73,9 +71,9 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
 
   const providerHealth = [
     mockHealth,
-    skippedHealth("wikimedia", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Wikimedia provider calls."),
-    skippedHealth("brave", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Brave provider calls."),
-    skippedHealth("tavily", "Skipped in client-side static demo mode. Use a Next.js runtime deployment for Tavily provider calls.")
+    ...SEARCH_PROVIDERS
+      .filter((provider) => provider !== "mock")
+      .map((provider) => skippedHealth(provider, `Skipped in client-side static demo mode. Use a Next.js runtime deployment for live ${provider} provider calls; use Reference Search Hub links manually.`))
   ];
 
   const generatedAt = new Date().toISOString();
@@ -147,6 +145,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     duplicate_count: normalized.stats.duplicate_count,
     provider_health: providerHealth,
     provider_toggles: providerToggles,
+    reference_searches: buildReferenceSearchLinks(tunedPlan.original_topic),
     mock_only: true,
     retrieval_evidence: finalEvidence,
     quality_calibration: finalCalibration,
@@ -159,6 +158,8 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       staticDemo: true,
       braveKeyPresent: false,
       tavilyKeyPresent: false,
+      smithsonianKeyPresent: false,
+      europeanaKeyPresent: false,
       generatedAt
     })
   };

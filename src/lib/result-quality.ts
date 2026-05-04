@@ -5,6 +5,11 @@ const institutionalArchiveHints = [
   "archives.gov",
   "archive.org",
   "europeana.eu",
+  "openverse.org",
+  "images.nasa.gov",
+  "nasa.gov",
+  "api.si.edu",
+  "si.edu",
   "metmuseum.org",
   "getty.edu",
   "si.edu",
@@ -15,7 +20,7 @@ const institutionalArchiveHints = [
   "library"
 ];
 
-const commonsHints = ["commons.wikimedia.org", "wikimedia", "wikipedia.org", "wikidata.org"];
+const commonsHints = ["commons.wikimedia.org", "wikimedia", "wikipedia.org", "wikidata.org", "openverse.org"];
 const officialAcademicHints = [".gov", ".edu", ".ac.", "who.int", "un.org", "worldbank.org", "oecd.org", "jstor.org", "springer.com", "nature.com", "sciencedirect.com"];
 const newsHints = ["reuters", "apnews", "bbc.", "cnn.", "nytimes", "guardian", "aljazeera", "dw.com", "lemonde", "politico", "ft.com", "bloomberg"];
 const commercialStockHints = ["shutterstock", "alamy", "gettyimages", "istockphoto", "adobestock", "depositphotos"];
