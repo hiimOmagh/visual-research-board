@@ -2,14 +2,12 @@ import type {
   ManualQualityReview,
   ManualReviewLabel,
   ManualReviewVerdict,
-  ProviderName,
   ResearchResult,
   RetrievalQualityCalibration,
   ReviewEvidenceBiasEntry,
   ReviewEvidenceCalibrationTrace,
   ReviewEvidenceFeedback,
-  ReviewEvidenceSourceSignal,
-  SourceGroup
+  ReviewEvidenceSourceSignal
 } from "@/types/research";
 import { normalizeManualReview } from "@/lib/manual-quality-review";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
