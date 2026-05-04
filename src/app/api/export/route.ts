@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   }
 
   if (body.format === "csv") {
-    return new Response(createCsvExport(body.results), {
+    return new Response(createCsvExport(body.results, body.project), {
       headers: {
         "Content-Type": "text/csv; charset=utf-8"
       }

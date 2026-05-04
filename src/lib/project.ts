@@ -1,4 +1,4 @@
-import type { BoardSection, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
+import type { BoardSection, ClaimEvidenceRelation, LibraryImportSummary, ProjectLibrary, ProviderHealth, ResearchClaim, ResearchProject, ResearchRequest, ResearchResponse, ResearchResult, SearchHistoryEntry, SearchResultSnapshot } from "@/types/research";
 import { DEFAULT_PROVIDER_TOGGLES } from "@/types/research";
 import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
@@ -18,6 +18,7 @@ import {
   suggestSectionForResult,
   VISUAL_REFERENCE_SECTION_ID as BOARD_VISUAL_REFERENCE_SECTION_ID
 } from "@/lib/board-organization";
+import { createResearchClaim, linkSourceToClaim, normalizeResearchClaims, removeResultFromAllClaims, unlinkSourceFromClaim, updateClaimMetadata } from "@/lib/claim-mapping";
 
 export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
 export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
@@ -55,6 +56,7 @@ export function createEmptyProject(name = "Untitled research project"): Research
     updated_at: createdAt,
     board_sections: createDefaultSections(),
     saved_results: [],
+    claims: [],
     review_evidence_memory: undefined,
     search_history: [],
     result_snapshots: []
@@ -185,6 +187,7 @@ export function normalizeProject(project: Partial<ResearchProject> & { name?: st
     updated_at: project.updated_at || nowIso(),
     board_sections: normalizeBoardSections(project.board_sections?.length ? project.board_sections : fallback.board_sections),
     saved_results: (project.saved_results ?? []).map(assignDefaultSection),
+    claims: normalizeResearchClaims(project.claims, (project.saved_results ?? []).map(assignDefaultSection)),
     review_evidence_memory: project.review_evidence_memory,
     search_history: normalizedHistory.slice(0, MAX_SEARCH_HISTORY),
     result_snapshots: normalizedSnapshots.slice(0, MAX_RESULT_SNAPSHOTS)
@@ -260,6 +263,7 @@ export function duplicateProject(project: ResearchProject): ResearchProject {
     created_at: now,
     updated_at: now,
     saved_results: project.saved_results.map((item) => ({ ...item, updated_at: now })),
+    claims: project.claims.map((claim) => ({ ...claim, updated_at: now, source_links: [...claim.source_links] })),
     review_evidence_memory: undefined,
     search_history: [...project.search_history],
     result_snapshots: [...project.result_snapshots],
@@ -295,6 +299,55 @@ export function createSearchHistoryEntry(response: ResearchResponse, request: Re
     provider_health: response.diagnostics.provider_health,
     provider_toggles: response.diagnostics.provider_toggles,
     reference_searches: response.diagnostics.reference_searches
+  };
+}
+
+export function addProjectClaim(project: ResearchProject, statement: string): ResearchProject {
+  return {
+    ...project,
+    claims: [createResearchClaim(statement), ...project.claims],
+    updated_at: nowIso()
+  };
+}
+
+export function updateProjectClaim(project: ResearchProject, claimId: string, patch: Partial<Pick<ResearchClaim, "statement" | "description" | "confidence" | "status">>): ResearchProject {
+  return {
+    ...project,
+    claims: updateClaimMetadata(project.claims, claimId, patch),
+    updated_at: nowIso()
+  };
+}
+
+export function removeProjectClaim(project: ResearchProject, claimId: string): ResearchProject {
+  return {
+    ...project,
+    claims: project.claims.filter((claim) => claim.id !== claimId),
+    updated_at: nowIso()
+  };
+}
+
+export function linkProjectSourceToClaim(project: ResearchProject, claimId: string, resultId: string, relation: ClaimEvidenceRelation): ResearchProject {
+  return {
+    ...project,
+    claims: linkSourceToClaim(project.claims, claimId, resultId, relation),
+    updated_at: nowIso()
+  };
+}
+
+export function unlinkProjectSourceFromClaim(project: ResearchProject, claimId: string, resultId: string): ResearchProject {
+  return {
+    ...project,
+    claims: unlinkSourceFromClaim(project.claims, claimId, resultId),
+    updated_at: nowIso()
+  };
+}
+
+export function removeSavedResultAndClaimLinks(project: ResearchProject, resultId: string): ResearchProject {
+  return {
+    ...project,
+    saved_results: project.saved_results.filter((item) => item.id !== resultId),
+    claims: removeResultFromAllClaims(project.claims, resultId),
+    updated_at: nowIso()
   };
 }
 

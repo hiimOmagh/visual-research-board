@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.3.2", "package.json version must be 0.3.2");
+assert(pkg.version === "0.3.3", "package.json version must be 0.3.3");
 assert(Boolean(pkg.scripts?.["board:organization:check"]), "package.json must define npm run board:organization:check");
 assert(pkg.scripts?.qa?.includes("board-organization-check"), "npm run qa must include board-organization-check");
 
@@ -65,10 +65,10 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.3.2",
+  "v0.3.3",
   "updateSavedTags",
   "normalizeBoardTags(tags)",
-  "visual-research-board-library-v0.3.2.json",
+  "visual-research-board-library-v0.3.3.json",
   "onUpdateTags={updateSavedTags}"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 

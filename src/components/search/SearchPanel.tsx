@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type {
+  ClaimEvidenceRelation,
   LibraryImportSummary,
   ManualQualityReview,
   ProjectLibrary,
@@ -34,6 +35,7 @@ import { NormalizationDedupePanel } from "@/components/search/NormalizationDedup
 import { SourceClassRoutingPanel } from "@/components/search/SourceClassRoutingPanel";
 import { RankingExplainabilityPanel } from "@/components/search/RankingExplainabilityPanel";
 import { ProjectReviewMemoryPanel } from "@/components/search/ProjectReviewMemoryPanel";
+import { ClaimMappingPanel } from "@/components/search/ClaimMappingPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -44,6 +46,7 @@ import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
 import { normalizeBoardTags } from "@/lib/board-organization";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit, isProjectReviewEvidenceMemoryStale, resetProjectReviewEvidenceMemory } from "@/lib/project-review-memory";
 import {
+  addProjectClaim,
   assignDefaultSection,
   createProjectLibrary,
   createSearchHistoryEntry,
@@ -51,11 +54,16 @@ import {
   createSection,
   duplicateProject,
   getActiveProject,
+  linkProjectSourceToClaim,
   MAX_RESULT_SNAPSHOTS,
   MAX_SEARCH_HISTORY,
   mergeLibraries,
   removeProject,
+  removeProjectClaim,
+  removeSavedResultAndClaimLinks,
+  unlinkProjectSourceFromClaim,
   updateActiveProject,
+  updateProjectClaim,
   upsertProject
 } from "@/lib/project";
 
@@ -232,10 +240,7 @@ export function SearchPanel() {
   };
 
   const removeSaved = (id: string) => {
-    updateProject((current) => ({
-      ...current,
-      saved_results: current.saved_results.filter((item) => item.id !== id)
-    }));
+    updateProject((current) => removeSavedResultAndClaimLinks(current, id));
   };
 
   const updateSavedNotes = (id: string, notes: string) => {
@@ -281,12 +286,32 @@ export function SearchPanel() {
     }));
   };
 
+  const addClaim = (statement: string) => {
+    updateProject((current) => addProjectClaim(current, statement));
+  };
+
+  const updateClaim = (claimId: string, patch: Parameters<typeof updateProjectClaim>[2]) => {
+    updateProject((current) => updateProjectClaim(current, claimId, patch));
+  };
+
+  const deleteClaim = (claimId: string) => {
+    updateProject((current) => removeProjectClaim(current, claimId));
+  };
+
+  const linkSourceToClaim = (claimId: string, resultId: string, relation: ClaimEvidenceRelation) => {
+    updateProject((current) => linkProjectSourceToClaim(current, claimId, resultId, relation));
+  };
+
+  const unlinkSourceFromClaim = (claimId: string, resultId: string) => {
+    updateProject((current) => unlinkProjectSourceFromClaim(current, claimId, resultId));
+  };
+
   const renameProject = (name: string) => {
     updateProject((current) => ({ ...current, name }));
   };
 
   const clearSaved = () => {
-    updateProject((current) => ({ ...current, saved_results: [] }));
+    updateProject((current) => ({ ...current, saved_results: [], claims: current.claims.map((claim) => ({ ...claim, source_links: [], status: "under_supported", updated_at: new Date().toISOString() })) }));
   };
 
   const resetReviewMemory = () => {
@@ -317,7 +342,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.3.2.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.3.3.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -350,12 +375,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.2</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.3</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, editable tags/notes, organization audits, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, editable tags/notes, organization audits, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -496,6 +521,12 @@ export function SearchPanel() {
           {diagnostics?.evidence_tuning && <EvidenceDrivenTuningPanel trace={diagnostics.evidence_tuning} />}
           {diagnostics?.review_evidence_calibration && <ReviewEvidenceFeedbackPanel trace={diagnostics.review_evidence_calibration} />}
           <ProjectReviewMemoryPanel memory={projectReviewMemory} audit={diagnostics?.project_review_memory ?? projectReviewMemoryAudit} onReset={resetReviewMemory} />
+          <ClaimMappingPanel
+            project={project}
+            onAddClaim={addClaim}
+            onUpdateClaim={updateClaim}
+            onRemoveClaim={deleteClaim}
+          />
           {diagnostics?.ranking_explainability && <RankingExplainabilityPanel audit={diagnostics.ranking_explainability} />}
           {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}
@@ -515,6 +546,8 @@ export function SearchPanel() {
           onUpdateManualReview={updateSavedManualReview}
           onUpdateTags={updateSavedTags}
           onAddSection={addSection}
+          onLinkSourceToClaim={linkSourceToClaim}
+          onUnlinkSourceFromClaim={unlinkSourceFromClaim}
           onManualImport={addManualResult}
         />
       </div>

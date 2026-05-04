@@ -1,10 +1,11 @@
-import type { ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchProject, ResearchResult } from "@/types/research";
+import type { ClaimEvidenceRelation, ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchClaim, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback, reviewEvidenceBiasSummary } from "@/lib/review-evidence-feedback";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit } from "@/lib/board-organization";
+import { buildClaimMappingAudit, CLAIM_RELATION_LABELS, CLAIM_STATUS_LABELS, claimsForResult, normalizeResearchClaims } from "@/lib/claim-mapping";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -42,10 +43,11 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
     .filter((entry) => entry.items.length > 0);
 }
 
-export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "review_evidence_memory">): string {
+export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "claims" | "review_evidence_memory">): string {
   const projectReviewMemory = project?.saved_results ? buildProjectReviewEvidenceMemory(project) : project?.review_evidence_memory;
   const projectReviewMemoryAudit = projectReviewMemory ? buildProjectReviewEvidenceMemoryAudit({ memory: projectReviewMemory, usedForSearch: false }) : undefined;
   const boardOrganizationAudit = project?.saved_results ? buildBoardOrganizationAudit(project) : undefined;
+  const claimMappingAudit = project?.saved_results && project.claims ? buildClaimMappingAudit(project) : undefined;
   return JSON.stringify(
     {
       export_schema_version: "0.1.0",
@@ -56,7 +58,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         section_count: project.board_sections.length,
         search_history_count: project.search_history.length,
         review_memory_status: projectReviewMemory?.status,
-        review_memory_confidence: projectReviewMemory?.confidence
+        review_memory_confidence: projectReviewMemory?.confidence,
+        claim_count: project.claims?.length ?? 0
       } : undefined,
       warning: "License labels are candidates and require manual verification before publication or commercial use.",
       audit: {
@@ -79,7 +82,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         ranking_confidence_counts: countBy(results.filter((item) => Boolean(item.ranking_explanation)), (item) => item.ranking_explanation?.calibration_confidence ?? "missing"),
         review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length,
         project_review_memory: projectReviewMemoryAudit,
-        board_organization: boardOrganizationAudit
+        board_organization: boardOrganizationAudit,
+        claim_mapping: claimMappingAudit
       },
       results
     },
@@ -88,7 +92,7 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
   );
 }
 
-export function createMarkdownExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+export function createMarkdownExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections" | "claims" | "saved_results">): string {
   const lines = [
     `# ${projectName(project)} — Visual Research Board Export`,
     "",
@@ -105,15 +109,18 @@ export function createMarkdownExport(results: ResearchResult[], project?: Pick<R
     `- Items with notes: ${results.filter((item) => Boolean(item.notes?.trim())).length}`,
     `- Ranking explanations: ${results.filter((item) => Boolean(item.ranking_explanation)).length}`,
     `- Tagged items: ${results.filter((item) => item.tags.length > 0).length}`,
+    `- Claims: ${project?.claims?.length ?? 0}`,
     ""
   ];
 
-  results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id), sectionKind(project, result.section_id)));
+  appendClaimSummary(lines, project);
+
+  results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id), sectionKind(project, result.section_id), project?.claims));
 
   return lines.join("\n");
 }
 
-function appendDetailedResult(lines: string[], result: ResearchResult, index: number, section: string, sectionKindLabel = "Custom"): void {
+function appendDetailedResult(lines: string[], result: ResearchResult, index: number, section: string, sectionKindLabel = "Custom", claims: ResearchClaim[] = []): void {
   lines.push(`## ${index}. ${result.title}`);
   lines.push("");
   lines.push(`- Section: ${section}`);
@@ -141,7 +148,9 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
     if (result.ranking_explanation.warnings.length) lines.push(`- Ranking warnings: ${result.ranking_explanation.warnings.join(" | ")}`);
   }
   if (result.quality_reasons?.length) lines.push(`- Why this result: ${result.quality_reasons.join(" | ")}`);
+  const linkedClaims = claimsForResult(normalizeResearchClaims(claims, [result]), result.id);
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
+  if (linkedClaims.length > 0) lines.push(`- Linked claims: ${linkedClaims.map((entry) => `${CLAIM_RELATION_LABELS[entry.link.relation]} → ${entry.claim.statement}`).join(" | ")}`);
   if (result.description) lines.push(`- Description: ${result.description}`);
   if (result.notes) lines.push(`- Notes: ${result.notes}`);
   const manualReview = normalizeManualReview(result.manual_review);
@@ -182,7 +191,7 @@ export function createAttributionExport(results: ResearchResult[], project?: Pic
   return lines.join("\n");
 }
 
-export function createProductionBriefExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+export function createProductionBriefExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections" | "claims" | "saved_results">): string {
   const lines = [
     `# ${projectName(project)} — Production Brief`,
     "",
@@ -198,8 +207,11 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
     `- Strong production candidates: ${results.filter((item) => item.scores.production_usefulness >= 0.7).length}`,
     `- Needs legal/source verification: ${results.filter((item) => item.risk_level !== "low").length}`,
     `- Tagged references: ${results.filter((item) => item.tags.length > 0).length}`,
+    `- Claim cards: ${project?.claims?.length ?? 0}`,
     ""
   ];
+
+  appendClaimSummary(lines, project);
 
   sortedBySection(results, project).forEach((group) => {
     lines.push(`## ${group.section}`);
@@ -221,7 +233,7 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
   return lines.join("\n");
 }
 
-export function createVisualMoodboardExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+export function createVisualMoodboardExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections" | "claims" | "saved_results">): string {
   const imageResults = results.filter((item) => item.thumbnail_url || item.image_url || item.type === "image");
   const lines = [
     `# ${projectName(project)} — Visual Moodboard`,
@@ -252,7 +264,7 @@ export function createVisualMoodboardExport(results: ResearchResult[], project?:
 }
 
 
-export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "review_evidence_memory">): string {
+export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "claims" | "review_evidence_memory">): string {
   const summary = summarizeManualReviews(results);
   const feedback = buildReviewEvidenceFeedback(results);
   const projectReviewMemory = project?.saved_results ? buildProjectReviewEvidenceMemory(project) : project?.review_evidence_memory;
@@ -317,11 +329,12 @@ export function createQualityReviewExport(results: ResearchResult[], project?: P
   return lines.join("\n");
 }
 
-export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "review_evidence_memory">): string {
+export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "claims" | "review_evidence_memory">): string {
   if (templateId === "production_brief") return createProductionBriefExport(results, project);
   if (templateId === "visual_moodboard") return createVisualMoodboardExport(results, project);
   if (templateId === "attribution_pack") return createAttributionExport(results, project);
   if (templateId === "quality_review") return createQualityReviewExport(results, project);
+  if (templateId === "claim_evidence") return createClaimEvidenceExport(results, project);
   return createMarkdownExport(results, project);
 }
 
@@ -331,7 +344,7 @@ function csvEscape(value: string | number | undefined): string {
   return raw;
 }
 
-export function createCsvExport(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections">): string {
+export function createCsvExport(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections" | "claims" | "saved_results">): string {
   const headers = [
     "title",
     "section_id",
@@ -364,10 +377,14 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
     "manual_review_source_trust",
     "manual_review_license_status",
     "manual_review_note",
-    "manual_reviewed_at"
+    "manual_reviewed_at",
+    "linked_claims",
+    "claim_relations"
   ];
 
-  const rows = results.map((result) => [
+  const rows = results.map((result) => {
+    const linkedClaims = claimsForResult(normalizeResearchClaims(project?.claims, project?.saved_results ?? results), result.id);
+    return [
     result.title,
     result.section_id ?? "",
     sectionName(project, result.section_id),
@@ -399,8 +416,11 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
     normalizeManualReview(result.manual_review).source_trust,
     normalizeManualReview(result.manual_review).license_status,
     normalizeManualReview(result.manual_review).reviewer_note ?? "",
-    normalizeManualReview(result.manual_review).reviewed_at ?? ""
-  ].map(csvEscape).join(","));
+    normalizeManualReview(result.manual_review).reviewed_at ?? "",
+    linkedClaims.map((entry) => entry.claim.statement).join(";"),
+    linkedClaims.map((entry) => entry.link.relation).join(";")
+  ].map(csvEscape).join(",");
+  });
 
   return [headers.join(","), ...rows].join("\n");
 }
@@ -420,13 +440,110 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         project_review_memory_count: library.projects.filter((project) => Boolean(project.review_evidence_memory)).length,
         board_section_count: library.projects.reduce((total, project) => total + project.board_sections.length, 0),
         tagged_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => item.tags.length > 0).length, 0),
-        noted_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => Boolean(item.notes?.trim())).length, 0)
+        noted_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => Boolean(item.notes?.trim())).length, 0),
+        claim_count: library.projects.reduce((total, project) => total + project.claims.length, 0),
+        claim_source_link_count: library.projects.reduce((total, project) => total + project.claims.reduce((claimTotal, claim) => claimTotal + claim.source_links.length, 0), 0)
       },
       library
     },
     null,
     2
   );
+}
+
+
+
+function relationCount(claims: ReturnType<typeof normalizeResearchClaims>, relation: ClaimEvidenceRelation): number {
+  return claims.reduce((total, claim) => total + claim.source_links.filter((link) => link.relation === relation).length, 0);
+}
+
+function appendClaimSummary(lines: string[], project?: Pick<ResearchProject, "claims" | "saved_results">): void {
+  if (!project?.claims?.length) return;
+  const claims = normalizeResearchClaims(project.claims, project.saved_results ?? []);
+  const audit = buildClaimMappingAudit({ claims, saved_results: project.saved_results ?? [] });
+  lines.push("## Claim Mapping");
+  lines.push("");
+  lines.push(`- Claims: ${audit.claim_count}`);
+  lines.push(`- Linked claims: ${audit.linked_claim_count}`);
+  lines.push(`- Source links: ${audit.source_link_count}`);
+  lines.push(`- Supporting links: ${audit.support_link_count}`);
+  lines.push(`- Contradiction/weakening links: ${audit.contradiction_link_count}`);
+  lines.push(`- Unlinked saved sources: ${audit.unlinked_saved_count}`);
+  if (audit.warnings.length) {
+    lines.push(`- Warnings: ${audit.warnings.join(" | ")}`);
+  }
+  lines.push("");
+  claims.forEach((claim, index) => {
+    lines.push(`### Claim ${index + 1}: ${claim.statement}`);
+    lines.push(`- Status: ${CLAIM_STATUS_LABELS[claim.status]}`);
+    lines.push(`- Confidence: ${claim.confidence}`);
+    lines.push(`- Links: ${claim.source_links.length}`);
+    if (claim.description) lines.push(`- Description: ${claim.description}`);
+    lines.push("");
+  });
+}
+
+export function createClaimEvidenceExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "claims">): string {
+  const claims = normalizeResearchClaims(project?.claims, project?.saved_results ?? results);
+  const audit = buildClaimMappingAudit({ claims, saved_results: project?.saved_results ?? results });
+  const resultById = new Map(results.map((result) => [result.id, result]));
+  const lines = [
+    `# ${projectName(project)} — Claim Evidence Map`,
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "> Claim mapping separates factual support from contradiction, context, and visual-reference use. Verify source pages and rights before publication.",
+    "",
+    "## Claim Mapping Audit",
+    "",
+    `- Claims: ${audit.claim_count}`,
+    `- Linked claims: ${audit.linked_claim_count}`,
+    `- Source links: ${audit.source_link_count}`,
+    `- Supports: ${relationCount(claims, "supports")}`,
+    `- Weakens: ${relationCount(claims, "weakens")}`,
+    `- Contradicts: ${relationCount(claims, "contradicts")}`,
+    `- Contextual: ${relationCount(claims, "contextual")}`,
+    `- Visual reference only: ${relationCount(claims, "visual_reference_only")}`,
+    `- Unlinked saved sources: ${audit.unlinked_saved_count}`,
+    ""
+  ];
+
+  if (audit.warnings.length) {
+    lines.push("## Mapping Warnings", "", ...audit.warnings.map((warning) => `- ${warning}`), "");
+  }
+
+  if (claims.length === 0) {
+    lines.push("No claim cards have been created yet.", "");
+    return lines.join("\n");
+  }
+
+  claims.forEach((claim, index) => {
+    lines.push(`## ${index + 1}. ${claim.statement}`);
+    lines.push("");
+    lines.push(`- Status: ${CLAIM_STATUS_LABELS[claim.status]}`);
+    lines.push(`- Confidence: ${claim.confidence}`);
+    if (claim.description) lines.push(`- Description: ${claim.description}`);
+    if (claim.source_links.length === 0) {
+      lines.push("- Evidence: none linked yet");
+      lines.push("");
+      return;
+    }
+    claim.source_links.forEach((link) => {
+      const source = resultById.get(link.result_id);
+      lines.push(`### ${CLAIM_RELATION_LABELS[link.relation]} — ${source?.title ?? link.result_id}`);
+      if (source) {
+        lines.push(`- Source: ${source.source_domain}`);
+        lines.push(`- URL: ${source.source_url}`);
+        lines.push(`- Rights/risk: ${source.rights_status} · ${source.reuse_risk}`);
+        lines.push(`- Section: ${sectionName(project, source.section_id)}`);
+      }
+      if (link.note) lines.push(`- Link note: ${link.note}`);
+      lines.push(`- Linked at: ${link.linked_at}`);
+      lines.push("");
+    });
+  });
+
+  return lines.join("\n");
 }
 
 export function downloadTextFile(filename: string, content: string, mimeType: string): void {

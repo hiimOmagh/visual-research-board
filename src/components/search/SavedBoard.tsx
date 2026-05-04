@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { BoardSection, ExportTemplateId, LicenseDetected, ManualQualityReview, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
+import type { BoardSection, ClaimEvidenceRelation, ExportTemplateId, LicenseDetected, ManualQualityReview, ResearchClaim, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
 import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research";
 import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
@@ -10,6 +10,7 @@ import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit, DEFAULT_BOARD_T
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { INBOX_SECTION_ID } from "@/lib/project";
 import { manualReviewBadge, normalizeManualReview, REVIEW_LABELS, REVIEW_VERDICTS } from "@/lib/manual-quality-review";
+import { CLAIM_RELATION_LABELS, CLAIM_RELATION_OPTIONS, claimsForResult, normalizeResearchClaims } from "@/lib/claim-mapping";
 import { EmptyState } from "@/components/search/EmptyState";
 import { ExportPreviewDrawer, type ExportPreviewFormat } from "@/components/search/ExportPreviewDrawer";
 
@@ -24,10 +25,12 @@ interface SavedBoardProps {
   onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
   onUpdateTags: (id: string, tags: string[]) => void;
   onAddSection: (name: string) => void;
+  onLinkSourceToClaim: (claimId: string, resultId: string, relation: ClaimEvidenceRelation) => void;
+  onUnlinkSourceFromClaim: (claimId: string, resultId: string) => void;
   onManualImport: (result: ResearchResult) => void;
 }
 
-export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onUpdateManualReview, onUpdateTags, onAddSection, onManualImport }: SavedBoardProps) {
+export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onUpdateManualReview, onUpdateTags, onAddSection, onLinkSourceToClaim, onUnlinkSourceFromClaim, onManualImport }: SavedBoardProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sectionName, setSectionName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<ExportTemplateId>("source_audit");
@@ -99,7 +102,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
           <p className="mt-1 text-xs text-slate-500">Project: {project.name}</p>
           {saved.length > 0 && (
             <p className="mt-1 text-xs text-slate-400">
-              {lowRiskCount} low-risk · {highRiskCount} high-risk/avoid · {manualCount} manual · {reviewedCount} reviewed
+              {lowRiskCount} low-risk · {highRiskCount} high-risk/avoid · {manualCount} manual · {reviewedCount} reviewed · {project.claims.length} claims
             </p>
           )}
         </div>
@@ -293,7 +296,10 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
                     onUpdateNotes={onUpdateNotes}
                     onUpdateSection={onUpdateSection}
                     onUpdateManualReview={onUpdateManualReview}
+                    claims={project.claims}
                     onUpdateTags={onUpdateTags}
+                    onLinkSourceToClaim={onLinkSourceToClaim}
+                    onUnlinkSourceFromClaim={onUnlinkSourceFromClaim}
                     onCopyAttribution={copyAttribution}
                   />
                 ))}
@@ -323,7 +329,10 @@ function SavedItem({
   onUpdateNotes,
   onUpdateSection,
   onUpdateManualReview,
+  claims,
   onUpdateTags,
+  onLinkSourceToClaim,
+  onUnlinkSourceFromClaim,
   onCopyAttribution
 }: {
   item: ResearchResult;
@@ -333,7 +342,10 @@ function SavedItem({
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateSection: (id: string, sectionId: string) => void;
   onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
+  claims: ResearchClaim[];
   onUpdateTags: (id: string, tags: string[]) => void;
+  onLinkSourceToClaim: (claimId: string, resultId: string, relation: ClaimEvidenceRelation) => void;
+  onUnlinkSourceFromClaim: (claimId: string, resultId: string) => void;
   onCopyAttribution: (item: ResearchResult) => void;
 }) {
   return (
@@ -367,6 +379,13 @@ function SavedItem({
       </label>
 
       <TagEditor item={item} onUpdateTags={onUpdateTags} />
+
+      <ClaimLinkEditor
+        item={item}
+        claims={claims}
+        onLinkSourceToClaim={onLinkSourceToClaim}
+        onUnlinkSourceFromClaim={onUnlinkSourceFromClaim}
+      />
 
       <label className="mt-3 block">
         <span className="mb-1 block text-xs font-semibold text-slate-400">Notes</span>
@@ -409,6 +428,90 @@ function SavedItem({
         </button>
       </div>
     </article>
+  );
+}
+
+
+function ClaimLinkEditor({
+  item,
+  claims,
+  onLinkSourceToClaim,
+  onUnlinkSourceFromClaim
+}: {
+  item: ResearchResult;
+  claims: ResearchClaim[];
+  onLinkSourceToClaim: (claimId: string, resultId: string, relation: ClaimEvidenceRelation) => void;
+  onUnlinkSourceFromClaim: (claimId: string, resultId: string) => void;
+}) {
+  const [claimId, setClaimId] = useState(claims[0]?.id ?? "");
+  const [relation, setRelation] = useState<ClaimEvidenceRelation>("supports");
+  const linkedClaims = claimsForResult(normalizeResearchClaims(claims, [item]), item.id);
+
+  const attach = () => {
+    if (!claimId) return;
+    onLinkSourceToClaim(claimId, item.id, relation);
+  };
+
+  return (
+    <section className="mt-3 rounded-2xl border border-sky-300/20 bg-sky-300/[0.06] p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-200">Claim links</p>
+        <span className="rounded-full border border-sky-300/20 bg-sky-300/10 px-2 py-1 text-[11px] text-sky-100">{linkedClaims.length} linked</span>
+      </div>
+      {claims.length === 0 ? (
+        <p className="mt-2 text-xs leading-5 text-slate-400">Create a claim in the Claim-to-source mapping panel, then attach this saved source as support, contradiction, context, or visual reference.</p>
+      ) : (
+        <>
+          <div className="mt-3 grid gap-2">
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-semibold text-slate-400">Attach to claim</span>
+              <select
+                value={claimId}
+                onChange={(event) => setClaimId(event.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none ring-sky-300/40 focus:ring-4"
+              >
+                {claims.map((claim) => <option key={claim.id} value={claim.id}>{claim.statement}</option>)}
+              </select>
+            </label>
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+              <select
+                value={relation}
+                onChange={(event) => setRelation(event.target.value as ClaimEvidenceRelation)}
+                className="rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none ring-sky-300/40 focus:ring-4"
+                aria-label={`Evidence relation for ${item.title}`}
+              >
+                {CLAIM_RELATION_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+              <button
+                type="button"
+                onClick={attach}
+                className="rounded-xl border border-sky-300/30 px-3 py-2 text-xs font-semibold text-sky-100 hover:border-sky-300/70"
+              >
+                Link
+              </button>
+            </div>
+          </div>
+          {linkedClaims.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {linkedClaims.map(({ claim, link }) => (
+                <div key={`${claim.id}-${item.id}`} className="rounded-xl bg-white/5 px-3 py-2 text-xs text-slate-300">
+                  <div className="flex items-start justify-between gap-2">
+                    <span><strong className="text-sky-100">{CLAIM_RELATION_LABELS[link.relation]}</strong> → {claim.statement}</span>
+                    <button
+                      type="button"
+                      onClick={() => onUnlinkSourceFromClaim(claim.id, item.id)}
+                      className="shrink-0 text-[11px] text-red-200 hover:text-red-100"
+                    >
+                      Unlink
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 

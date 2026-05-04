@@ -68,6 +68,60 @@ export interface BoardOrganizationAudit {
   warnings: string[];
 }
 
+
+export type ClaimEvidenceRelation =
+  | "supports"
+  | "weakens"
+  | "contradicts"
+  | "contextual"
+  | "visual_reference_only";
+
+export type ClaimConfidence = "low" | "medium" | "high";
+
+export type ClaimStatus =
+  | "under_supported"
+  | "supported"
+  | "contested"
+  | "needs_verification";
+
+export interface ClaimSourceLink {
+  result_id: string;
+  relation: ClaimEvidenceRelation;
+  note?: string;
+  linked_at: string;
+}
+
+export interface ResearchClaim {
+  id: string;
+  statement: string;
+  description?: string;
+  confidence: ClaimConfidence;
+  status: ClaimStatus;
+  tags: string[];
+  source_links: ClaimSourceLink[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClaimMappingAudit {
+  schema_version: "0.3.3";
+  generated_at: string;
+  claim_count: number;
+  linked_claim_count: number;
+  source_link_count: number;
+  support_link_count: number;
+  contradiction_link_count: number;
+  context_link_count: number;
+  visual_reference_link_count: number;
+  supported_claim_count: number;
+  contested_claim_count: number;
+  under_supported_claim_count: number;
+  needs_verification_claim_count: number;
+  claim_without_support_count: number;
+  unlinked_saved_count: number;
+  warnings: string[];
+}
+
 export type SourceAccessMode =
   | "backend_free_no_key"
   | "backend_free_key_required"
@@ -404,7 +458,8 @@ export type ExportTemplateId =
   | "production_brief"
   | "visual_moodboard"
   | "attribution_pack"
-  | "quality_review";
+  | "quality_review"
+  | "claim_evidence";
 
 export interface ResearchRequest {
   topic: string;
@@ -722,6 +777,7 @@ export interface SearchDiagnostics {
   review_evidence_calibration?: ReviewEvidenceCalibrationTrace;
   project_review_memory?: ProjectReviewEvidenceMemoryAudit;
   ranking_explainability?: RankingExplainabilityAudit;
+  claim_mapping?: ClaimMappingAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }
@@ -789,6 +845,7 @@ export interface ResearchProject {
   updated_at: string;
   board_sections: BoardSection[];
   saved_results: ResearchResult[];
+  claims: ResearchClaim[];
   review_evidence_memory?: ProjectReviewEvidenceMemory;
   search_history: SearchHistoryEntry[];
   result_snapshots: SearchResultSnapshot[];
@@ -866,6 +923,11 @@ export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; d
     value: "quality_review",
     label: "Quality Review",
     description: "Manual review loop evidence with relevance, visual usefulness, source trust, license status, and reviewer verdicts."
+  },
+  {
+    value: "claim_evidence",
+    label: "Claim Evidence",
+    description: "Claim cards with linked support, contradiction, context, and visual-reference sources."
   }
 ];
 

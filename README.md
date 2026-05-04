@@ -1,8 +1,8 @@
 # Visual Research Board
 
-`v0.3.2 board sections + source organization package`
+`v0.3.3 claim-to-source mapping package`
 
-A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
+A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, claim-to-source mapping, review feedback, ranking calibration, and exportable production packs.
 
 ## Stable free-source scope
 
@@ -36,10 +36,11 @@ Implemented:
 - Ranking explainability with per-result factor breakdowns, review-delta visibility, confidence labels, and calibration audit diagnostics.
 - Project-specific review evidence memory with reset/stale diagnostics and export-visible calibration isolation.
 - Board-section organization upgrade with a richer default taxonomy, editable tags, notes coverage, organization warnings, and section-aware exports.
+- Claim-to-source mapping with claim cards, support/weakening/contradiction/context/visual-reference links, claim status/confidence, mapping warnings, and claim-evidence exports.
 
-## v0.3.2 focus
+## v0.3.3 focus
 
-This package upgrades the saved board into a structured source organization layer. It adds a richer section taxonomy, editable normalized tags, organization audit warnings, section-kind metadata, migration support for older section buckets, and export-visible board organization summaries. Ranking explainability and project-specific review memory remain intact.
+This package upgrades the saved board into a claim-oriented evidence workspace. It adds claim cards, source-to-claim links, support/weakening/contradiction/context/visual-reference relation labels, claim status/confidence controls, claim mapping warnings, and claim-evidence exports. Board sections, ranking explainability, and project-specific review memory remain intact.
 
 ## Free image retrieval boundary
 
@@ -47,7 +48,7 @@ This release is designed to retrieve more relevant visual/source candidates with
 
 It still cannot literally fetch every image on the web. The target is broad, legal, source-aware retrieval with manual reference import for search-engine discoveries.
 
-See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, `docs/query-expansion-source-class-routing.md`, `docs/ranking-explainability-calibration-audit.md`, `docs/project-specific-review-evidence-memory.md`, `docs/board-sections-source-organization.md`, and `docs/provider-setup.md`.
+See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, `docs/query-expansion-source-class-routing.md`, `docs/ranking-explainability-calibration-audit.md`, `docs/project-specific-review-evidence-memory.md`, `docs/board-sections-source-organization.md`, `docs/claim-to-source-mapping.md`, and `docs/provider-setup.md`.
 
 ## Install and run locally
 
