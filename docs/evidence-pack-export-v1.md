@@ -1,8 +1,8 @@
-# v0.4.0 — Evidence Pack Export v1
+# v0.4.1 — Evidence Pack Export v1
 
 ## Purpose
 
-v0.4.0 converts the saved board into an explicit evidence pack instead of only a generic source list.
+v0.4.1 converts the saved board into an explicit evidence pack instead of only a generic source list.
 
 The export separates saved items into four production buckets:
 

@@ -1,4 +1,4 @@
-import type { ClaimEvidenceRelation, ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchClaim, ResearchProject, ResearchResult } from "@/types/research";
+import type { AttributionFormat, ClaimEvidenceRelation, ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchClaim, ResearchProject, ResearchResult } from "@/types/research";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
@@ -8,6 +8,7 @@ import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit } from "@/lib/bo
 import { buildClaimMappingAudit, CLAIM_RELATION_LABELS, CLAIM_STATUS_LABELS, claimsForResult, normalizeResearchClaims } from "@/lib/claim-mapping";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 import { buildEvidencePackAudit, buildEvidencePackPayload, createEvidencePackCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport } from "@/lib/evidence-pack-export";
+import { buildAttributionAudit, buildAttributionPackPayload, createAttributionCsvExport, createAttributionJsonExport, createAttributionMarkdownExport, createAttributionText, createMultiFormatAttributionMarkdownExport } from "@/lib/attribution-generator";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -53,7 +54,7 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
   const coverageBiasAudit = project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results);
   return JSON.stringify(
     {
-      export_schema_version: "0.4.0",
+      export_schema_version: "0.4.1",
       exported_at: new Date().toISOString(),
       project: project ? {
         id: project.id,
@@ -88,7 +89,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         board_organization: boardOrganizationAudit,
         claim_mapping: claimMappingAudit,
         coverage_bias: coverageBiasAudit,
-        evidence_pack: buildEvidencePackAudit(results, project)
+        evidence_pack: buildEvidencePackAudit(results, project),
+        attribution_generator: buildAttributionAudit(results)
       },
       evidence_pack_buckets: buildEvidencePackPayload(results, project).buckets,
       results
@@ -169,34 +171,23 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
 }
 
 export function createSingleAttribution(result: ResearchResult): string {
-  const license = licenseLabel(result.license_detected);
-  const risk = riskLabel(result.risk_level);
-  const licenseUrl = result.license_url ? ` License: ${result.license_url}.` : "";
-  return `${result.title} — Source: ${result.source_domain} (${result.source_url}). ${license}; ${risk}.${licenseUrl}`;
+  return createAttributionText(result, "simple");
 }
 
-export function createAttributionExport(results: ResearchResult[], project?: Pick<ResearchProject, "name">): string {
-  const lines = [
-    `# ${projectName(project)} — Attribution Pack`,
-    "",
-    `Generated at: ${new Date().toISOString()}`,
-    "",
-    "> These attribution lines are drafting aids only. Verify source pages and license terms before publication or commercial use.",
-    ""
-  ];
+export function createAttributionExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name">): string {
+  return createMultiFormatAttributionMarkdownExport(results, project);
+}
 
-  results.forEach((result, index) => {
-    lines.push(`## ${index + 1}. ${result.title}`);
-    lines.push("");
-    lines.push(createSingleAttribution(result));
-    if (result.notes) {
-      lines.push("");
-      lines.push(`Internal note: ${result.notes}`);
-    }
-    lines.push("");
-  });
+export function createAttributionPackMarkdownExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name">, format: AttributionFormat = "simple"): string {
+  return createAttributionMarkdownExport(results, project, format);
+}
 
-  return lines.join("\n");
+export function createAttributionPackJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name">, format: AttributionFormat = "simple"): string {
+  return createAttributionJsonExport(results, project, format);
+}
+
+export function createAttributionPackCsvExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name">, format: AttributionFormat = "simple"): string {
+  return createAttributionCsvExport(results, project, format);
 }
 
 export function createProductionBriefExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections" | "claims" | "saved_results">): string {
@@ -443,7 +434,7 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
 export function createProjectLibraryExport(library: ProjectLibrary): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.4.0",
+      export_schema_version: "0.4.1",
       exported_at: new Date().toISOString(),
       warning: "Local project-library export. License labels and attribution lines remain candidates requiring manual verification.",
       audit: {
@@ -463,7 +454,9 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         evidence_pack_reusable_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).reusable_count, 0),
         evidence_pack_check_required_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).check_required_count, 0),
         evidence_pack_reference_only_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).reference_only_count, 0),
-        evidence_pack_restricted_or_rejected_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).restricted_or_rejected_count, 0)
+        evidence_pack_restricted_or_rejected_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).restricted_or_rejected_count, 0),
+        attribution_ready_candidate_count: library.projects.reduce((total, project) => total + buildAttributionAudit(project.saved_results).attribution_ready_candidate_count, 0),
+        attribution_verify_before_use_count: library.projects.reduce((total, project) => total + buildAttributionAudit(project.saved_results).verify_before_use_count, 0)
       },
       library
     },
@@ -610,6 +603,15 @@ export {
   createEvidencePackJsonExport,
   createEvidencePackMarkdownExport
 } from "@/lib/evidence-pack-export";
+
+export {
+  buildAttributionAudit,
+  buildAttributionPackPayload,
+  createAttributionCsvExport,
+  createAttributionJsonExport,
+  createAttributionMarkdownExport,
+  createMultiFormatAttributionMarkdownExport
+} from "@/lib/attribution-generator";
 
 export function downloadTextFile(filename: string, content: string, mimeType: string): void {
   const blob = new Blob([content], { type: mimeType });

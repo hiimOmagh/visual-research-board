@@ -1,38 +1,47 @@
 # Visual Research Board
 
-`v0.4.0 evidence pack export package`
+`v0.4.1 attribution generator upgrade package`
 
-A free-source visual research board for discovering, saving, reviewing, ranking, organizing, claim-linking, auditing, and exporting image/source evidence.
+A free-source visual research board for discovering, reviewing, ranking, organizing, and exporting image/source evidence with rights-risk labels, claim mapping, coverage audits, evidence packs, and license-aware attribution drafts.
 
-## v0.4.0 focus
+## v0.4.1 focus
 
-v0.4.0 adds **Evidence Pack Export v1**. Saved board items can now be exported as a consolidated evidence pack with clear production buckets:
+v0.4.1 upgrades attribution from a single generic line into a **license-aware attribution generator**.
 
-- reusable / likely safe candidates
-- check required before use
-- reference-only discovery leads
-- restricted, rejected, or avoid
+It supports:
 
-The evidence pack preserves source URLs, provider/source group, board section, rights status, reuse risk, license label, manual review state, linked claims, notes, tags, attribution draft lines, and warnings.
+- simple attribution
+- creator/title/source/license attribution
+- Markdown citation blocks
+- video description blocks
+- article source-list entries
+- rough bibliography entries
+- attribution JSON/Markdown/CSV exports
+- clearance labels: attribution-ready candidate, verify before use, reference only, do not use
+- warning trails for unclear rights, missing license URLs, reference-only material, rejected material, and metadata gaps
 
 ## Validation
 
 ```bash
-npm run evidence:pack:check
+npm run attribution:generator:check
 npm run qa
 ```
 
-## Guardrail
+Full TypeScript/lint validation still requires project dependencies to be installed locally:
 
-Evidence-pack labels are workflow categories, not legal clearance. Verify every source page, image file, creator, and license before publication or commercial use.
+```bash
+npm install
+npm run typecheck
+npm run lint
+```
 
-## Compatibility validation commands
+## Earlier evidence gates retained
 
-Earlier gates remain available and are still included in `npm run qa`:
+The current package preserves earlier v0.3.1 evidence gates and commands:
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-This package continues the evidence validation path introduced in v0.3.1 while advancing the export layer to v0.4.0.
+These remain part of the broader QA/evidence path even though the current release focus is v0.4.1.

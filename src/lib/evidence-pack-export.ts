@@ -4,9 +4,10 @@ import { buildClaimMappingAudit, CLAIM_RELATION_LABELS, CLAIM_STATUS_LABELS, nor
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 import { normalizeManualReview } from "@/lib/manual-quality-review";
 import { licenseLabel, riskLabel } from "@/lib/risk";
+import { createAttributionText } from "@/lib/attribution-generator";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 
-export const EVIDENCE_PACK_SCHEMA_VERSION = "0.4.0" as const;
+export const EVIDENCE_PACK_SCHEMA_VERSION = "0.4.1" as const;
 
 const BUCKET_LABELS: Record<EvidencePackBucketId, string> = {
   reusable: "Reusable / likely safe candidates",
@@ -136,7 +137,7 @@ export function buildEvidencePackItem(result: ResearchResult, project?: Pick<Res
     notes: result.notes,
     manual_review: normalizeManualReview(result.manual_review),
     linked_claims: linkedClaims,
-    attribution_line: `${result.title} — Source: ${result.source_domain} (${result.source_url}). ${licenseLabel(result.license_detected)}; ${riskLabel(result.risk_level)}.${result.license_url ? ` License: ${result.license_url}.` : ""}`,
+    attribution_line: createAttributionText(result, "creator_title_source_license"),
     warnings: itemWarnings(result, bucket)
   };
 }

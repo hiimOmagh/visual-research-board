@@ -27,6 +27,7 @@ import { buildRankingExplainability } from "@/lib/ranking-explainability";
 import { buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 import { buildEvidencePackAudit } from "@/lib/evidence-pack-export";
+import { buildAttributionAudit } from "@/lib/attribution-generator";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -296,6 +297,7 @@ export async function POST(request: Request) {
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
   const coverageBias = buildCoverageBiasAudit(rankedResults);
   const evidencePack = buildEvidencePackAudit(rankedResults);
+  const attributionAudit = buildAttributionAudit(rankedResults);
   const projectReviewMemoryAudit = buildProjectReviewEvidenceMemoryAudit({
     memory: effectiveRequest.project_review_evidence_memory,
     usedForSearch: Boolean(effectiveRequest.project_review_evidence_memory),
@@ -336,6 +338,7 @@ export async function POST(request: Request) {
       ranking_explainability: rankingExplainability,
       coverage_bias: coverageBias,
       evidence_pack: evidencePack,
+      attribution_generator: attributionAudit,
       provider_result_inspection: providerResultInspection,
       runtime_report: runtimeReport
     }

@@ -16,6 +16,7 @@ import { buildRankingExplainability } from "@/lib/ranking-explainability";
 import { buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 import { buildEvidencePackAudit } from "@/lib/evidence-pack-export";
+import { buildAttributionAudit } from "@/lib/attribution-generator";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -161,6 +162,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
   const coverageBias = buildCoverageBiasAudit(rankedResults);
   const evidencePack = buildEvidencePackAudit(rankedResults);
+  const attributionAudit = buildAttributionAudit(rankedResults);
   const projectReviewMemoryAudit = buildProjectReviewEvidenceMemoryAudit({
     memory: request.project_review_evidence_memory,
     usedForSearch: Boolean(request.project_review_evidence_memory),
@@ -188,6 +190,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     ranking_explainability: rankingExplainability,
     coverage_bias: coverageBias,
       evidence_pack: evidencePack,
+    attribution_generator: attributionAudit,
     provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,

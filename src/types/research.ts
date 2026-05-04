@@ -211,7 +211,7 @@ export interface EvidencePackItem {
 }
 
 export interface EvidencePackAudit {
-  schema_version: "0.4.0";
+  schema_version: "0.4.1";
   generated_at: string;
   total_items: number;
   reusable_count: number;
@@ -221,6 +221,59 @@ export interface EvidencePackAudit {
   claim_linked_count: number;
   attribution_ready_count: number;
   bucket_counts: Record<EvidencePackBucketId, number>;
+  warnings: string[];
+}
+
+
+export type AttributionFormat =
+  | "simple"
+  | "creator_title_source_license"
+  | "markdown_citation"
+  | "video_description"
+  | "article_source_list"
+  | "rough_bibliography";
+
+export type AttributionClearance =
+  | "attribution_ready_candidate"
+  | "verify_before_use"
+  | "reference_only"
+  | "do_not_use";
+
+export interface AttributionEntry {
+  schema_version: "0.4.1";
+  generated_at: string;
+  result_id: string;
+  title: string;
+  format: AttributionFormat;
+  format_label: string;
+  text: string;
+  markdown: string;
+  creator: string;
+  source_domain: string;
+  source_url: string;
+  image_url?: string;
+  license_label: string;
+  license_url?: string;
+  rights_status: RightsStatus;
+  reuse_risk: ReuseRisk;
+  risk_level: RiskLevel;
+  source_access_mode: SourceAccessMode;
+  clearance: AttributionClearance;
+  clearance_label: string;
+  warnings: string[];
+}
+
+export interface AttributionAudit {
+  schema_version: "0.4.1";
+  generated_at: string;
+  total_items: number;
+  attribution_ready_candidate_count: number;
+  verify_before_use_count: number;
+  reference_only_count: number;
+  do_not_use_count: number;
+  unknown_license_count: number;
+  missing_license_url_count: number;
+  warning_count: number;
   warnings: string[];
 }
 
@@ -884,6 +937,7 @@ export interface SearchDiagnostics {
   claim_mapping?: ClaimMappingAudit;
   coverage_bias?: CoverageBiasAudit;
   evidence_pack?: EvidencePackAudit;
+  attribution_generator?: AttributionAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }
@@ -1022,8 +1076,8 @@ export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; d
   },
   {
     value: "attribution_pack",
-    label: "Attribution Pack",
-    description: "Draft attribution lines that still require manual verification."
+    label: "Attribution Generator",
+    description: "License-aware attribution drafts for simple, creator/title/source/license, Markdown, video description, article source list, and rough bibliography formats."
   },
   {
     value: "quality_review",

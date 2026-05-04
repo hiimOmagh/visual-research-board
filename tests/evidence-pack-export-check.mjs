@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.4.0", "package.json version must be 0.4.0");
+assert(pkg.version === "0.4.1", "package.json version must be 0.4.1");
 assert(Boolean(pkg.scripts?.["evidence:pack:check"]), "package.json must define npm run evidence:pack:check");
 assert(pkg.scripts?.qa?.includes("evidence-pack-export-check"), "npm run qa must include evidence-pack-export-check");
 
@@ -16,14 +16,14 @@ for (const file of [
   "docs/evidence-pack-export-v1.md",
   "src/components/search/ExportPreviewDrawer.tsx",
   "src/components/search/SavedBoard.tsx"
-]) assert(existsSync(join(root, file)), `Missing v0.4.0 file: ${file}`);
+]) assert(existsSync(join(root, file)), `Missing v0.4.1 file: ${file}`);
 
 const types = read("src/types/research.ts");
 for (const token of [
   "EvidencePackBucketId",
   "EvidencePackItem",
   "EvidencePackAudit",
-  "schema_version: \"0.4.0\"",
+  "schema_version: \"0.4.1\"",
   "evidence_pack?: EvidencePackAudit",
   "evidence_pack"
 ]) assert(types.includes(token), `types must include ${token}`);
@@ -95,11 +95,11 @@ assert(clientSearch.includes("buildEvidencePackAudit"), "client search must buil
 assert(clientSearch.includes("evidence_pack: evidencePack"), "client search diagnostics must include evidence_pack");
 
 const docs = read("docs/evidence-pack-export-v1.md");
-assert(docs.includes("v0.4.0"), "docs must identify v0.4.0");
+assert(docs.includes("v0.4.1"), "docs must identify v0.4.1");
 assert(docs.includes("npm run evidence:pack:check"), "docs must document validation command");
 
 const manifest = read("PATCH_MANIFEST.md");
-assert(manifest.includes("v0.4.0"), "PATCH_MANIFEST must identify v0.4.0");
+assert(manifest.includes("v0.4.1"), "PATCH_MANIFEST must identify v0.4.1");
 assert(manifest.includes("Evidence Pack Export v1"), "PATCH_MANIFEST must identify the feature");
 
 if (failures.length) {
@@ -107,5 +107,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Evidence Pack Export v1 checks passed for v0.4.0.");
+console.log("Evidence Pack Export v1 checks passed for v0.4.1.");
 process.exit(0);

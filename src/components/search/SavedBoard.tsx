@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { BoardSection, ClaimEvidenceRelation, ExportTemplateId, LicenseDetected, ManualQualityReview, ResearchClaim, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
 import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research";
-import { createAttributionExport, createCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
+import { createAttributionExport, createAttributionPackCsvExport, createAttributionPackJsonExport, createAttributionPackMarkdownExport, createCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createFallbackMetadata, createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
 import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit, DEFAULT_BOARD_TAGS, formatBoardTag, normalizeBoardTags, toggleBoardTag } from "@/lib/board-organization";
@@ -61,6 +61,18 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
 
   const exportAttribution = () => {
     downloadTextFile("visual-research-board-attribution-pack.md", createAttributionExport(saved, project), "text/markdown");
+  };
+
+  const exportAttributionMarkdown = () => {
+    downloadTextFile("visual-research-board-attribution-generator-v1.md", createAttributionPackMarkdownExport(saved, project), "text/markdown");
+  };
+
+  const exportAttributionJson = () => {
+    downloadTextFile("visual-research-board-attribution-generator-v1.json", createAttributionPackJsonExport(saved, project), "application/json");
+  };
+
+  const exportAttributionCsv = () => {
+    downloadTextFile("visual-research-board-attribution-generator-v1.csv", createAttributionPackCsvExport(saved, project), "text/csv");
   };
 
   const exportQualityReview = () => {
@@ -261,6 +273,46 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
         </div>
       </section>
 
+
+      <section className="mt-4 rounded-2xl border border-sky-300/20 bg-sky-300/[0.06] p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-sky-200">Attribution Generator v1</p>
+        <p className="mt-1 text-xs leading-5 text-slate-300">License-aware attribution drafts for simple credits, creator/title/source/license lines, Markdown citations, video descriptions, article source lists, and rough bibliography entries.</p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={exportAttribution}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-sky-300/30 px-4 py-2 text-sm font-semibold text-sky-100 transition hover:border-sky-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+          >
+            Multi-format attribution
+          </button>
+          <button
+            type="button"
+            onClick={exportAttributionMarkdown}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-sky-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+          >
+            Download attribution MD
+          </button>
+          <button
+            type="button"
+            onClick={exportAttributionJson}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-sky-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+          >
+            Download attribution JSON
+          </button>
+          <button
+            type="button"
+            onClick={exportAttributionCsv}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-sky-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+          >
+            Download attribution CSV
+          </button>
+        </div>
+      </section>
+
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <button
           type="button"
@@ -308,7 +360,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
           disabled={saved.length === 0}
           className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
         >
-          Attribution Pack
+          Attribution Generator
         </button>
         <button
           type="button"
