@@ -1,6 +1,6 @@
-# Free Image Retrieval + Reference Search Hub — v0.3.0
+# Free Image Retrieval + Reference Search Hub — v0.3.1
 
-`v0.3.0` expands the Visual Research Board from a narrow provider stack into a free-source image discovery workflow.
+`v0.3.1` expands the Visual Research Board from a narrow provider stack into a free-source image discovery workflow.
 
 ## Backend-free providers
 

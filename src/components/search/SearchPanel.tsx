@@ -33,6 +33,7 @@ import { ReferenceSearchHub } from "@/components/search/ReferenceSearchHub";
 import { NormalizationDedupePanel } from "@/components/search/NormalizationDedupePanel";
 import { SourceClassRoutingPanel } from "@/components/search/SourceClassRoutingPanel";
 import { RankingExplainabilityPanel } from "@/components/search/RankingExplainabilityPanel";
+import { ProjectReviewMemoryPanel } from "@/components/search/ProjectReviewMemoryPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -40,6 +41,7 @@ import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
 import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/client-search";
 import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
+import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit, isProjectReviewEvidenceMemoryStale, resetProjectReviewEvidenceMemory } from "@/lib/project-review-memory";
 import {
   assignDefaultSection,
   createProjectLibrary,
@@ -85,6 +87,13 @@ export function SearchPanel() {
   const project = useMemo(() => getActiveProject(library), [library]);
   const saved = project.saved_results;
   const savedIds = useMemo(() => new Set(saved.map((item) => item.id)), [saved]);
+  const projectReviewMemoryStale = useMemo(() => isProjectReviewEvidenceMemoryStale(project), [project]);
+  const projectReviewMemory = useMemo(() => project.review_evidence_memory ?? buildProjectReviewEvidenceMemory(project), [project]);
+  const projectReviewMemoryAudit = useMemo(() => buildProjectReviewEvidenceMemoryAudit({
+    memory: projectReviewMemory,
+    stale: projectReviewMemoryStale,
+    usedForSearch: false
+  }), [projectReviewMemory, projectReviewMemoryStale]);
 
   const updateLibrary = (updater: (current: ProjectLibrary) => ProjectLibrary) => {
     setLibrary((current) => updater(current));
@@ -129,13 +138,15 @@ export function SearchPanel() {
   };
 
   const submitSearch = async () => {
-    const reviewEvidenceFeedback = buildReviewEvidenceFeedback(saved);
+    const freshProjectReviewMemory = buildProjectReviewEvidenceMemory(project);
+    const reviewEvidenceFeedback = freshProjectReviewMemory.feedback ?? buildReviewEvidenceFeedback(saved);
     const request: ResearchRequest = {
       topic: topic.trim(),
       mode,
       depth,
       provider_toggles: providerToggles,
-      review_evidence_feedback: reviewEvidenceFeedback
+      review_evidence_feedback: reviewEvidenceFeedback,
+      project_review_evidence_memory: freshProjectReviewMemory
     };
 
     if (request.topic.length < 2) {
@@ -180,6 +191,7 @@ export function SearchPanel() {
       const historyEntry = createSearchHistoryEntry(data, request, snapshot.id);
       updateProject((current) => ({
         ...current,
+        review_evidence_memory: freshProjectReviewMemory,
         result_snapshots: [snapshot, ...current.result_snapshots].slice(0, MAX_RESULT_SNAPSHOTS),
         search_history: [historyEntry, ...current.search_history].slice(0, MAX_SEARCH_HISTORY)
       }));
@@ -269,6 +281,13 @@ export function SearchPanel() {
     updateProject((current) => ({ ...current, saved_results: [] }));
   };
 
+  const resetReviewMemory = () => {
+    updateProject((current) => ({
+      ...current,
+      review_evidence_memory: resetProjectReviewEvidenceMemory(current)
+    }));
+  };
+
   const createNewProject = () => {
     const nextProject = createFreshProject("Visual research project");
     updateLibrary((current) => upsertProject(current, nextProject));
@@ -290,7 +309,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.3.0.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.3.1.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -323,12 +342,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.0</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.1</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -468,6 +487,7 @@ export function SearchPanel() {
           {diagnostics?.auto_tuning && <RetrievalAutoTuningPanel trace={diagnostics.auto_tuning} />}
           {diagnostics?.evidence_tuning && <EvidenceDrivenTuningPanel trace={diagnostics.evidence_tuning} />}
           {diagnostics?.review_evidence_calibration && <ReviewEvidenceFeedbackPanel trace={diagnostics.review_evidence_calibration} />}
+          <ProjectReviewMemoryPanel memory={projectReviewMemory} audit={diagnostics?.project_review_memory ?? projectReviewMemoryAudit} onReset={resetReviewMemory} />
           {diagnostics?.ranking_explainability && <RankingExplainabilityPanel audit={diagnostics.ranking_explainability} />}
           {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}

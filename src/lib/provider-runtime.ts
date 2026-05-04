@@ -1,6 +1,6 @@
 import type { ProviderRuntimeEntry, ProviderRuntimeReport, SearchProviderName } from "@/types/research";
 
-export const APP_VERSION = "0.3.0";
+export const APP_VERSION = "0.3.1";
 
 const ENDPOINT_SAMPLES: Record<SearchProviderName, string[]> = {
   mock: ["local/mock"],

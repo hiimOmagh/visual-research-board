@@ -13,7 +13,7 @@ const clientSearch = read("src/lib/client-search.ts");
 const panel = read("src/components/search/RetrievalEvidencePanel.tsx");
 const docs = read("docs/real-retrieval-validation.md");
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.3.0", "package version must be v0.3.0");
+assert(pkg.version === "0.3.1", "package version must be v0.3.1");
 assert(types.includes("RetrievalEvidenceVerdict"), "types must include RetrievalEvidenceVerdict");
 assert(types.includes("retrieval_evidence: RetrievalEvidence"), "SearchDiagnostics must require retrieval evidence");
 assert(evidence.includes("TARGET_CANDIDATES"), "retrieval evidence must define target candidate gates");
@@ -25,7 +25,7 @@ assert(searchRoute.includes("retrieval_evidence: retrievalEvidence"), "API searc
 assert(clientSearch.includes("buildRetrievalEvidence"), "static mock fallback must attach retrieval evidence");
 assert(panel.includes("Retrieval evidence"), "UI must render retrieval evidence");
 assert(panel.includes("Failure signals to correct"), "UI must show evidence warnings");
-assert(docs.includes("v0.3.0"), "real retrieval validation docs must identify v0.3.0");
+assert(docs.includes("v0.3.1"), "real retrieval validation docs must identify v0.3.1");
 assert(docs.includes("40 candidates"), "docs must state the deep-mode candidate target");
 if (failures.length) { console.error("Retrieval evidence checks failed:"); for (const failure of failures) console.error(`- ${failure}`); process.exit(1); }
-console.log("Retrieval evidence checks passed for v0.3.0.");
+console.log("Retrieval evidence checks passed for v0.3.1.");

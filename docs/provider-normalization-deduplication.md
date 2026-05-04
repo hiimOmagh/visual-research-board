@@ -1,10 +1,10 @@
-# v0.3.0 — Provider Normalization + Deduplication
+# v0.3.1 — Provider Normalization + Deduplication
 
 This release adds a normalization gate between provider retrieval and ranking/export.
 
 ## Purpose
 
-Free/open providers often return the same image through different source URLs, thumbnail URLs, mirrors, or file-size variants. v0.3.0 prevents those repeated records from polluting ranking, review, and export.
+Free/open providers often return the same image through different source URLs, thumbnail URLs, mirrors, or file-size variants. v0.3.1 prevents those repeated records from polluting ranking, review, and export.
 
 ## What is normalized
 

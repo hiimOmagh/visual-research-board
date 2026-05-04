@@ -1,15 +1,15 @@
 {
   "name": "visual-research-board",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
-  "description": "Ranking explainability and calibration audit package for a free-source visual research board with rights labels, review calibration, source routing, and evidence exports.",
+  "description": "Project-specific review evidence memory package for a free-source visual research board with rights labels, source routing, review calibration, ranking explainability, and exportable evidence packs.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs && node tests/review-evidence-feedback-check.mjs && node tests/free-image-retrieval-check.mjs && node tests/normalization-dedupe-check.mjs && node tests/query-routing-check.mjs && node tests/ranking-explainability-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs && node tests/review-evidence-feedback-check.mjs && node tests/free-image-retrieval-check.mjs && node tests/normalization-dedupe-check.mjs && node tests/query-routing-check.mjs && node tests/ranking-explainability-check.mjs && node tests/project-review-memory-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
@@ -44,7 +44,8 @@
     "free:image:check": "node tests/free-image-retrieval-check.mjs",
     "normalization:dedupe:check": "node tests/normalization-dedupe-check.mjs",
     "query:routing:check": "node tests/query-routing-check.mjs",
-    "ranking:explain:check": "node tests/ranking-explainability-check.mjs"
+    "ranking:explain:check": "node tests/ranking-explainability-check.mjs",
+    "project:review:memory:check": "node tests/project-review-memory-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

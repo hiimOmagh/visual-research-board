@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.3.0 ranking explainability + calibration audit package`
+`v0.3.1 ranking explainability + calibration audit package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
 
@@ -35,7 +35,7 @@ Implemented:
 - Query expansion and source-class routing so each provider receives source-appropriate query variants instead of the same generic front-sliced list.
 - Ranking explainability with per-result factor breakdowns, review-delta visibility, confidence labels, and calibration audit diagnostics.
 
-## v0.3.0 focus
+## v0.3.1 focus
 
 This package adds ranking explainability and calibration audit coverage. Every ranked candidate can now expose a factor breakdown, final rank, baseline-vs-final score delta, dominant ranking factors, confidence label, and warnings for sparse review evidence, rights ambiguity, metadata gaps, or conflicting review signals.
 
@@ -225,6 +225,11 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.3.0` is the ranking explainability and calibration audit package. It closes the black-box ranking gap introduced by review-driven calibration and makes every ranked result inspectable before the next workflow layer is added.
+`v0.3.1` is the ranking explainability and calibration audit package. It closes the black-box ranking gap introduced by review-driven calibration and makes every ranked result inspectable before the next workflow layer is added.
 
-- v0.3.0 adds `ranking_explainability` diagnostics, per-result `ranking_explanation`, factor-level score breakdowns, review-delta visibility, confidence labels, and export coverage.
+- v0.3.1 adds `ranking_explainability` diagnostics, per-result `ranking_explanation`, factor-level score breakdowns, review-delta visibility, confidence labels, and export coverage.
+
+
+## v0.3.1 Project review memory
+
+Project-specific review evidence memory isolates manual-review calibration per project, adds reset/stale diagnostics, and exports memory audit evidence. Validate with `npm run project:review:memory:check`.

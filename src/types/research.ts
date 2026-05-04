@@ -285,6 +285,45 @@ export interface ReviewEvidenceCalibrationTrace {
   warnings: string[];
 }
 
+export type ProjectReviewEvidenceMemoryStatus = "empty" | "current" | "stale" | "reset" | "conflicting";
+
+export interface ProjectReviewEvidenceMemory {
+  schema_version: "0.3.1";
+  project_id: string;
+  isolation_key: string;
+  generated_at: string;
+  reset_at?: string;
+  source_fingerprint: string;
+  reviewed_result_count: number;
+  included_result_ids: string[];
+  ignored_pre_reset_review_count: number;
+  feedback: ReviewEvidenceFeedback;
+  confidence: number;
+  status: ProjectReviewEvidenceMemoryStatus;
+  warnings: string[];
+}
+
+export interface ProjectReviewEvidenceMemoryAudit {
+  schema_version: "0.3.1";
+  generated_at: string;
+  enabled: boolean;
+  used_for_search: boolean;
+  project_id?: string;
+  isolation_key?: string;
+  status: ProjectReviewEvidenceMemoryStatus;
+  stale: boolean;
+  reset_at?: string;
+  memory_confidence: number;
+  included_review_count: number;
+  ignored_pre_reset_review_count: number;
+  feedback_confidence: number;
+  domain_bias_count: number;
+  source_group_bias_count: number;
+  provider_bias_count: number;
+  reviewed_source_count: number;
+  warnings: string[];
+}
+
 export interface ProviderResultInspectionEntry {
   provider: SearchProviderName;
   status: ProviderStatus;
@@ -343,6 +382,7 @@ export interface ResearchRequest {
   depth: SearchDepth;
   provider_toggles?: ProviderToggleMap;
   review_evidence_feedback?: ReviewEvidenceFeedback;
+  project_review_evidence_memory?: ProjectReviewEvidenceMemory;
 }
 
 export interface ResultScores {
@@ -650,6 +690,7 @@ export interface SearchDiagnostics {
   auto_tuning?: RetrievalAutoTuningTrace;
   evidence_tuning?: EvidenceDrivenTuningTrace;
   review_evidence_calibration?: ReviewEvidenceCalibrationTrace;
+  project_review_memory?: ProjectReviewEvidenceMemoryAudit;
   ranking_explainability?: RankingExplainabilityAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
@@ -714,6 +755,7 @@ export interface ResearchProject {
   updated_at: string;
   board_sections: BoardSection[];
   saved_results: ResearchResult[];
+  review_evidence_memory?: ProjectReviewEvidenceMemory;
   search_history: SearchHistoryEntry[];
   result_snapshots: SearchResultSnapshot[];
 }

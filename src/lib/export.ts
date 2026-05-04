@@ -3,6 +3,7 @@ import { licenseLabel, riskLabel } from "@/lib/risk";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback, reviewEvidenceBiasSummary } from "@/lib/review-evidence-feedback";
+import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -35,7 +36,9 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
     .filter((entry) => entry.items.length > 0);
 }
 
-export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
+export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "review_evidence_memory">): string {
+  const projectReviewMemory = project?.saved_results ? buildProjectReviewEvidenceMemory(project) : project?.review_evidence_memory;
+  const projectReviewMemoryAudit = projectReviewMemory ? buildProjectReviewEvidenceMemoryAudit({ memory: projectReviewMemory, usedForSearch: false }) : undefined;
   return JSON.stringify(
     {
       export_schema_version: "0.1.0",
@@ -44,7 +47,9 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         id: project.id,
         name: project.name,
         section_count: project.board_sections.length,
-        search_history_count: project.search_history.length
+        search_history_count: project.search_history.length,
+        review_memory_status: projectReviewMemory?.status,
+        review_memory_confidence: projectReviewMemory?.confidence
       } : undefined,
       warning: "License labels are candidates and require manual verification before publication or commercial use.",
       audit: {
@@ -65,7 +70,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         metadata_gap_count: results.reduce((total, item) => total + (item.metadata_gaps?.length ?? 0), 0),
         ranking_explained_count: results.filter((item) => Boolean(item.ranking_explanation)).length,
         ranking_confidence_counts: countBy(results.filter((item) => Boolean(item.ranking_explanation)), (item) => item.ranking_explanation?.calibration_confidence ?? "missing"),
-        review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length
+        review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length,
+        project_review_memory: projectReviewMemoryAudit
       },
       results
     },
@@ -235,9 +241,11 @@ export function createVisualMoodboardExport(results: ResearchResult[], project?:
 }
 
 
-export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
+export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "review_evidence_memory">): string {
   const summary = summarizeManualReviews(results);
   const feedback = buildReviewEvidenceFeedback(results);
+  const projectReviewMemory = project?.saved_results ? buildProjectReviewEvidenceMemory(project) : project?.review_evidence_memory;
+  const projectMemoryAudit = projectReviewMemory ? buildProjectReviewEvidenceMemoryAudit({ memory: projectReviewMemory, usedForSearch: false }) : undefined;
   const summaryLine = (verdict: ManualReviewVerdict) => `- ${verdict}: ${summary[verdict]}`;
   const lines = [
     `# ${projectName(project)} — Manual Quality Review Evidence`,
@@ -261,6 +269,16 @@ export function createQualityReviewExport(results: ResearchResult[], project?: P
     `- Domain bias entries: ${feedback.domain_bias.length}`,
     `- Source-group bias entries: ${feedback.source_group_bias.length}`,
     `- Provider bias entries: ${feedback.provider_bias.length}`,
+    "",
+    "## Project-Specific Review Evidence Memory",
+    "",
+    `- Memory status: ${projectMemoryAudit?.status ?? "empty"}`,
+    `- Isolation key: ${projectMemoryAudit?.isolation_key ?? "none"}`,
+    `- Used for this export: false`,
+    `- Included reviews: ${projectMemoryAudit?.included_review_count ?? 0}`,
+    `- Ignored pre-reset reviews: ${projectMemoryAudit?.ignored_pre_reset_review_count ?? 0}`,
+    `- Memory confidence: ${Math.round((projectMemoryAudit?.memory_confidence ?? 0) * 100)}%`,
+    ...(projectMemoryAudit?.warnings.length ? ["", "### Project memory warnings", "", ...projectMemoryAudit.warnings.map((warning) => `- ${warning}`)] : []),
     ...(feedback.warnings.length ? ["", "### Feedback warnings", "", ...feedback.warnings.map((warning) => `- ${warning}`)] : []),
     ""
   ];
@@ -288,7 +306,7 @@ export function createQualityReviewExport(results: ResearchResult[], project?: P
   return lines.join("\n");
 }
 
-export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history">): string {
+export function createTemplateExport(templateId: ExportTemplateId, results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "review_evidence_memory">): string {
   if (templateId === "production_brief") return createProductionBriefExport(results, project);
   if (templateId === "visual_moodboard") return createVisualMoodboardExport(results, project);
   if (templateId === "attribution_pack") return createAttributionExport(results, project);
@@ -383,7 +401,8 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         active_project_id: library.active_project_id,
         saved_result_count: library.projects.reduce((total, project) => total + project.saved_results.length, 0),
         search_history_count: library.projects.reduce((total, project) => total + project.search_history.length, 0),
-        result_snapshot_count: library.projects.reduce((total, project) => total + project.result_snapshots.length, 0)
+        result_snapshot_count: library.projects.reduce((total, project) => total + project.result_snapshots.length, 0),
+        project_review_memory_count: library.projects.filter((project) => Boolean(project.review_evidence_memory)).length
       },
       library
     },

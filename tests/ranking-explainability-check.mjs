@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.3.0", "package.json version must be 0.3.0");
+assert(pkg.version === "0.3.1", "package.json version must be 0.3.1");
 assert(Boolean(pkg.scripts?.["ranking:explain:check"]), "package.json must define npm run ranking:explain:check");
 assert(pkg.scripts?.qa?.includes("ranking-explainability-check"), "npm run qa must include ranking-explainability-check");
 
@@ -15,7 +15,7 @@ for (const file of [
   "src/lib/ranking-explainability.ts",
   "src/components/search/RankingExplainabilityPanel.tsx",
   "docs/ranking-explainability-calibration-audit.md"
-]) assert(existsSync(join(root, file)), `Missing v0.3.0 file: ${file}`);
+]) assert(existsSync(join(root, file)), `Missing v0.3.1 file: ${file}`);
 
 const types = read("src/types/research.ts");
 for (const token of [
@@ -24,7 +24,7 @@ for (const token of [
   "RankingExplainabilityAudit",
   "ranking_explanation?: RankingExplanation",
   "ranking_explainability?: RankingExplainabilityAudit",
-  "schema_version: \"0.3.0\""
+  "schema_version: \"0.3.1\""
 ]) assert(types.includes(token), `types must include ${token}`);
 
 const lib = read("src/lib/ranking-explainability.ts");
@@ -58,7 +58,7 @@ for (const token of [
 
 const panel = read("src/components/search/RankingExplainabilityPanel.tsx");
 for (const token of [
-  "v0.3.0 ranking gate",
+  "v0.3.1 ranking gate",
   "Ranking explainability + calibration audit",
   "sparse review evidence",
   "conflicting review evidence",
@@ -67,10 +67,10 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.3.0",
+  "v0.3.1",
   "RankingExplainabilityPanel",
   "diagnostics?.ranking_explainability",
-  "visual-research-board-library-v0.3.0.json"
+  "visual-research-board-library-v0.3.1.json"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 
 const resultCard = read("src/components/search/ResultCard.tsx");
@@ -89,7 +89,7 @@ for (const token of ["ranking_explained_count", "ranking_confidence_counts", "Do
 }
 
 const docs = read("docs/ranking-explainability-calibration-audit.md");
-assert(docs.includes("v0.3.0"), "docs must identify v0.3.0");
+assert(docs.includes("v0.3.1"), "docs must identify v0.3.1");
 assert(docs.includes("npm run ranking:explain:check"), "docs must document validation command");
 
 if (failures.length) {
@@ -97,5 +97,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Ranking explainability checks passed for v0.3.0.");
+console.log("Ranking explainability checks passed for v0.3.1.");
 process.exit(0);

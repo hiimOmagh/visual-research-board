@@ -13,6 +13,7 @@ import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from 
 import { buildReferenceSearchLinks } from "@/lib/reference-search";
 import { providerQuerySlice } from "@/lib/providers/provider-utils";
 import { buildRankingExplainability } from "@/lib/ranking-explainability";
+import { buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -115,10 +116,11 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       : initialEvidenceTuningTrace.reason
   }, tunedPlan.original_topic);
   const preReviewCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: evidenceRankedResults, providerHealth });
-  const reviewRankedResults = applyReviewEvidenceRanking(evidenceRankedResults, request.review_evidence_feedback);
+  const activeReviewFeedback = request.review_evidence_feedback ?? request.project_review_evidence_memory?.feedback;
+  const reviewRankedResults = applyReviewEvidenceRanking(evidenceRankedResults, activeReviewFeedback);
   const preliminaryCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: reviewRankedResults, providerHealth });
   const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({
-    feedback: request.review_evidence_feedback,
+    feedback: activeReviewFeedback,
     rankedResults: reviewRankedResults,
     beforeCalibration: preReviewCalibration,
     afterCalibration: preliminaryCalibration
@@ -127,7 +129,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     finalResults: reviewRankedResults,
     baselineResults: evidenceRankedResults,
     providerHealth,
-    reviewFeedback: request.review_evidence_feedback,
+    reviewFeedback: activeReviewFeedback,
     reviewTrace: reviewEvidenceCalibration,
     generatedAt
   });
@@ -155,6 +157,11 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
   });
 
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
+  const projectReviewMemoryAudit = buildProjectReviewEvidenceMemoryAudit({
+    memory: request.project_review_evidence_memory,
+    usedForSearch: Boolean(request.project_review_evidence_memory),
+    generatedAt
+  });
 
   const diagnostics: SearchDiagnostics = {
     generated_at: generatedAt,
@@ -173,6 +180,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     auto_tuning: autoTuning,
     evidence_tuning: evidenceTuning,
     review_evidence_calibration: reviewEvidenceCalibration,
+    project_review_memory: projectReviewMemoryAudit,
     ranking_explainability: rankingExplainability,
     provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({

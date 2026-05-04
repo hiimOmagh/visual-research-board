@@ -1,4 +1,4 @@
-# Real Retrieval Validation — v0.3.0
+# Real Retrieval Validation — v0.3.1
 
 This release adds a retrieval-evidence gate. The goal is not to claim that the app crawls the whole web. The realistic target is broad multi-provider retrieval with measurable evidence: candidate volume, image density, source diversity, saveable candidates, and provider activity.
 

@@ -1,6 +1,6 @@
-# Provider Setup — v0.3.0
+# Provider Setup — v0.3.1
 
-Visual Research Board must remain usable without API keys. v0.3.0 defaults to free/no-key backend sources, mock fallback, and manual reference-search launchers. It must not scrape Google, Bing, Yandex, or other search-result pages.
+Visual Research Board must remain usable without API keys. v0.3.1 defaults to free/no-key backend sources, mock fallback, and manual reference-search launchers. It must not scrape Google, Bing, Yandex, or other search-result pages.
 
 ## Free core providers
 

@@ -1,4 +1,4 @@
-# v0.3.0 — Ranking Explainability + Calibration Audit
+# v0.3.1 — Ranking Explainability + Calibration Audit
 
 This release makes ranking inspectable instead of hidden.
 

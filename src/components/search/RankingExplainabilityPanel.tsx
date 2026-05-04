@@ -11,7 +11,7 @@ export function RankingExplainabilityPanel({ audit }: { audit: RankingExplainabi
     <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft" aria-label="Ranking explainability and calibration audit">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-lime-300">v0.3.0 ranking gate</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-lime-300">v0.3.1 ranking gate</p>
           <h2 className="mt-1 text-xl font-bold text-white">Ranking explainability + calibration audit</h2>
           <p className="mt-2 text-xs leading-5 text-slate-400">
             Every ranked candidate now carries an explicit score breakdown, review-evidence delta, confidence label, and warning trail.

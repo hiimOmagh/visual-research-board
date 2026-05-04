@@ -1,6 +1,6 @@
-# Retrieval Weak-Case Auto-Tuning — v0.3.0
+# Retrieval Weak-Case Auto-Tuning — v0.3.1
 
-`v0.3.0` adds a weak-case correction layer on top of the v0.2.3 retrieval creator gate.
+`v0.3.1` adds a weak-case correction layer on top of the v0.2.3 retrieval creator gate.
 
 The goal is not to claim literal all-web crawling. The goal is to make the system react when a search is visibly weak.
 

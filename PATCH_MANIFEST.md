@@ -1,53 +1,42 @@
-# v0.3.0 — Ranking Explainability + Calibration Audit Patch Manifest
+# v0.3.1 — Project-Specific Review Evidence Memory
 
-## Release objective
+## Summary
 
-Make ranking inspectable after review-evidence calibration. v0.3.0 adds per-result factor explanations, review-delta visibility, confidence labels, and an aggregate calibration audit so ranking is no longer a hidden score.
+Adds project-scoped review evidence memory so manual review calibration no longer behaves like global or transient saved-result metadata.
 
-## Core changes
+## Main changes
 
-- Added `src/lib/ranking-explainability.ts`.
-- Added `RankingExplanation`, `RankingExplanationFactor`, and `RankingExplainabilityAudit` types.
-- Added `ranking_explanation` on each ranked result.
-- Added `diagnostics.ranking_explainability`.
-- Added `RankingExplainabilityPanel`.
-- Result cards now show rank, confidence, review delta, and dominant factors.
-- Result detail panel now shows full factor breakdown and ranking warnings.
-- Exports now include ranking explanation summaries and confidence counts.
-- Search runtime and static client fallback both build ranking explanations from the same library.
-- Added docs: `docs/ranking-explainability-calibration-audit.md`.
-- Added validation: `npm run ranking:explain:check`.
-- Updated release metadata to `0.3.0`.
+- Added `src/lib/project-review-memory.ts`.
+- Added `ProjectReviewMemoryPanel`.
+- Added project memory types:
+  - `ProjectReviewEvidenceMemory`
+  - `ProjectReviewEvidenceMemoryAudit`
+  - `ProjectReviewEvidenceMemoryStatus`
+- Added `review_evidence_memory` to `ResearchProject`.
+- Added `project_review_evidence_memory` to search requests.
+- Added `diagnostics.project_review_memory` to search responses.
+- Search now sends project-specific memory with the active project isolation key.
+- API and static client fallback use `project_review_evidence_memory.feedback` when review feedback is not supplied directly.
+- Added memory reset behavior with `reset_at` and ignored pre-reset review diagnostics.
+- Added stale-memory detection through saved-review fingerprinting.
+- JSON/library/quality-review exports now preserve or report project review memory state.
+- Updated release version to `0.3.1`.
+- Added validation script: `npm run project:review:memory:check`.
 
-## Validation run
+## Validation
 
 Passed:
 
 ```bash
-npm run ranking:explain:check
+npm run project:review:memory:check
 npm run qa
 ```
 
-Also verified the late QA gates individually:
-
-```bash
-node tests/manual-quality-review-check.mjs
-node tests/review-evidence-feedback-check.mjs
-node tests/free-image-retrieval-check.mjs
-node tests/normalization-dedupe-check.mjs
-node tests/query-routing-check.mjs
-node tests/ranking-explainability-check.mjs
-```
-
-Not completed:
+Not completed successfully in this container:
 
 ```bash
 npm run typecheck
 npm run lint
 ```
 
-Reason: this container has no installed `node_modules`; TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies. The dedicated source/fixture gates passed.
-
-## Changed-file patch
-
-This ZIP contains files modified or added relative to v0.2.11.
+Reason: `node_modules` is absent in this container, so TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies before source-level validation can complete.

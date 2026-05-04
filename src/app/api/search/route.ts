@@ -24,6 +24,7 @@ import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
 import { buildReferenceSearchLinks } from "@/lib/reference-search";
 import { buildRankingExplainability } from "@/lib/ranking-explainability";
+import { buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -65,12 +66,14 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
     return acc;
   }, { ...DEFAULT_PROVIDER_TOGGLES });
   if (!anyProviderEnabled(provider_toggles)) provider_toggles.mock = true;
+  const projectReviewMemory = candidate.project_review_evidence_memory;
   return {
     topic: candidate.topic.trim(),
     mode: candidate.mode,
     depth: candidate.depth,
     provider_toggles,
-    review_evidence_feedback: candidate.review_evidence_feedback
+    review_evidence_feedback: candidate.review_evidence_feedback ?? projectReviewMemory?.feedback,
+    project_review_evidence_memory: projectReviewMemory
   };
 }
 
@@ -245,7 +248,13 @@ export async function POST(request: Request) {
   const baseSearchPlan = createSearchPlan(validRequest);
   const requestedToggles = validRequest.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES;
   const runtimeToggles = mockOnly ? { ...disabledToggles(), mock: true } : requestedToggles;
-  const effectiveRequest: ResearchRequest = { ...validRequest, provider_toggles: runtimeToggles };
+  const projectReviewMemory = validRequest.project_review_evidence_memory;
+  const effectiveRequest: ResearchRequest = {
+    ...validRequest,
+    provider_toggles: runtimeToggles,
+    review_evidence_feedback: validRequest.review_evidence_feedback ?? projectReviewMemory?.feedback,
+    project_review_evidence_memory: projectReviewMemory
+  };
 
   const firstProviderRuns = await executeProviderRuns({ searchPlan: baseSearchPlan, runtimeToggles, mockOnly });
   const firstRawResults = firstProviderRuns.flatMap((entry) => entry.results);
@@ -283,6 +292,11 @@ export async function POST(request: Request) {
   const autoTuning = completeAutoTuningTrace({ trace: shouldRunTunedPass ? initialAutoTuneTrace : { ...initialAutoTuneTrace, applied: false, reason: isAutoTuneDisabled() ? "Auto-tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_AUTO_TUNING." : initialAutoTuneTrace.reason }, finalEvidence: retrievalEvidence, finalCalibration: qualityCalibration });
   const evidenceTuning = completeEvidenceDrivenTuningTrace({ trace: shouldRunTunedPass ? initialEvidenceTuningTrace : { ...initialEvidenceTuningTrace, applied: false, reason: isEvidenceTuningDisabled() ? "Evidence-driven tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING." : initialEvidenceTuningTrace.reason }, finalEvidence: retrievalEvidence, finalCalibration: qualityCalibration });
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
+  const projectReviewMemoryAudit = buildProjectReviewEvidenceMemoryAudit({
+    memory: effectiveRequest.project_review_evidence_memory,
+    usedForSearch: Boolean(effectiveRequest.project_review_evidence_memory),
+    generatedAt
+  });
   const runtimeReport = buildProviderRuntimeReport({
     mockOnly,
     staticDemo: false,
@@ -314,6 +328,7 @@ export async function POST(request: Request) {
       auto_tuning: autoTuning,
       evidence_tuning: evidenceTuning,
       review_evidence_calibration: reviewEvidenceCalibration,
+      project_review_memory: projectReviewMemoryAudit,
       ranking_explainability: rankingExplainability,
       provider_result_inspection: providerResultInspection,
       runtime_report: runtimeReport

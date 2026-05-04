@@ -56,6 +56,7 @@ export function createEmptyProject(name = "Untitled research project"): Research
     updated_at: createdAt,
     board_sections: createDefaultSections(),
     saved_results: [],
+    review_evidence_memory: undefined,
     search_history: [],
     result_snapshots: []
   };
@@ -161,8 +162,10 @@ function normalizeHistoryEntry(entry: Partial<SearchHistoryEntry>): SearchHistor
     result_count: entry.result_count ?? 0,
     duplicate_count: entry.duplicate_count ?? 0,
     normalization_dedupe: entry.normalization_dedupe,
+    source_class_routing: entry.source_class_routing,
     provider_health: normalizeProviderHealth(entry.provider_health ?? []),
-    provider_toggles: entry.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES
+    provider_toggles: entry.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES,
+    reference_searches: entry.reference_searches
   };
 }
 
@@ -185,6 +188,7 @@ export function normalizeProject(project: Partial<ResearchProject> & { name?: st
     updated_at: project.updated_at || nowIso(),
     board_sections: project.board_sections?.length ? project.board_sections : fallback.board_sections,
     saved_results: (project.saved_results ?? []).map(assignDefaultSection),
+    review_evidence_memory: project.review_evidence_memory,
     search_history: normalizedHistory.slice(0, MAX_SEARCH_HISTORY),
     result_snapshots: normalizedSnapshots.slice(0, MAX_RESULT_SNAPSHOTS)
   };
@@ -259,6 +263,7 @@ export function duplicateProject(project: ResearchProject): ResearchProject {
     created_at: now,
     updated_at: now,
     saved_results: project.saved_results.map((item) => ({ ...item, updated_at: now })),
+    review_evidence_memory: undefined,
     search_history: [...project.search_history],
     result_snapshots: [...project.result_snapshots],
     board_sections: [...project.board_sections]
@@ -289,8 +294,10 @@ export function createSearchHistoryEntry(response: ResearchResponse, request: Re
     result_count: response.results.length,
     duplicate_count: response.diagnostics.duplicate_count,
     normalization_dedupe: response.diagnostics.normalization_dedupe,
+    source_class_routing: response.diagnostics.source_class_routing,
     provider_health: response.diagnostics.provider_health,
-    provider_toggles: response.diagnostics.provider_toggles
+    provider_toggles: response.diagnostics.provider_toggles,
+    reference_searches: response.diagnostics.reference_searches
   };
 }
 
