@@ -4,6 +4,7 @@ import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback, reviewEvidenceBiasSummary } from "@/lib/review-evidence-feedback";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
+import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit } from "@/lib/board-organization";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -19,6 +20,11 @@ function projectName(project?: Pick<ResearchProject, "name">): string {
 
 function sectionName(project: Pick<ResearchProject, "board_sections"> | undefined, sectionId?: string): string {
   return project?.board_sections.find((section) => section.id === sectionId)?.name ?? "Unassigned";
+}
+
+function sectionKind(project: Pick<ResearchProject, "board_sections"> | undefined, sectionId?: string): string {
+  const kind = project?.board_sections.find((section) => section.id === sectionId)?.kind ?? "custom";
+  return BOARD_SECTION_KIND_LABELS[kind];
 }
 
 function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections">): Array<{ section: string; items: ResearchResult[] }> {
@@ -39,6 +45,7 @@ function sortedBySection(results: ResearchResult[], project?: Pick<ResearchProje
 export function createJsonExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "search_history" | "saved_results" | "review_evidence_memory">): string {
   const projectReviewMemory = project?.saved_results ? buildProjectReviewEvidenceMemory(project) : project?.review_evidence_memory;
   const projectReviewMemoryAudit = projectReviewMemory ? buildProjectReviewEvidenceMemoryAudit({ memory: projectReviewMemory, usedForSearch: false }) : undefined;
+  const boardOrganizationAudit = project?.saved_results ? buildBoardOrganizationAudit(project) : undefined;
   return JSON.stringify(
     {
       export_schema_version: "0.1.0",
@@ -71,7 +78,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         ranking_explained_count: results.filter((item) => Boolean(item.ranking_explanation)).length,
         ranking_confidence_counts: countBy(results.filter((item) => Boolean(item.ranking_explanation)), (item) => item.ranking_explanation?.calibration_confidence ?? "missing"),
         review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length,
-        project_review_memory: projectReviewMemoryAudit
+        project_review_memory: projectReviewMemoryAudit,
+        board_organization: boardOrganizationAudit
       },
       results
     },
@@ -96,18 +104,20 @@ export function createMarkdownExport(results: ResearchResult[], project?: Pick<R
     `- Manual imports: ${results.filter((item) => item.provider === "manual").length}`,
     `- Items with notes: ${results.filter((item) => Boolean(item.notes?.trim())).length}`,
     `- Ranking explanations: ${results.filter((item) => Boolean(item.ranking_explanation)).length}`,
+    `- Tagged items: ${results.filter((item) => item.tags.length > 0).length}`,
     ""
   ];
 
-  results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id)));
+  results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id), sectionKind(project, result.section_id)));
 
   return lines.join("\n");
 }
 
-function appendDetailedResult(lines: string[], result: ResearchResult, index: number, section: string): void {
+function appendDetailedResult(lines: string[], result: ResearchResult, index: number, section: string, sectionKindLabel = "Custom"): void {
   lines.push(`## ${index}. ${result.title}`);
   lines.push("");
   lines.push(`- Section: ${section}`);
+  lines.push(`- Section kind: ${sectionKindLabel}`);
   lines.push(`- Type: ${result.type}`);
   lines.push(`- Source: ${result.source_domain}`);
   lines.push(`- URL: ${result.source_url}`);
@@ -187,6 +197,7 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
     `- Saved references: ${results.length}`,
     `- Strong production candidates: ${results.filter((item) => item.scores.production_usefulness >= 0.7).length}`,
     `- Needs legal/source verification: ${results.filter((item) => item.risk_level !== "low").length}`,
+    `- Tagged references: ${results.filter((item) => item.tags.length > 0).length}`,
     ""
   ];
 
@@ -320,10 +331,12 @@ function csvEscape(value: string | number | undefined): string {
   return raw;
 }
 
-export function createCsvExport(results: ResearchResult[]): string {
+export function createCsvExport(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections">): string {
   const headers = [
     "title",
     "section_id",
+    "section_name",
+    "section_kind",
     "type",
     "provider",
     "source_domain",
@@ -357,6 +370,8 @@ export function createCsvExport(results: ResearchResult[]): string {
   const rows = results.map((result) => [
     result.title,
     result.section_id ?? "",
+    sectionName(project, result.section_id),
+    sectionKind(project, result.section_id),
     result.type,
     result.provider,
     result.source_domain,
@@ -402,7 +417,10 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         saved_result_count: library.projects.reduce((total, project) => total + project.saved_results.length, 0),
         search_history_count: library.projects.reduce((total, project) => total + project.search_history.length, 0),
         result_snapshot_count: library.projects.reduce((total, project) => total + project.result_snapshots.length, 0),
-        project_review_memory_count: library.projects.filter((project) => Boolean(project.review_evidence_memory)).length
+        project_review_memory_count: library.projects.filter((project) => Boolean(project.review_evidence_memory)).length,
+        board_section_count: library.projects.reduce((total, project) => total + project.board_sections.length, 0),
+        tagged_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => item.tags.length > 0).length, 0),
+        noted_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => Boolean(item.notes?.trim())).length, 0)
       },
       library
     },

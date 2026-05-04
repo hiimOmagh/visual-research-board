@@ -5,12 +5,30 @@ import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality"
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 import { normalizeManualReview } from "@/lib/manual-quality-review";
 import { canonicalUrl, normalizeKey, normalizeTitle } from "@/lib/result-normalizer";
+import {
+  CHECK_REQUIRED_SECTION_ID as BOARD_CHECK_REQUIRED_SECTION_ID,
+  COUNTER_EVIDENCE_SECTION_ID as BOARD_COUNTER_EVIDENCE_SECTION_ID,
+  createDefaultBoardSections,
+  INBOX_SECTION_ID as BOARD_INBOX_SECTION_ID,
+  normalizeBoardSections,
+  normalizeBoardTags,
+  PRIMARY_EVIDENCE_SECTION_ID as BOARD_PRIMARY_EVIDENCE_SECTION_ID,
+  PUBLIC_DOMAIN_SECTION_ID as BOARD_PUBLIC_DOMAIN_SECTION_ID,
+  REJECTED_SECTION_ID as BOARD_REJECTED_SECTION_ID,
+  suggestSectionForResult,
+  VISUAL_REFERENCE_SECTION_ID as BOARD_VISUAL_REFERENCE_SECTION_ID
+} from "@/lib/board-organization";
 
 export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
 export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
-export const INBOX_SECTION_ID = "section_inbox";
-export const PUBLIC_DOMAIN_SECTION_ID = "section_public_domain";
-export const THUMBNAIL_SECTION_ID = "section_thumbnail";
+export const INBOX_SECTION_ID = BOARD_INBOX_SECTION_ID;
+export const PRIMARY_EVIDENCE_SECTION_ID = BOARD_PRIMARY_EVIDENCE_SECTION_ID;
+export const COUNTER_EVIDENCE_SECTION_ID = BOARD_COUNTER_EVIDENCE_SECTION_ID;
+export const VISUAL_REFERENCE_SECTION_ID = BOARD_VISUAL_REFERENCE_SECTION_ID;
+export const PUBLIC_DOMAIN_SECTION_ID = BOARD_PUBLIC_DOMAIN_SECTION_ID;
+export const CHECK_REQUIRED_SECTION_ID = BOARD_CHECK_REQUIRED_SECTION_ID;
+export const REJECTED_SECTION_ID = BOARD_REJECTED_SECTION_ID;
+export const THUMBNAIL_SECTION_ID = BOARD_VISUAL_REFERENCE_SECTION_ID;
 export const MAX_SEARCH_HISTORY = 50;
 export const MAX_RESULT_SNAPSHOTS = 20;
 
@@ -23,28 +41,9 @@ export function createId(prefix: string): string {
 }
 
 export function createDefaultSections(): BoardSection[] {
-  const createdAt = nowIso();
-  return [
-    {
-      id: INBOX_SECTION_ID,
-      name: "Inbox",
-      description: "Default holding area for newly saved references.",
-      created_at: createdAt
-    },
-    {
-      id: PUBLIC_DOMAIN_SECTION_ID,
-      name: "Public-domain / CC candidates",
-      description: "Items that still require manual license verification.",
-      created_at: createdAt
-    },
-    {
-      id: THUMBNAIL_SECTION_ID,
-      name: "Thumbnail / production ideas",
-      description: "References that may help composition, framing, or visual strategy.",
-      created_at: createdAt
-    }
-  ];
+  return createDefaultBoardSections(nowIso());
 }
+
 
 export function createEmptyProject(name = "Untitled research project"): ResearchProject {
   const createdAt = nowIso();
@@ -75,7 +74,9 @@ export function createSection(name: string): BoardSection {
   return {
     id: createId("section"),
     name: name.trim() || "Untitled section",
-    created_at: nowIso()
+    kind: "custom",
+    created_at: nowIso(),
+    export_priority: 100
   };
 }
 
@@ -90,6 +91,7 @@ export function ensureResultQuality(result: ResearchResult): ResearchResult {
     reuse_risk: result.reuse_risk ?? (rights_status === "public_domain" ? "low" : rights_status === "restricted" ? "high" : "medium"),
     manual_review: result.manual_review ? normalizeManualReview(result.manual_review) : undefined,
     source_group,
+    tags: normalizeBoardTags(result.tags ?? []),
     scores,
     canonical_source_url: result.canonical_source_url ?? canonicalUrl(result.source_url),
     canonical_image_url: result.canonical_image_url ?? canonicalUrl(result.image_url),
@@ -109,14 +111,9 @@ export function ensureResultQuality(result: ResearchResult): ResearchResult {
 
 export function assignDefaultSection(result: ResearchResult): ResearchResult {
   const enriched = ensureResultQuality(result);
+  if (enriched.section_id === "section_thumbnail") return { ...enriched, section_id: VISUAL_REFERENCE_SECTION_ID };
   if (enriched.section_id) return enriched;
-  if (enriched.license_detected === "public_domain" || enriched.license_detected === "creative_commons") {
-    return { ...enriched, section_id: PUBLIC_DOMAIN_SECTION_ID };
-  }
-  if (enriched.tags.some((tag) => tag.includes("thumbnail") || tag.includes("composition"))) {
-    return { ...enriched, section_id: THUMBNAIL_SECTION_ID };
-  }
-  return { ...enriched, section_id: INBOX_SECTION_ID };
+  return { ...enriched, section_id: suggestSectionForResult(enriched) };
 }
 
 function normalizeProviderHealth(health: ProviderHealth[]): ProviderHealth[] {
@@ -186,7 +183,7 @@ export function normalizeProject(project: Partial<ResearchProject> & { name?: st
     name: project.name || fallback.name,
     created_at: project.created_at || fallback.created_at,
     updated_at: project.updated_at || nowIso(),
-    board_sections: project.board_sections?.length ? project.board_sections : fallback.board_sections,
+    board_sections: normalizeBoardSections(project.board_sections?.length ? project.board_sections : fallback.board_sections),
     saved_results: (project.saved_results ?? []).map(assignDefaultSection),
     review_evidence_memory: project.review_evidence_memory,
     search_history: normalizedHistory.slice(0, MAX_SEARCH_HISTORY),

@@ -38,6 +38,36 @@ export type SourceClass =
   | "web_context"
   | "academic_context";
 
+
+export type BoardSectionKind =
+  | "inbox"
+  | "background"
+  | "primary_evidence"
+  | "counter_evidence"
+  | "visual_reference"
+  | "public_domain_candidate"
+  | "check_required"
+  | "rejected"
+  | "custom";
+
+export interface BoardOrganizationAudit {
+  schema_version: "0.3.2";
+  generated_at: string;
+  total_saved_count: number;
+  section_count: number;
+  populated_section_count: number;
+  unassigned_count: number;
+  notes_count: number;
+  tagged_count: number;
+  manual_reviewed_count: number;
+  rejected_count: number;
+  check_required_count: number;
+  reference_only_count: number;
+  section_counts: Record<string, number>;
+  tag_counts: Record<string, number>;
+  warnings: string[];
+}
+
 export type SourceAccessMode =
   | "backend_free_no_key"
   | "backend_free_key_required"
@@ -717,7 +747,11 @@ export interface BoardSection {
   id: string;
   name: string;
   description?: string;
+  kind?: BoardSectionKind;
   created_at: string;
+  updated_at?: string;
+  locked?: boolean;
+  export_priority?: number;
 }
 
 export interface SearchResultSnapshot {

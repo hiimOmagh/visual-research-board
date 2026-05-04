@@ -6,6 +6,7 @@ import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research"
 import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createFallbackMetadata, createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
+import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit, DEFAULT_BOARD_TAGS, formatBoardTag, normalizeBoardTags, toggleBoardTag } from "@/lib/board-organization";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { INBOX_SECTION_ID } from "@/lib/project";
 import { manualReviewBadge, normalizeManualReview, REVIEW_LABELS, REVIEW_VERDICTS } from "@/lib/manual-quality-review";
@@ -21,11 +22,12 @@ interface SavedBoardProps {
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateSection: (id: string, sectionId: string) => void;
   onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
+  onUpdateTags: (id: string, tags: string[]) => void;
   onAddSection: (name: string) => void;
   onManualImport: (result: ResearchResult) => void;
 }
 
-export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onUpdateManualReview, onAddSection, onManualImport }: SavedBoardProps) {
+export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpdateNotes, onUpdateSection, onUpdateManualReview, onUpdateTags, onAddSection, onManualImport }: SavedBoardProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sectionName, setSectionName] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState<ExportTemplateId>("source_audit");
@@ -51,7 +53,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
   };
 
   const exportCsv = () => {
-    downloadTextFile("visual-research-board-export.csv", createCsvExport(saved), "text/csv");
+    downloadTextFile("visual-research-board-export.csv", createCsvExport(saved, project), "text/csv");
   };
 
   const exportAttribution = () => {
@@ -86,6 +88,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
   const highRiskCount = saved.filter((item) => ["high", "avoid"].includes(item.risk_level)).length;
   const manualCount = saved.filter((item) => item.provider === "manual").length;
   const reviewedCount = saved.filter((item) => normalizeManualReview(item.manual_review).verdict !== "unreviewed").length;
+  const organizationAudit = useMemo(() => buildBoardOrganizationAudit(project), [project]);
 
   return (
     <aside className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
@@ -112,13 +115,35 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
       </div>
 
       <section className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Board sections</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Board organization</p>
+            <p className="mt-1 text-xs text-slate-500">v0.3.2 section taxonomy, tag coverage, notes, and triage warnings.</p>
+          </div>
+          <span className="rounded-full border border-lime-300/20 bg-lime-300/10 px-2 py-1 text-[11px] text-lime-100">
+            {organizationAudit.populated_section_count}/{organizationAudit.section_count} populated
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+          <span className="rounded-xl bg-white/5 px-2 py-2">Tagged: {organizationAudit.tagged_count}/{organizationAudit.total_saved_count}</span>
+          <span className="rounded-xl bg-white/5 px-2 py-2">Notes: {organizationAudit.notes_count}/{organizationAudit.total_saved_count}</span>
+          <span className="rounded-xl bg-white/5 px-2 py-2">Check-required: {organizationAudit.check_required_count}</span>
+          <span className="rounded-xl bg-white/5 px-2 py-2">Reference-only: {organizationAudit.reference_only_count}</span>
+        </div>
+        {organizationAudit.warnings.length > 0 && (
+          <div className="mt-3 rounded-xl border border-amber-300/20 bg-amber-300/[0.06] p-3 text-xs text-amber-100">
+            <p className="font-semibold text-amber-50">Organization warnings</p>
+            <ul className="mt-1 list-disc space-y-1 pl-4">
+              {organizationAudit.warnings.slice(0, 4).map((warning) => <li key={warning}>{warning}</li>)}
+            </ul>
+          </div>
+        )}
         <div className="mt-3 flex gap-2">
           <input
             value={sectionName}
             onChange={(event) => setSectionName(event.target.value)}
             className="min-w-0 flex-1 rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white outline-none ring-lime-300/40 placeholder:text-slate-600 focus:ring-4"
-            placeholder="Add section"
+            placeholder="Add custom section"
           />
           <button
             type="button"
@@ -128,11 +153,15 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
             Add
           </button>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
+        <div className="mt-3 grid gap-2 text-[11px] text-slate-300">
           {sections.map((section) => (
-            <span key={section.id} className="rounded-full bg-white/5 px-2 py-1">
-              {section.name}: {groupedSaved.get(section.id)?.length ?? 0}
-            </span>
+            <div key={section.id} className="rounded-xl bg-white/5 px-3 py-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-semibold text-slate-100">{section.name}</span>
+                <span>{groupedSaved.get(section.id)?.length ?? 0}</span>
+              </div>
+              <div className="mt-1 text-slate-500">{BOARD_SECTION_KIND_LABELS[section.kind ?? "custom"]} · priority {section.export_priority ?? 100}</div>
+            </div>
           ))}
         </div>
       </section>
@@ -264,6 +293,7 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
                     onUpdateNotes={onUpdateNotes}
                     onUpdateSection={onUpdateSection}
                     onUpdateManualReview={onUpdateManualReview}
+                    onUpdateTags={onUpdateTags}
                     onCopyAttribution={copyAttribution}
                   />
                 ))}
@@ -293,6 +323,7 @@ function SavedItem({
   onUpdateNotes,
   onUpdateSection,
   onUpdateManualReview,
+  onUpdateTags,
   onCopyAttribution
 }: {
   item: ResearchResult;
@@ -302,6 +333,7 @@ function SavedItem({
   onUpdateNotes: (id: string, notes: string) => void;
   onUpdateSection: (id: string, sectionId: string) => void;
   onUpdateManualReview: (id: string, patch: Partial<ManualQualityReview>) => void;
+  onUpdateTags: (id: string, tags: string[]) => void;
   onCopyAttribution: (item: ResearchResult) => void;
 }) {
   return (
@@ -333,6 +365,8 @@ function SavedItem({
           {sections.map((section) => <option key={section.id} value={section.id}>{section.name}</option>)}
         </select>
       </label>
+
+      <TagEditor item={item} onUpdateTags={onUpdateTags} />
 
       <label className="mt-3 block">
         <span className="mb-1 block text-xs font-semibold text-slate-400">Notes</span>
@@ -377,6 +411,46 @@ function SavedItem({
     </article>
   );
 }
+
+
+function TagEditor({ item, onUpdateTags }: { item: ResearchResult; onUpdateTags: (id: string, tags: string[]) => void }) {
+  const tags = normalizeBoardTags(item.tags);
+  const updateTagText = (value: string) => onUpdateTags(item.id, normalizeBoardTags(value));
+  const toggleTag = (tag: string) => onUpdateTags(item.id, toggleBoardTag(tags, tag));
+  return (
+    <section className="mt-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">Tags</p>
+        <span className="text-[11px] text-slate-500">{tags.length}/16</span>
+      </div>
+      <input
+        value={tags.join(", ")}
+        onChange={(event) => updateTagText(event.target.value)}
+        className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-slate-100 outline-none ring-lime-300/40 placeholder:text-slate-600 focus:ring-4"
+        placeholder="map, archive, public-domain, check-rights..."
+        aria-label={`Tags for ${item.title}`}
+      />
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {DEFAULT_BOARD_TAGS.map((tag) => {
+          const active = tags.includes(tag);
+          return (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleTag(tag)}
+              className={active
+                ? "rounded-full border border-lime-300/50 bg-lime-300/15 px-2 py-1 text-[11px] text-lime-100"
+                : "rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-slate-400 hover:border-lime-300/30 hover:text-lime-100"}
+            >
+              {formatBoardTag(tag)}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 
 function ManualReviewControls({
   item,

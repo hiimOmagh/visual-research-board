@@ -1,34 +1,39 @@
-# v0.3.1 — Project-Specific Review Evidence Memory
+# v0.3.2 — Board Sections + Source Organization Upgrade
 
 ## Summary
 
-Adds project-scoped review evidence memory so manual review calibration no longer behaves like global or transient saved-result metadata.
+Upgrades the saved board from a simple saved-results list into a structured source organization layer with default research sections, editable tags, organization diagnostics, and section-aware exports.
 
 ## Main changes
 
-- Added `src/lib/project-review-memory.ts`.
-- Added `ProjectReviewMemoryPanel`.
-- Added project memory types:
-  - `ProjectReviewEvidenceMemory`
-  - `ProjectReviewEvidenceMemoryAudit`
-  - `ProjectReviewEvidenceMemoryStatus`
-- Added `review_evidence_memory` to `ResearchProject`.
-- Added `project_review_evidence_memory` to search requests.
-- Added `diagnostics.project_review_memory` to search responses.
-- Search now sends project-specific memory with the active project isolation key.
-- API and static client fallback use `project_review_evidence_memory.feedback` when review feedback is not supplied directly.
-- Added memory reset behavior with `reset_at` and ignored pre-reset review diagnostics.
-- Added stale-memory detection through saved-review fingerprinting.
-- JSON/library/quality-review exports now preserve or report project review memory state.
-- Updated release version to `0.3.1`.
-- Added validation script: `npm run project:review:memory:check`.
+- Added `src/lib/board-organization.ts`.
+- Added board organization types:
+  - `BoardSectionKind`
+  - `BoardOrganizationAudit`
+- Expanded default board sections:
+  - Inbox
+  - Background / context
+  - Primary evidence
+  - Counter-evidence
+  - Visual references
+  - Public-domain / open-license candidates
+  - Check-required
+  - Rejected / do not use
+- Added normalized tag editing in saved item cards.
+- Added quick tag chips for common research tags such as map, archive, document, public-domain, check-rights, counter-evidence, and thumbnail.
+- Added board organization audit counts and warnings in the saved board.
+- Added migration support for the old `section_thumbnail` bucket into `section_visual_reference`.
+- Updated exports to include board organization audit, section name, section kind, tag counts, note counts, and project-library organization counts.
+- Updated library export filename to `visual-research-board-library-v0.3.2.json`.
+- Updated app version to `0.3.2`.
+- Added validation script: `npm run board:organization:check`.
 
 ## Validation
 
 Passed:
 
 ```bash
-npm run project:review:memory:check
+npm run board:organization:check
 npm run qa
 ```
 
@@ -40,3 +45,7 @@ npm run lint
 ```
 
 Reason: `node_modules` is absent in this container, so TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies before source-level validation can complete.
+
+## Next recommended build
+
+`v0.3.3 — Claim-to-Source Mapping`

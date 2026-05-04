@@ -34,7 +34,7 @@ function formatLabel(format: ExportPreviewFormat, templateId: ExportTemplateId):
 function buildExportBody(format: ExportPreviewFormat, templateId: ExportTemplateId, saved: ResearchResult[], project: ResearchProject): string {
   if (format === "json") return createJsonExport(saved, project);
   if (format === "markdown") return createMarkdownExport(saved, project);
-  if (format === "csv") return createCsvExport(saved);
+  if (format === "csv") return createCsvExport(saved, project);
   return createTemplateExport(templateId, saved, project);
 }
 

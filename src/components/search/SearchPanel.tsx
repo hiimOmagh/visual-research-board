@@ -41,6 +41,7 @@ import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
 import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/client-search";
 import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
+import { normalizeBoardTags } from "@/lib/board-organization";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit, isProjectReviewEvidenceMemoryStale, resetProjectReviewEvidenceMemory } from "@/lib/project-review-memory";
 import {
   assignDefaultSection,
@@ -251,6 +252,13 @@ export function SearchPanel() {
     }));
   };
 
+  const updateSavedTags = (id: string, tags: string[]) => {
+    updateProject((current) => ({
+      ...current,
+      saved_results: current.saved_results.map((item) => item.id === id ? { ...item, tags: normalizeBoardTags(tags), updated_at: new Date().toISOString() } : item)
+    }));
+  };
+
   const updateSavedManualReview = (id: string, patch: Partial<ManualQualityReview>) => {
     updateProject((current) => ({
       ...current,
@@ -309,7 +317,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.3.1.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.3.2.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -342,12 +350,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.1</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.2</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, editable tags/notes, organization audits, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -505,6 +513,7 @@ export function SearchPanel() {
           onUpdateNotes={updateSavedNotes}
           onUpdateSection={updateSavedSection}
           onUpdateManualReview={updateSavedManualReview}
+          onUpdateTags={updateSavedTags}
           onAddSection={addSection}
           onManualImport={addManualResult}
         />
