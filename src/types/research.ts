@@ -12,6 +12,32 @@ export type SearchDepth = "quick" | "standard" | "deep";
 
 export type ResultType = "image" | "web" | "news" | "archive";
 
+export type SearchSourceTarget = "web" | "image" | "news" | "archive" | "commons";
+
+export type QueryIntent =
+  | "exact"
+  | "visual"
+  | "public_domain"
+  | "archive"
+  | "museum"
+  | "science"
+  | "news"
+  | "academic"
+  | "stock"
+  | "reference"
+  | "web";
+
+export type SourceClass =
+  | "open_media"
+  | "archive"
+  | "museum"
+  | "science"
+  | "stock"
+  | "manual_reference"
+  | "news_reference"
+  | "web_context"
+  | "academic_context";
+
 export type SourceAccessMode =
   | "backend_free_no_key"
   | "backend_free_key_required"
@@ -370,12 +396,50 @@ export interface ResearchResult {
   manual_review?: ManualQualityReview;
 }
 
+export interface QueryVariant {
+  id: string;
+  query: string;
+  intent: QueryIntent;
+  source_classes: SourceClass[];
+  provider_targets: SearchProviderName[];
+  language_hint?: "en" | "ar" | "fr" | "de" | "mixed";
+  priority: number;
+  reason: string;
+}
+
+export interface ProviderRoutingPlanEntry {
+  provider: SearchProviderName;
+  source_classes: SourceClass[];
+  query_ids: string[];
+  queries: string[];
+  max_queries: number;
+  routing_reason: string;
+}
+
+export interface SourceClassRoutingTrace {
+  schema_version: "0.2.11";
+  original_topic: string;
+  mode: ResearchMode;
+  depth: SearchDepth;
+  query_variant_count: number;
+  routed_provider_count: number;
+  source_class_counts: Partial<Record<SourceClass, number>>;
+  intent_counts: Partial<Record<QueryIntent, number>>;
+  provider_query_counts: Partial<Record<SearchProviderName, number>>;
+  provider_source_classes: Partial<Record<SearchProviderName, SourceClass[]>>;
+  reference_launcher_count: number;
+  warnings: string[];
+}
+
 export interface SearchPlan {
   original_topic: string;
   mode: ResearchMode;
   depth: SearchDepth;
   queries: string[];
-  source_targets: Array<"web" | "image" | "news" | "archive" | "commons">;
+  source_targets: SearchSourceTarget[];
+  query_variants?: QueryVariant[];
+  provider_routing?: Partial<Record<SearchProviderName, ProviderRoutingPlanEntry>>;
+  source_class_routing?: SourceClassRoutingTrace;
 }
 
 export interface ProviderHealth {
@@ -387,6 +451,9 @@ export interface ProviderHealth {
   duration_ms: number;
   queries_used: number;
   query_sample: string[];
+  routed_query_count?: number;
+  source_classes?: SourceClass[];
+  routing_reason?: string;
   endpoint_sample?: string[];
   missing_env?: string;
   message?: string;
@@ -524,6 +591,7 @@ export interface SearchDiagnostics {
   total_deduped_results: number;
   duplicate_count: number;
   normalization_dedupe?: NormalizationDedupeTrace;
+  source_class_routing?: SourceClassRoutingTrace;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
   reference_searches?: ReferenceSearchLink[];
@@ -582,6 +650,7 @@ export interface SearchHistoryEntry {
   result_count: number;
   duplicate_count: number;
   normalization_dedupe?: NormalizationDedupeTrace;
+  source_class_routing?: SourceClassRoutingTrace;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
   reference_searches?: ReferenceSearchLink[];

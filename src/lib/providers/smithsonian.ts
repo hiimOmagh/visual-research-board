@@ -1,6 +1,6 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface SmithsonianContent {
   title?: string;
@@ -55,7 +55,7 @@ async function searchSmithsonianQuery(query: string, queryIndex: number, plan: S
 
 export async function searchSmithsonianOpenAccess(plan: SearchPlan): Promise<RawProviderResult[]> {
   if (!plan.source_targets.includes("archive") && !plan.source_targets.includes("image") && !plan.source_targets.includes("commons")) return [];
-  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchSmithsonianQuery(query, queryIndex, plan));
+  const tasks = providerQuerySlice(plan, "smithsonian").map((query, queryIndex) => () => searchSmithsonianQuery(query, queryIndex, plan));
   const batches = await runLimited(tasks, 2);
   return batches.flat();
 }

@@ -1,4 +1,4 @@
-# Deployment — Visual Research Board v0.2.10
+# Deployment — Visual Research Board v0.2.11
 
 Visual Research Board has two valid deployment modes.
 

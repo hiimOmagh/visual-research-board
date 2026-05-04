@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.10 provider normalization + deduplication package`
+`v0.2.11 query expansion + source-class routing package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
 
@@ -32,10 +32,11 @@ Implemented:
 - Retrieval weak-case auto-tuning with tuned query branches, provider/source/license weighting, and diversity-aware reranking.
 - Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
+- Query expansion and source-class routing so each provider receives source-appropriate query variants instead of the same generic front-sliced list.
 
-## v0.2.10 focus
+## v0.2.11 focus
 
-This package adds a provider normalization and deduplication gate after free/open retrieval. Results now carry canonical source/image URLs, normalized title keys, duplicate keys, duplicate merge traces, provider-source audit trails, and metadata-gap labels. Duplicate records are merged before ranking/export instead of silently polluting the board.
+This package adds bounded query expansion and provider-specific source-class routing. The planner now creates query variants with intents and source classes, routes archive/open-media/museum/science/reference branches to the right adapters, and exposes routing diagnostics in the UI and API response.
 
 ## Free image retrieval boundary
 
@@ -43,7 +44,7 @@ This release is designed to retrieve more relevant visual/source candidates with
 
 It still cannot literally fetch every image on the web. The target is broad, legal, source-aware retrieval with manual reference import for search-engine discoveries.
 
-See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, and `docs/provider-setup.md`.
+See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, `docs/query-expansion-source-class-routing.md`, and `docs/provider-setup.md`.
 
 ## Install and run locally
 
@@ -223,6 +224,6 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.10` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
+`v0.2.11` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
 
-- v0.2.10 adds `normalization_dedupe` diagnostics, duplicate-provider source retention, canonical URL fields, and metadata-gap export coverage.
+- v0.2.11 adds `normalization_dedupe` diagnostics, duplicate-provider source retention, canonical URL fields, and metadata-gap export coverage.

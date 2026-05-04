@@ -7,7 +7,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 const assert = (condition, message) => { if (!condition) failures.push(message); };
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.10", "package.json version must be 0.2.10");
+assert(pkg.version === "0.2.11", "package.json version must be 0.2.11");
 assert(Boolean(pkg.scripts?.["normalization:dedupe:check"]), "package.json must define normalization:dedupe:check");
 assert(pkg.scripts?.qa?.includes("normalization-dedupe-check"), "npm run qa must include normalization-dedupe-check");
 
@@ -62,8 +62,8 @@ for (const token of ["Provider normalization gate", "Normalization + deduplicati
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("NormalizationDedupePanel"), "SearchPanel must render NormalizationDedupePanel");
-assert(searchPanel.includes("v0.2.10"), "SearchPanel header must show v0.2.10");
-assert(searchPanel.includes("visual-research-board-library-v0.2.10.json"), "library export filename must use v0.2.10");
+assert(searchPanel.includes("v0.2.11"), "SearchPanel header must show v0.2.11");
+assert(searchPanel.includes("visual-research-board-library-v0.2.11.json"), "library export filename must use v0.2.11");
 
 const resultCard = read("src/components/search/ResultCard.tsx");
 assert(resultCard.includes("merged ×"), "ResultCard must surface merged duplicate count");
@@ -85,7 +85,7 @@ for (const token of ["duplicate_group_count", "metadata_gap_count", "canonical_s
 }
 
 const docs = read("docs/provider-normalization-deduplication.md");
-assert(docs.includes("v0.2.10"), "normalization docs must identify v0.2.10");
+assert(docs.includes("v0.2.11"), "normalization docs must identify v0.2.11");
 assert(docs.includes("npm run normalization:dedupe:check"), "normalization docs must document validation command");
 
 if (failures.length) {
@@ -93,4 +93,4 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Normalization + deduplication checks passed for v0.2.10.");
+console.log("Normalization + deduplication checks passed for v0.2.11.");

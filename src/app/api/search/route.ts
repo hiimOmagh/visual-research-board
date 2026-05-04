@@ -11,7 +11,7 @@ import { searchInternetArchive } from "@/lib/providers/internet-archive";
 import { searchNasaImages } from "@/lib/providers/nasa";
 import { searchSmithsonianOpenAccess } from "@/lib/providers/smithsonian";
 import { searchEuropeana } from "@/lib/providers/europeana";
-import { ProviderFetchError, querySlice } from "@/lib/providers/provider-utils";
+import { ProviderFetchError, providerQuerySlice } from "@/lib/providers/provider-utils";
 import type { ProviderHealth, ResearchMode, ResearchRequest, ResultType, SearchDepth, SearchPlan, SearchProviderName } from "@/types/research";
 import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
@@ -73,8 +73,8 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
   };
 }
 
-function providerQueries(plan: SearchPlan): string[] {
-  return querySlice(plan.queries, plan.depth);
+function providerQueries(plan: SearchPlan, provider: SearchProviderName): string[] {
+  return providerQuerySlice(plan, provider);
 }
 
 function countResultTypes(results: RawProviderResult[]): Partial<Record<ResultType, number>> {
@@ -95,7 +95,8 @@ async function runProvider(params: {
   run: () => Promise<RawProviderResult[]>;
 }): Promise<{ results: RawProviderResult[]; health: ProviderHealth }> {
   const startedAt = Date.now();
-  const query_sample = providerQueries(params.plan);
+  const query_sample = providerQueries(params.plan, params.provider);
+  const routing = params.plan.provider_routing?.[params.provider];
   const endpoint_sample = params.endpointSample ?? [];
   if (!params.enabled) {
     return {
@@ -110,6 +111,9 @@ async function runProvider(params: {
         queries_used: 0,
         query_sample,
         endpoint_sample,
+        routed_query_count: routing?.queries.length ?? query_sample.length,
+        source_classes: routing?.source_classes,
+        routing_reason: routing?.routing_reason,
         message: params.skippedMessage ?? "Provider disabled or not targeted by this research mode."
       }
     };
@@ -128,6 +132,9 @@ async function runProvider(params: {
         query_sample,
         endpoint_sample,
         missing_env: params.missingEnv,
+        routed_query_count: routing?.queries.length ?? query_sample.length,
+        source_classes: routing?.source_classes,
+        routing_reason: routing?.routing_reason,
         message: params.missingKeyMessage ?? `Missing ${params.missingEnv}. Add it to .env.local or disable this provider.`
       }
     };
@@ -148,7 +155,10 @@ async function runProvider(params: {
         queries_used: query_sample.length,
         query_sample,
         endpoint_sample,
-        message: results.length > 0 ? undefined : "Provider responded but returned no usable normalized candidates for this plan."
+        routed_query_count: routing?.queries.length ?? query_sample.length,
+        source_classes: routing?.source_classes,
+        routing_reason: routing?.routing_reason,
+        message: results.length > 0 ? undefined : "Provider responded but returned no usable normalized candidates for this routed source-class plan."
       }
     };
   } catch (error) {
@@ -165,6 +175,9 @@ async function runProvider(params: {
         queries_used: query_sample.length,
         query_sample,
         endpoint_sample,
+        routed_query_count: routing?.queries.length ?? query_sample.length,
+        source_classes: routing?.source_classes,
+        routing_reason: routing?.routing_reason,
         message: error instanceof Error ? error.message : "Unknown provider error."
       }
     };
@@ -281,6 +294,7 @@ export async function POST(request: Request) {
       total_deduped_results: rankedResults.length,
       duplicate_count: normalized.stats.duplicate_count,
       normalization_dedupe: normalized.stats.trace,
+      source_class_routing: tunedPlan.source_class_routing,
       provider_health: providerHealth,
       provider_toggles: runtimeToggles,
       reference_searches: buildReferenceSearchLinks(tunedPlan.original_topic),

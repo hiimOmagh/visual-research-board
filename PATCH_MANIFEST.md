@@ -1,36 +1,38 @@
-# v0.2.10 Patch Manifest — Provider Normalization + Deduplication
+# v0.2.11 — Query Expansion + Source-Class Routing Patch Manifest
 
-Apply this package over `visual-research-board-v0.2.9-free-image-retrieval-reference-hub`. It contains only files changed or added for v0.2.10.
+## Release objective
 
-## Objective
+Add bounded query expansion and source-class routing so each provider receives query variants matched to its strengths instead of the same generic query slice.
 
-Add a normalization gate after provider retrieval so free/open provider results are canonicalized, duplicate records are merged, metadata gaps are visible, and exports preserve a traceable provider-source audit.
+## Core changes
 
-## Added
+- Added query intent/source-class types and routing diagnostics.
+- Rebuilt `createSearchPlan()` to generate query variants with provider targets.
+- Added provider-specific routing entries in `search_plan.provider_routing`.
+- Added `diagnostics.source_class_routing`.
+- Added `providerQuerySlice(plan, provider)` and routed all provider adapters through it.
+- Added source-class/routing visibility in Provider Health and a new Source Class Routing panel.
+- Added `npm run query:routing:check` and included it in `npm run qa`.
+- Updated release metadata to `0.2.11`.
 
-- `src/components/search/NormalizationDedupePanel.tsx`
-- `docs/provider-normalization-deduplication.md`
-- `tests/normalization-dedupe-check.mjs`
+## Validation run
 
-## Updated
-
-- `src/lib/result-normalizer.ts` — canonical source/image URL normalization, duplicate merge logic, metadata-gap detection, duplicate trace diagnostics.
-- `src/types/research.ts` — duplicate match reasons, metadata gaps, provider-source traces, normalization diagnostics, result canonical fields.
-- `src/app/api/search/route.ts` — returns `normalization_dedupe` diagnostics and removes stale duplicate `autoTuning` declaration.
-- `src/lib/client-search.ts` — static/demo responses include normalization diagnostics.
-- `src/lib/project.ts` — migrations hydrate canonical/duplicate metadata and search history persists normalization diagnostics.
-- `src/lib/export.ts` — JSON/Markdown/CSV exports include canonical URLs, duplicate merge context, and metadata gap data.
-- `src/components/search/SearchPanel.tsx` — v0.2.10 header and NormalizationDedupePanel rendering.
-- `src/components/search/ResultCard.tsx` and `ResultDetailPanel.tsx` — visible duplicate/metadata-gap cues.
-- package/docs/tests versioned to v0.2.10.
-
-## Validation
-
-Passed in this build container:
+Passed:
 
 ```bash
-npm run normalization:dedupe:check
+npm run query:routing:check
 npm run qa
 ```
 
-`npm run typecheck` was not run here because the current container does not include installed Next/React/Node dependencies unless the recipient runs `npm install`.
+Not completed:
+
+```bash
+npm run typecheck
+npm run lint
+```
+
+Reason: this container has no installed `node_modules`; TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies. After fixing the one source-level TypeScript issue found in `query-planner.ts`, remaining typecheck output is dependency-resolution noise.
+
+## Changed-file patch
+
+This ZIP contains only files modified or added relative to v0.2.10.

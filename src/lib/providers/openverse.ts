@@ -1,6 +1,6 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { domainFromUrl, fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface OpenverseImageResult {
   id?: string;
@@ -69,7 +69,7 @@ async function searchOpenverseQuery(query: string, queryIndex: number, plan: Sea
 
 export async function searchOpenverse(plan: SearchPlan): Promise<RawProviderResult[]> {
   if (!plan.source_targets.includes("image") && !plan.source_targets.includes("commons")) return [];
-  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchOpenverseQuery(query, queryIndex, plan));
+  const tasks = providerQuerySlice(plan, "openverse").map((query, queryIndex) => () => searchOpenverseQuery(query, queryIndex, plan));
   const batches = await runLimited(tasks, 2);
   return batches.flat();
 }

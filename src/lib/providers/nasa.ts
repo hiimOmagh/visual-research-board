@@ -1,6 +1,6 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface NasaItem {
   href?: string;
@@ -47,7 +47,7 @@ async function searchNasaQuery(query: string, queryIndex: number, plan: SearchPl
 
 export async function searchNasaImages(plan: SearchPlan): Promise<RawProviderResult[]> {
   if (!plan.source_targets.includes("image") && !plan.source_targets.includes("archive")) return [];
-  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchNasaQuery(query, queryIndex, plan));
+  const tasks = providerQuerySlice(plan, "nasa").map((query, queryIndex) => () => searchNasaQuery(query, queryIndex, plan));
   const batches = await runLimited(tasks, 2);
   return batches.flat();
 }

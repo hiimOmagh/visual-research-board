@@ -1,6 +1,6 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { domainFromUrl, fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface BraveImageResult {
   title?: string;
@@ -48,7 +48,7 @@ export async function searchBraveImages(plan: SearchPlan): Promise<RawProviderRe
   if (!apiKey || !plan.source_targets.includes("image")) return [];
 
   const count = plan.depth === "quick" ? 12 : 20;
-  const queries = querySlice(plan.queries, plan.depth);
+  const queries = providerQuerySlice(plan, "brave");
   const offsets = offsetsForDepth(plan.depth);
   const tasks = queries.flatMap((query, queryIndex) =>
     offsets.map((offset) => async () => {
@@ -84,7 +84,7 @@ export async function searchBraveWeb(plan: SearchPlan): Promise<RawProviderResul
   if (!apiKey || !plan.source_targets.includes("web")) return [];
 
   const count = plan.depth === "quick" ? 8 : plan.depth === "standard" ? 12 : 16;
-  const queries = querySlice(plan.queries, plan.depth);
+  const queries = providerQuerySlice(plan, "brave");
   const offsets = plan.depth === "deep" ? [0, 20] : [0];
   const tasks = queries.flatMap((query, queryIndex) =>
     offsets.map((offset) => async () => {

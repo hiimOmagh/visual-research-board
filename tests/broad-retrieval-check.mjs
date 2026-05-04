@@ -19,13 +19,13 @@ const wikimedia = read("src/lib/providers/wikimedia.ts");
 const tavily = read("src/lib/providers/tavily.ts");
 const docs = read("docs/broad-image-retrieval.md");
 
-assert(planner.includes("deep: 16"), "query planner must keep a broad deep query plan");
-assert(planner.includes("visualQueryExpansions"), "query planner must include visual/image-specific query expansions");
+assert(planner.includes("deep: 28"), "query planner must keep a broad deep query plan");
+assert(planner.includes("QueryIntent") && planner.includes("SourceClass") && planner.includes("visual"), "query planner must include visual/image-specific query expansion variants");
 assert(providerUtils.includes('depth === "quick" ? 2 : depth === "standard" ? 5 : 8'), "querySlice must search more than one branch");
 assert(providerUtils.includes("runLimited"), "provider calls must be concurrency-limited");
 assert(brave.includes("offsetsForDepth"), "Brave image search must use offset windows for broader retrieval");
 assert(brave.includes("broad-web-image-candidate"), "Brave image results must be tagged as broad web image candidates");
-assert(wikimedia.includes("querySlice(plan.queries, plan.depth)"), "Wikimedia must search multiple query branches");
+assert(wikimedia.includes("providerQuerySlice(plan, \"wikimedia\")"), "Wikimedia must search routed multiple query branches");
 assert(wikimedia.includes("broad-commons-candidate"), "Wikimedia results must identify broad Commons candidates");
 assert(tavily.includes("include_images: plan.source_targets.includes(\"image\")"), "Tavily must request image candidates when relevant");
 assert(tavily.includes("tavily-image"), "Tavily image candidates must be normalized into image results");
@@ -37,4 +37,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Broad retrieval checks passed for v0.2.10.");
+console.log("Broad retrieval checks passed for v0.2.11.");

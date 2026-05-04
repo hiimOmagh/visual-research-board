@@ -1,6 +1,6 @@
 import type { SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { domainFromUrl, fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface TavilyResult {
   title?: string;
@@ -32,7 +32,7 @@ export async function searchTavily(plan: SearchPlan): Promise<RawProviderResult[
   if (!apiKey || !plan.source_targets.includes("web")) return [];
 
   const maxResults = plan.depth === "quick" ? 5 : plan.depth === "standard" ? 8 : 10;
-  const queries = querySlice(plan.queries, plan.depth);
+  const queries = providerQuerySlice(plan, "tavily");
   const tasks = queries.map((query, queryIndex) => async () => {
     const data = await fetchJsonWithTimeout<TavilyResponse>(
       "https://api.tavily.com/search",

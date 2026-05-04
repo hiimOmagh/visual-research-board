@@ -11,6 +11,7 @@ import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvid
 import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
 import { buildReferenceSearchLinks } from "@/lib/reference-search";
+import { providerQuerySlice } from "@/lib/providers/provider-utils";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -23,7 +24,9 @@ function countResultTypes(results: ResearchResult[]): ProviderHealth["result_typ
   }, emptyTypeCounts());
 }
 
-function skippedHealth(provider: SearchProviderName, message: string): ProviderHealth {
+function skippedHealth(provider: SearchProviderName, message: string, plan?: ReturnType<typeof createSearchPlan>): ProviderHealth {
+  const querySample = plan ? providerQuerySlice(plan, provider) : [];
+  const routing = plan?.provider_routing?.[provider];
   return {
     provider,
     status: "skipped",
@@ -32,7 +35,10 @@ function skippedHealth(provider: SearchProviderName, message: string): ProviderH
     result_type_counts: emptyTypeCounts(),
     duration_ms: 0,
     queries_used: 0,
-    query_sample: [],
+    query_sample: querySample,
+    routed_query_count: routing?.queries.length ?? querySample.length,
+    source_classes: routing?.source_classes,
+    routing_reason: routing?.routing_reason,
     message
   };
 }
@@ -64,7 +70,10 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     result_type_counts: countResultTypes(normalized.results),
     duration_ms: Date.now() - startedAt,
     queries_used: searchPlan.queries.length,
-    query_sample: searchPlan.queries.slice(0, 3),
+    query_sample: providerQuerySlice(searchPlan, "mock"),
+    routed_query_count: searchPlan.provider_routing?.mock?.queries.length ?? providerQuerySlice(searchPlan, "mock").length,
+    source_classes: searchPlan.provider_routing?.mock?.source_classes,
+    routing_reason: searchPlan.provider_routing?.mock?.routing_reason,
     endpoint_sample: ["client/mock"],
     message: "Client-side mock search is active. This mode works on static hosts such as GitHub Pages but does not call real provider APIs."
   };
@@ -73,7 +82,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     mockHealth,
     ...SEARCH_PROVIDERS
       .filter((provider) => provider !== "mock")
-      .map((provider) => skippedHealth(provider, `Skipped in client-side static demo mode. Use a Next.js runtime deployment for live ${provider} provider calls; use Reference Search Hub links manually.`))
+      .map((provider) => skippedHealth(provider, `Skipped in client-side static demo mode. Use a Next.js runtime deployment for live ${provider} provider calls; use Reference Search Hub links manually.`, searchPlan))
   ];
 
   const generatedAt = new Date().toISOString();
@@ -144,6 +153,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     total_deduped_results: rankedResults.length,
     duplicate_count: normalized.stats.duplicate_count,
     normalization_dedupe: normalized.stats.trace,
+    source_class_routing: tunedPlan.source_class_routing,
     provider_health: providerHealth,
     provider_toggles: providerToggles,
     reference_searches: buildReferenceSearchLinks(tunedPlan.original_topic),

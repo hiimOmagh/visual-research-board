@@ -1,4 +1,4 @@
-import type { ProviderStatus, SearchDepth } from "@/types/research";
+import type { ProviderStatus, SearchDepth, SearchPlan, SearchProviderName } from "@/types/research";
 
 export class ProviderFetchError extends Error {
   status: Extract<ProviderStatus, "error" | "timeout">;
@@ -40,6 +40,12 @@ export async function fetchJsonWithTimeout<T>(url: string, init: RequestInit = {
 export function querySlice(queries: string[], depth: SearchDepth): string[] {
   const count = depth === "quick" ? 2 : depth === "standard" ? 5 : 8;
   return queries.slice(0, count);
+}
+
+export function providerQuerySlice(plan: SearchPlan, provider: SearchProviderName): string[] {
+  const routedQueries = plan.provider_routing?.[provider]?.queries;
+  const candidates = routedQueries && routedQueries.length > 0 ? routedQueries : plan.queries;
+  return querySlice(candidates, plan.depth);
 }
 
 export async function runLimited<T>(tasks: Array<() => Promise<T>>, concurrency = 3): Promise<T[]> {

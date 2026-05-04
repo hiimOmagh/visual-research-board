@@ -1,6 +1,6 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface ArchiveDoc {
   identifier?: string;
@@ -55,7 +55,7 @@ async function searchArchiveQuery(query: string, queryIndex: number, plan: Searc
 
 export async function searchInternetArchive(plan: SearchPlan): Promise<RawProviderResult[]> {
   if (!plan.source_targets.includes("archive") && !plan.source_targets.includes("image")) return [];
-  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchArchiveQuery(query, queryIndex, plan));
+  const tasks = providerQuerySlice(plan, "internet_archive").map((query, queryIndex) => () => searchArchiveQuery(query, queryIndex, plan));
   const batches = await runLimited(tasks, 2);
   return batches.flat();
 }

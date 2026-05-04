@@ -31,6 +31,7 @@ import { ProviderResultInspectorPanel } from "@/components/search/ProviderResult
 import { ReviewEvidenceFeedbackPanel } from "@/components/search/ReviewEvidenceFeedbackPanel";
 import { ReferenceSearchHub } from "@/components/search/ReferenceSearchHub";
 import { NormalizationDedupePanel } from "@/components/search/NormalizationDedupePanel";
+import { SourceClassRoutingPanel } from "@/components/search/SourceClassRoutingPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -288,7 +289,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.2.10.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.2.11.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -321,12 +322,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.10</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.11</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, rights/risk labels, review-based ranking calibration, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -459,6 +460,7 @@ export function SearchPanel() {
           <ProviderTogglePanel toggles={providerToggles} onChange={setProviderToggles} />
           <ReferenceSearchHub topic={topic} links={diagnostics?.reference_searches} />
           {searchPlan && <SearchPlanPanel plan={searchPlan} diagnostics={diagnostics} />}
+          {diagnostics?.source_class_routing && <SourceClassRoutingPanel trace={diagnostics.source_class_routing} />}
           {diagnostics?.normalization_dedupe && <NormalizationDedupePanel trace={diagnostics.normalization_dedupe} />}
           {diagnostics?.retrieval_evidence && <RetrievalEvidencePanel evidence={diagnostics.retrieval_evidence} />}
           {diagnostics?.quality_calibration && <LiveQualityCalibrationPanel calibration={diagnostics.quality_calibration} />}
@@ -511,6 +513,22 @@ function SearchPlanPanel({ plan, diagnostics }: { plan: SearchPlan; diagnostics:
           ))}
         </div>
       </div>
+      {plan.query_variants && plan.query_variants.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-white">Expanded query variants</h3>
+            <span className="rounded-full border border-lime-300/30 bg-lime-300/10 px-3 py-1 text-xs text-lime-100">{plan.query_variants.length} variants</span>
+          </div>
+          <div className="grid gap-2 md:grid-cols-2">
+            {plan.query_variants.map((variant) => (
+              <div key={variant.id} className="rounded-2xl bg-white/[0.04] px-4 py-3 text-sm text-slate-300">
+                <span className="block text-slate-100">{variant.query}</span>
+                <span className="mt-1 block text-[11px] text-slate-500">{variant.intent} · {variant.source_classes.join(" / ")} · {variant.reason}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="mt-4 grid gap-2 md:grid-cols-2">
         {plan.queries.map((query) => (
           <div key={query} className="rounded-2xl bg-black/20 px-4 py-3 text-sm text-slate-300">

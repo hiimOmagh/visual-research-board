@@ -39,7 +39,7 @@ export function ProviderHealthPanel({ health }: { health: ProviderHealth[] }) {
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider health</p>
           <h2 className="mt-1 text-xl font-bold text-white">Search adapters</h2>
         </div>
-        <p className="text-xs text-slate-400">Broad retrieval records endpoint samples, missing keys, typed counts, query breadth, and provider-specific failures.</p>
+        <p className="text-xs text-slate-400">Broad retrieval records endpoint samples, missing keys, typed counts, routed source classes, query breadth, and provider-specific failures.</p>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {health.map((item) => (
@@ -56,6 +56,8 @@ export function ProviderHealthPanel({ health }: { health: ProviderHealth[] }) {
             </dl>
             <p className="mt-3 text-[11px] leading-5 text-slate-500">{typeSummary(item)}</p>
             {item.missing_env && <p className="mt-2 rounded-xl border border-amber-300/20 bg-amber-300/10 p-2 text-[11px] leading-5 text-amber-100">Missing environment variable: <span className="font-semibold">{item.missing_env}</span></p>}
+            {item.source_classes && item.source_classes.length > 0 && <p className="mt-3 line-clamp-2 text-[11px] leading-5 text-slate-500">Source classes: {item.source_classes.join(" · ")}</p>}
+            {item.routing_reason && <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-slate-500">Routing: {item.routing_reason}</p>}
             {item.endpoint_sample && item.endpoint_sample.length > 0 && <p className="mt-3 line-clamp-2 text-[11px] leading-5 text-slate-500">Endpoints: {item.endpoint_sample.join(" · ")}</p>}
             {item.query_sample.length > 0 && <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-slate-500">Queries: {item.query_sample.join(" · ")}</p>}
             {item.message && <p className="mt-3 text-xs leading-5 text-slate-400">{item.message}</p>}

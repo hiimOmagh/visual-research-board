@@ -1,6 +1,6 @@
 import type { LicenseDetected, SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
-import { fetchJsonWithTimeout, querySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
 
 interface WikimediaImageInfo {
   url?: string;
@@ -124,7 +124,7 @@ async function searchWikimediaQuery(query: string, queryIndex: number, plan: Sea
 export async function searchWikimediaCommons(plan: SearchPlan): Promise<RawProviderResult[]> {
   if (!plan.source_targets.includes("commons")) return [];
 
-  const tasks = querySlice(plan.queries, plan.depth).map((query, queryIndex) => () => searchWikimediaQuery(query, queryIndex, plan));
+  const tasks = providerQuerySlice(plan, "wikimedia").map((query, queryIndex) => () => searchWikimediaQuery(query, queryIndex, plan));
   const batches = await runLimited(tasks, 3);
   return batches.flat();
 }

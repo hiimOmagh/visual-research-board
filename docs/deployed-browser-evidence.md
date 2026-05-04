@@ -1,6 +1,6 @@
-# Deployed Browser Evidence — v0.2.10
+# Deployed Browser Evidence — v0.2.11
 
-`v0.2.10` adds a deployment evidence pack so a hosted build can be checked without guessing whether the user is looking at the real app, a static demo, or a broken documentation page.
+`v0.2.11` adds a deployment evidence pack so a hosted build can be checked without guessing whether the user is looking at the real app, a static demo, or a broken documentation page.
 
 ## Purpose
 
