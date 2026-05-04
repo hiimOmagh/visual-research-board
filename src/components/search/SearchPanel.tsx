@@ -36,6 +36,7 @@ import { SourceClassRoutingPanel } from "@/components/search/SourceClassRoutingP
 import { RankingExplainabilityPanel } from "@/components/search/RankingExplainabilityPanel";
 import { ProjectReviewMemoryPanel } from "@/components/search/ProjectReviewMemoryPanel";
 import { ClaimMappingPanel } from "@/components/search/ClaimMappingPanel";
+import { CoverageBiasAuditPanel } from "@/components/search/CoverageBiasAuditPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -44,6 +45,7 @@ import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/clie
 import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
 import { normalizeBoardTags } from "@/lib/board-organization";
+import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit, isProjectReviewEvidenceMemoryStale, resetProjectReviewEvidenceMemory } from "@/lib/project-review-memory";
 import {
   addProjectClaim,
@@ -103,6 +105,7 @@ export function SearchPanel() {
     stale: projectReviewMemoryStale,
     usedForSearch: false
   }), [projectReviewMemory, projectReviewMemoryStale]);
+  const coverageBiasAudit = useMemo(() => buildCoverageBiasAudit(project), [project]);
 
   const updateLibrary = (updater: (current: ProjectLibrary) => ProjectLibrary) => {
     setLibrary((current) => updater(current));
@@ -342,7 +345,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.3.3.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.3.4.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -375,12 +378,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.3</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.4</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, editable tags/notes, organization audits, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, coverage/bias auditing, editable tags/notes, organization audits, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -527,6 +530,7 @@ export function SearchPanel() {
             onUpdateClaim={updateClaim}
             onRemoveClaim={deleteClaim}
           />
+          <CoverageBiasAuditPanel audit={diagnostics?.coverage_bias ?? coverageBiasAudit} />
           {diagnostics?.ranking_explainability && <RankingExplainabilityPanel audit={diagnostics.ranking_explainability} />}
           {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}

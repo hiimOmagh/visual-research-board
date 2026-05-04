@@ -122,6 +122,46 @@ export interface ClaimMappingAudit {
   warnings: string[];
 }
 
+
+export interface CoverageBiasAudit {
+  schema_version: "0.3.4";
+  generated_at: string;
+  total_saved_count: number;
+  provider_count: number;
+  domain_count: number;
+  source_group_count: number;
+  section_count: number;
+  claim_count: number;
+  provider_counts: Partial<Record<ProviderName, number>>;
+  domain_counts: Record<string, number>;
+  source_group_counts: Partial<Record<SourceGroup, number>>;
+  rights_status_counts: Partial<Record<RightsStatus, number>>;
+  reuse_risk_counts: Partial<Record<ReuseRisk, number>>;
+  section_counts: Record<string, number>;
+  dominant_provider: string;
+  dominant_provider_share: number;
+  dominant_domain: string;
+  dominant_domain_share: number;
+  dominant_source_group: string;
+  dominant_source_group_share: number;
+  reference_only_count: number;
+  check_required_count: number;
+  high_reuse_risk_count: number;
+  reusable_candidate_count: number;
+  public_domain_or_open_count: number;
+  metadata_gap_item_count: number;
+  support_link_count: number;
+  contradiction_link_count: number;
+  contextual_link_count: number;
+  visual_reference_link_count: number;
+  unlinked_saved_count: number;
+  claims_without_support_count: number;
+  claims_without_counter_count: number;
+  under_supported_claim_count: number;
+  contested_claim_count: number;
+  warnings: string[];
+}
+
 export type SourceAccessMode =
   | "backend_free_no_key"
   | "backend_free_key_required"
@@ -459,7 +499,8 @@ export type ExportTemplateId =
   | "visual_moodboard"
   | "attribution_pack"
   | "quality_review"
-  | "claim_evidence";
+  | "claim_evidence"
+  | "coverage_audit";
 
 export interface ResearchRequest {
   topic: string;
@@ -778,6 +819,7 @@ export interface SearchDiagnostics {
   project_review_memory?: ProjectReviewEvidenceMemoryAudit;
   ranking_explainability?: RankingExplainabilityAudit;
   claim_mapping?: ClaimMappingAudit;
+  coverage_bias?: CoverageBiasAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }
@@ -928,6 +970,11 @@ export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; d
     value: "claim_evidence",
     label: "Claim Evidence",
     description: "Claim cards with linked support, contradiction, context, and visual-reference sources."
+  },
+  {
+    value: "coverage_audit",
+    label: "Coverage Audit",
+    description: "Coverage and bias review with provider/domain concentration, rights risk, and claim-evidence gaps."
   }
 ];
 

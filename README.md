@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.3.3 claim-to-source mapping package`
+`v0.3.4 coverage and bias audit package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, claim-to-source mapping, review feedback, ranking calibration, and exportable production packs.
 
@@ -38,7 +38,7 @@ Implemented:
 - Board-section organization upgrade with a richer default taxonomy, editable tags, notes coverage, organization warnings, and section-aware exports.
 - Claim-to-source mapping with claim cards, support/weakening/contradiction/context/visual-reference links, claim status/confidence, mapping warnings, and claim-evidence exports.
 
-## v0.3.3 focus
+## v0.3.4 focus
 
 This package upgrades the saved board into a claim-oriented evidence workspace. It adds claim cards, source-to-claim links, support/weakening/contradiction/context/visual-reference relation labels, claim status/confidence controls, claim mapping warnings, and claim-evidence exports. Board sections, ranking explainability, and project-specific review memory remain intact.
 
@@ -237,3 +237,13 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 ## v0.3.1 Project review memory
 
 Project-specific review evidence memory isolates manual-review calibration per project, adds reset/stale diagnostics, and exports memory audit evidence. Validate with `npm run project:review:memory:check`.
+
+
+## v0.3.4 validation
+
+```bash
+npm run coverage:bias:check
+npm run qa
+```
+
+The v0.3.4 gate adds coverage and bias diagnostics for source diversity, rights risk, claim-support gaps, and counter-evidence gaps.

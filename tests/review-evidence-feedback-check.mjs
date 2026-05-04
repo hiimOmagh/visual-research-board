@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.3.3", "package.json version must be 0.3.3");
+assert(pkg.version === "0.3.4", "package.json version must be 0.3.4");
 assert(Boolean(pkg.scripts?.["review:evidence:check"]), "package.json must define npm run review:evidence:check");
 assert(pkg.scripts?.qa?.includes("review-evidence-feedback-check"), "npm run qa must include review-evidence-feedback-check");
 
@@ -45,8 +45,8 @@ assert(searchPanel.includes("buildReviewEvidenceFeedback(saved)"), "SearchPanel 
 assert(searchPanel.includes("review_evidence_feedback: reviewEvidenceFeedback"), "SearchPanel must send review feedback in request");
 assert(searchPanel.includes("ReviewEvidenceFeedbackPanel"), "SearchPanel must render ReviewEvidenceFeedbackPanel");
 assert(searchPanel.includes("diagnostics?.review_evidence_calibration"), "SearchPanel must gate panel by review_evidence_calibration diagnostics");
-assert(searchPanel.includes("v0.3.3"), "SearchPanel header must show v0.3.3");
-assert(searchPanel.includes("visual-research-board-library-v0.3.3.json"), "library export filename must use v0.3.3");
+assert(searchPanel.includes("v0.3.4"), "SearchPanel header must show v0.3.4");
+assert(searchPanel.includes("visual-research-board-library-v0.3.4.json"), "library export filename must use v0.3.4");
 
 const panel = read("src/components/search/ReviewEvidenceFeedbackPanel.tsx");
 assert(panel.includes("Review-evidence feedback into ranking calibration"), "panel must identify review-evidence calibration");

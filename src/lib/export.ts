@@ -6,6 +6,7 @@ import { buildReviewEvidenceFeedback, reviewEvidenceBiasSummary } from "@/lib/re
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit } from "@/lib/board-organization";
 import { buildClaimMappingAudit, CLAIM_RELATION_LABELS, CLAIM_STATUS_LABELS, claimsForResult, normalizeResearchClaims } from "@/lib/claim-mapping";
+import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -48,6 +49,7 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
   const projectReviewMemoryAudit = projectReviewMemory ? buildProjectReviewEvidenceMemoryAudit({ memory: projectReviewMemory, usedForSearch: false }) : undefined;
   const boardOrganizationAudit = project?.saved_results ? buildBoardOrganizationAudit(project) : undefined;
   const claimMappingAudit = project?.saved_results && project.claims ? buildClaimMappingAudit(project) : undefined;
+  const coverageBiasAudit = project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results);
   return JSON.stringify(
     {
       export_schema_version: "0.1.0",
@@ -83,7 +85,8 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length,
         project_review_memory: projectReviewMemoryAudit,
         board_organization: boardOrganizationAudit,
-        claim_mapping: claimMappingAudit
+        claim_mapping: claimMappingAudit,
+        coverage_bias: coverageBiasAudit
       },
       results
     },
@@ -113,6 +116,7 @@ export function createMarkdownExport(results: ResearchResult[], project?: Pick<R
     ""
   ];
 
+  appendCoverageBiasSummary(lines, project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results));
   appendClaimSummary(lines, project);
 
   results.forEach((result, index) => appendDetailedResult(lines, result, index + 1, sectionName(project, result.section_id), sectionKind(project, result.section_id), project?.claims));
@@ -211,6 +215,7 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
     ""
   ];
 
+  appendCoverageBiasSummary(lines, project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results));
   appendClaimSummary(lines, project);
 
   sortedBySection(results, project).forEach((group) => {
@@ -335,6 +340,7 @@ export function createTemplateExport(templateId: ExportTemplateId, results: Rese
   if (templateId === "attribution_pack") return createAttributionExport(results, project);
   if (templateId === "quality_review") return createQualityReviewExport(results, project);
   if (templateId === "claim_evidence") return createClaimEvidenceExport(results, project);
+  if (templateId === "coverage_audit") return createCoverageAuditExport(results, project);
   return createMarkdownExport(results, project);
 }
 
@@ -379,7 +385,8 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
     "manual_review_note",
     "manual_reviewed_at",
     "linked_claims",
-    "claim_relations"
+    "claim_relations",
+    "coverage_flags"
   ];
 
   const rows = results.map((result) => {
@@ -418,7 +425,8 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
     normalizeManualReview(result.manual_review).reviewer_note ?? "",
     normalizeManualReview(result.manual_review).reviewed_at ?? "",
     linkedClaims.map((entry) => entry.claim.statement).join(";"),
-    linkedClaims.map((entry) => entry.link.relation).join(";")
+    linkedClaims.map((entry) => entry.link.relation).join(";"),
+    [result.rights_status === "reference_only" ? "reference_only" : "", result.reuse_risk === "high" ? "high_reuse_risk" : "", (result.metadata_gaps?.length ?? 0) > 0 ? "metadata_gap" : ""].filter(Boolean).join(";")
   ].map(csvEscape).join(",");
   });
 
@@ -442,7 +450,9 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         tagged_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => item.tags.length > 0).length, 0),
         noted_result_count: library.projects.reduce((total, project) => total + project.saved_results.filter((item) => Boolean(item.notes?.trim())).length, 0),
         claim_count: library.projects.reduce((total, project) => total + project.claims.length, 0),
-        claim_source_link_count: library.projects.reduce((total, project) => total + project.claims.reduce((claimTotal, claim) => claimTotal + claim.source_links.length, 0), 0)
+        claim_source_link_count: library.projects.reduce((total, project) => total + project.claims.reduce((claimTotal, claim) => claimTotal + claim.source_links.length, 0), 0),
+        coverage_warning_count: library.projects.reduce((total, project) => total + buildCoverageBiasAudit(project).warnings.length, 0),
+        coverage_high_risk_count: library.projects.reduce((total, project) => total + buildCoverageBiasAudit(project).high_reuse_risk_count, 0)
       },
       library
     },
@@ -481,6 +491,40 @@ function appendClaimSummary(lines: string[], project?: Pick<ResearchProject, "cl
     if (claim.description) lines.push(`- Description: ${claim.description}`);
     lines.push("");
   });
+}
+
+function appendCoverageBiasSummary(lines: string[], audit: ReturnType<typeof buildCoverageBiasAudit>): void {
+  lines.push("## Coverage and Bias Audit");
+  lines.push("");
+  lines.push(`- Saved items: ${audit.total_saved_count}`);
+  lines.push(`- Providers/domains/source groups: ${audit.provider_count}/${audit.domain_count}/${audit.source_group_count}`);
+  lines.push(`- Dominant provider: ${audit.dominant_provider} (${Math.round(audit.dominant_provider_share * 100)}%)`);
+  lines.push(`- Dominant domain: ${audit.dominant_domain} (${Math.round(audit.dominant_domain_share * 100)}%)`);
+  lines.push(`- Reference-only/check-required/high-risk: ${audit.reference_only_count}/${audit.check_required_count}/${audit.high_reuse_risk_count}`);
+  lines.push(`- Claims without support/counter-evidence: ${audit.claims_without_support_count}/${audit.claims_without_counter_count}`);
+  if (audit.warnings.length) lines.push(`- Warnings: ${audit.warnings.join(" | ")}`);
+  lines.push("");
+}
+
+export function createCoverageAuditExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "claims">): string {
+  const audit = project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results);
+  const lines = [
+    `# ${projectName(project)} — Coverage and Bias Audit`,
+    "",
+    `Generated at: ${new Date().toISOString()}`,
+    "",
+    "> This audit detects concentration, rights-risk, missing counter-evidence, and weak claim-source coverage. It does not replace editorial or legal review.",
+    ""
+  ];
+
+  appendCoverageBiasSummary(lines, audit);
+
+  lines.push("## Provider Counts", "", ...Object.entries(audit.provider_counts).sort((a, b) => b[1] - a[1]).map(([key, count]) => `- ${key}: ${count}`), "");
+  lines.push("## Domain Counts", "", ...Object.entries(audit.domain_counts).sort((a, b) => b[1] - a[1]).slice(0, 20).map(([key, count]) => `- ${key}: ${count}`), "");
+  lines.push("## Source Group Counts", "", ...Object.entries(audit.source_group_counts).sort((a, b) => b[1] - a[1]).map(([key, count]) => `- ${key}: ${count}`), "");
+  lines.push("## Rights and Reuse", "", ...Object.entries(audit.rights_status_counts).sort((a, b) => b[1] - a[1]).map(([key, count]) => `- ${key}: ${count}`), "", ...Object.entries(audit.reuse_risk_counts).sort((a, b) => b[1] - a[1]).map(([key, count]) => `- reuse_${key}: ${count}`), "");
+  if (audit.warnings.length) lines.push("## Warnings", "", ...audit.warnings.map((warning) => `- ${warning}`), "");
+  return lines.join("\n");
 }
 
 export function createClaimEvidenceExport(results: ResearchResult[], project?: Pick<ResearchProject, "id" | "name" | "board_sections" | "saved_results" | "claims">): string {
