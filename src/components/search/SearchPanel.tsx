@@ -28,12 +28,14 @@ import { LiveQualityCalibrationPanel } from "@/components/search/LiveQualityCali
 import { RetrievalAutoTuningPanel } from "@/components/search/RetrievalAutoTuningPanel";
 import { EvidenceDrivenTuningPanel } from "@/components/search/EvidenceDrivenTuningPanel";
 import { ProviderResultInspectorPanel } from "@/components/search/ProviderResultInspectorPanel";
+import { ReviewEvidenceFeedbackPanel } from "@/components/search/ReviewEvidenceFeedbackPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
 import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
 import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/client-search";
 import { applyManualReviewPatch } from "@/lib/manual-quality-review";
+import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
 import {
   assignDefaultSection,
   createProjectLibrary,
@@ -123,11 +125,13 @@ export function SearchPanel() {
   };
 
   const submitSearch = async () => {
+    const reviewEvidenceFeedback = buildReviewEvidenceFeedback(saved);
     const request: ResearchRequest = {
       topic: topic.trim(),
       mode,
       depth,
-      provider_toggles: providerToggles
+      provider_toggles: providerToggles,
+      review_evidence_feedback: reviewEvidenceFeedback
     };
 
     if (request.topic.length < 2) {
@@ -282,7 +286,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.2.7.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.2.8.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -315,7 +319,7 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.7</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.8</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
@@ -456,6 +460,7 @@ export function SearchPanel() {
           {diagnostics?.quality_calibration && <LiveQualityCalibrationPanel calibration={diagnostics.quality_calibration} />}
           {diagnostics?.auto_tuning && <RetrievalAutoTuningPanel trace={diagnostics.auto_tuning} />}
           {diagnostics?.evidence_tuning && <EvidenceDrivenTuningPanel trace={diagnostics.evidence_tuning} />}
+          {diagnostics?.review_evidence_calibration && <ReviewEvidenceFeedbackPanel trace={diagnostics.review_evidence_calibration} />}
           {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}

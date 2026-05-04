@@ -2,6 +2,7 @@ import type { ExportTemplateId, ProjectLibrary, ManualReviewVerdict, ResearchPro
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { classifySourceDomain, sourceGroupLabel } from "@/lib/result-quality";
 import { normalizeManualReview, summarizeManualReviews } from "@/lib/manual-quality-review";
+import { buildReviewEvidenceFeedback, reviewEvidenceBiasSummary } from "@/lib/review-evidence-feedback";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -214,6 +215,7 @@ export function createVisualMoodboardExport(results: ResearchResult[], project?:
 
 export function createQualityReviewExport(results: ResearchResult[], project?: Pick<ResearchProject, "name" | "board_sections">): string {
   const summary = summarizeManualReviews(results);
+  const feedback = buildReviewEvidenceFeedback(results);
   const summaryLine = (verdict: ManualReviewVerdict) => `- ${verdict}: ${summary[verdict]}`;
   const lines = [
     `# ${projectName(project)} — Manual Quality Review Evidence`,
@@ -229,6 +231,15 @@ export function createQualityReviewExport(results: ResearchResult[], project?: P
     summaryLine("needs_source_check"),
     summaryLine("reject"),
     summaryLine("unreviewed"),
+    "",
+    "## Review-Evidence Ranking Feedback",
+    "",
+    `- Feedback summary: ${reviewEvidenceBiasSummary(feedback)}`,
+    `- Pass/watch/fail labels: ${feedback.pass_label_count}/${feedback.watch_label_count}/${feedback.fail_label_count}`,
+    `- Domain bias entries: ${feedback.domain_bias.length}`,
+    `- Source-group bias entries: ${feedback.source_group_bias.length}`,
+    `- Provider bias entries: ${feedback.provider_bias.length}`,
+    ...(feedback.warnings.length ? ["", "### Feedback warnings", "", ...feedback.warnings.map((warning) => `- ${warning}`)] : []),
     ""
   ];
 

@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.7 provider-inspection and manual-review package`
+`v0.2.8 review-evidence feedback calibration package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, risk/license candidate labels, notes, board sections, snapshots, and exportable production packs.
 
@@ -28,11 +28,12 @@ Implemented:
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
 - Provider result inspector with provider-level warnings, review candidate IDs, and visual/source/license quality signals.
 - Manual quality review loop for saved references with relevance, visual usefulness, source trust, license status, final verdict, reviewer note, and Quality Review export.
+- Review-evidence feedback calibration that converts saved-board reviews into conservative ranking signals for repeated domains, source groups, providers, and exact sources.
 
 
-## v0.2.7 focus
+## v0.2.8 focus
 
-This package adds provider inspection and human review evidence. Retrieval ranking is no longer treated as sufficient by itself: the app now exposes which providers produced useful candidates and gives saved references an explicit manual review state before export.
+This package connects human review evidence back into ranking calibration. Saved-board reviews now produce a compact feedback profile that influences the next search through exact-source, domain, source-group, and provider signals while exposing confidence, deltas, and warnings in diagnostics.
 
 ## Broad image retrieval boundary
 
@@ -212,7 +213,9 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 - `npm run topic:matrix:test` can run the real-topic matrix and capture retrieval evidence across eight creator-relevant scenarios.
 - `npm run evidence:tuning:test` can consume topic-matrix artifacts and produce `artifacts/evidence-driven-tuning-report.json`.
 - Search diagnostics include `evidence_tuning` with query hints, score weights, provider bias, weak metrics, and before/after metric snapshots.
+- Search requests can carry `review_evidence_feedback`, and diagnostics include `review_evidence_calibration` with confidence, adjusted result counts, bias hits, and calibration deltas.
+- `npm run review:evidence:check` verifies the review-feedback bridge across types, search runtime, static fallback, UI, exports, docs, and QA.
 
 ## Release status
 
-`v0.2.7` is the provider-inspection and manual-review package. Future work should use provider inspection output and manual review evidence to calibrate actual retrieval quality, not add speculative infrastructure.
+`v0.2.8` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.

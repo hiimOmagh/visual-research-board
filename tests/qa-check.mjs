@@ -15,7 +15,9 @@ function read(relativePath) {
 const requiredFiles = [
   "src/lib/project.ts",
   "src/lib/manual-import.ts",
+  "src/lib/review-evidence-feedback.ts",
   "src/components/search/SavedBoard.tsx",
+  "src/components/search/ReviewEvidenceFeedbackPanel.tsx",
   "src/components/search/ProjectLibraryPanel.tsx",
   "src/components/search/SearchHistoryPanel.tsx",
   "src/components/search/ProviderTogglePanel.tsx",
@@ -51,7 +53,7 @@ const requiredFiles = [
 requiredFiles.forEach((file) => assert(existsSync(join(root, file)), `Missing required file: ${file}`));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.7", "package.json version must be 0.2.7");
+assert(pkg.version === "0.2.8", "package.json version must be 0.2.8");
 assert(Boolean(pkg.scripts?.qa), "package.json must define npm run qa");
 assert(Boolean(pkg.scripts?.["normalization:test"]), "package.json must define npm run normalization:test");
 assert(Boolean(pkg.scripts?.["e2e:fixtures"]), "package.json must define npm run e2e:fixtures");
@@ -63,6 +65,7 @@ assert(Boolean(pkg.scripts?.["broad:retrieval:test"]), "package.json must define
 assert(Boolean(pkg.scripts?.["retrieval:evidence:test"]), "package.json must define npm run retrieval:evidence:test");
 assert(Boolean(pkg.scripts?.["validate:deploy"]), "package.json must define npm run validate:deploy");
 assert(Boolean(pkg.scripts?.validate), "package.json must define npm run validate");
+assert(Boolean(pkg.scripts?.["review:evidence:check"]), "package.json must define npm run review:evidence:check");
 
 const types = read("src/types/research.ts");
 assert(types.includes("ProjectLibrary"), "ProjectLibrary type must exist");
@@ -87,7 +90,9 @@ assert(searchPanel.includes("createProjectLibraryExport"), "SearchPanel must exp
 assert(searchPanel.includes("importLibraryFile"), "SearchPanel must import project libraries");
 assert(searchPanel.includes("mergeLibraries"), "SearchPanel must use conflict-safe library merge import");
 assert(searchPanel.includes("provider_toggles"), "SearchPanel must send provider_toggles to API");
-assert(searchPanel.includes("v0.2.7"), "SearchPanel header must show v0.2.7");
+assert(searchPanel.includes("v0.2.8"), "SearchPanel header must show v0.2.8");
+assert(searchPanel.includes("buildReviewEvidenceFeedback(saved)"), "SearchPanel must build review evidence feedback from saved items");
+assert(searchPanel.includes("ReviewEvidenceFeedbackPanel"), "SearchPanel must render review evidence feedback diagnostics");
 assert(searchPanel.includes("importSummary"), "SearchPanel must surface import summary state");
 assert(searchPanel.includes("aria-live"), "SearchPanel must announce import status to assistive tech");
 assert(searchPanel.includes("filters.savedFirst"), "SearchPanel must support saved-first result sorting");
@@ -151,6 +156,8 @@ assert(searchRoute.includes("no_results"), "search route must return no_results 
 assert(searchRoute.includes("provider_toggles: runtimeToggles"), "search route diagnostics must persist provider toggles");
 assert(searchRoute.includes("query_sample"), "search route provider health must include query samples");
 assert(searchRoute.includes("buildRetrievalEvidence"), "search route must build retrieval evidence diagnostics");
+assert(searchRoute.includes("applyReviewEvidenceRanking"), "search route must apply review evidence ranking");
+assert(searchRoute.includes("review_evidence_calibration"), "search route must return review evidence calibration diagnostics");
 
 const localStorage = read("src/lib/local-storage.ts");
 assert(localStorage.includes("project-library:v0.1.0"), "localStorage key must be stable project library key");
@@ -174,6 +181,7 @@ assert(project.includes("ensureResultQuality"), "project.ts must hydrate quality
 
 const clientSearch = read("src/lib/client-search.ts");
 assert(clientSearch.includes("createClientMockResearchResponse"), "client-search.ts must expose client mock response builder");
+assert(clientSearch.includes("applyReviewEvidenceRanking"), "client-search.ts must apply review evidence ranking in static fallback");
 assert(clientSearch.includes("Skipped in client-side static demo mode"), "client-search.ts must mark real providers as skipped in static mode");
 
 const staticBuildScript = read("scripts/build-static-demo.mjs");
@@ -199,6 +207,7 @@ assert(exportLib.includes('export_schema_version: "0.1.0"'), "JSON export schema
 assert(exportLib.includes("createProjectLibraryExport"), "export.ts must include project library export");
 assert(exportLib.includes("result_snapshot_count"), "library export audit must include snapshot count");
 assert(exportLib.includes("by_source_group"), "export audit must include source group counts");
+assert(exportLib.includes("Review-Evidence Ranking Feedback"), "quality export must include review evidence feedback section");
 
 const libraryFixture = JSON.parse(read("tests/fixtures/project-library-stable.json"));
 assert(libraryFixture.schema_version === "0.1.0", "project library fixture must be stable");
@@ -228,4 +237,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("QA checks passed for v0.2.7.");
+console.log("QA checks passed for v0.2.8.");

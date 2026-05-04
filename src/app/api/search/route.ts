@@ -15,6 +15,7 @@ import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
+import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -47,7 +48,13 @@ function validateResearchRequest(body: unknown): ResearchRequest | null {
     return acc;
   }, { ...DEFAULT_PROVIDER_TOGGLES });
   if (!provider_toggles.mock && !provider_toggles.wikimedia && !provider_toggles.brave && !provider_toggles.tavily) provider_toggles.mock = true;
-  return { topic: candidate.topic.trim(), mode: candidate.mode, depth: candidate.depth, provider_toggles };
+  return {
+    topic: candidate.topic.trim(),
+    mode: candidate.mode,
+    depth: candidate.depth,
+    provider_toggles,
+    review_evidence_feedback: candidate.review_evidence_feedback
+  };
 }
 
 function providerQueries(plan: SearchPlan): string[] {
@@ -302,10 +309,18 @@ export async function POST(request: Request) {
 
   const normalized = normalizeResults(rawResults, { topic: tunedPlan.original_topic, mode: tunedPlan.mode });
   const autoRankedResults = applyAutoTunedRanking(normalized.results, initialAutoTuneTrace);
-  const rankedResults = applyEvidenceDrivenRanking(autoRankedResults, initialEvidenceTuningTrace, tunedPlan.original_topic);
+  const evidenceRankedResults = applyEvidenceDrivenRanking(autoRankedResults, initialEvidenceTuningTrace, tunedPlan.original_topic);
+  const preReviewCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: evidenceRankedResults, providerHealth });
+  const rankedResults = applyReviewEvidenceRanking(evidenceRankedResults, effectiveRequest.review_evidence_feedback);
   const generatedAt = new Date().toISOString();
   const retrievalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
   const qualityCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
+  const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({
+    feedback: effectiveRequest.review_evidence_feedback,
+    rankedResults,
+    beforeCalibration: preReviewCalibration,
+    afterCalibration: qualityCalibration
+  });
   const autoTuning = completeAutoTuningTrace({
     trace: shouldRunTunedPass
       ? initialAutoTuneTrace
@@ -346,6 +361,7 @@ export async function POST(request: Request) {
       quality_calibration: qualityCalibration,
       auto_tuning: autoTuning,
       evidence_tuning: evidenceTuning,
+      review_evidence_calibration: reviewEvidenceCalibration,
       provider_result_inspection: providerResultInspection,
       runtime_report: runtimeReport
     }

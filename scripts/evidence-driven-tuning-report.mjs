@@ -59,7 +59,7 @@ const modes = Array.from(modeSummary.values()).map((entry) => ({
 }));
 
 const report = {
-  app_version: "0.2.7",
+  app_version: "0.2.8",
   generated_at: new Date().toISOString(),
   input_source: input.source,
   input_kind: input.kind,

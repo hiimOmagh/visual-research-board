@@ -97,6 +97,74 @@ export interface ManualQualityReview {
   reviewed_at?: string;
 }
 
+
+export interface ReviewEvidenceBiasEntry {
+  key: string;
+  label: string;
+  count: number;
+  positive_count: number;
+  negative_count: number;
+  weight: number;
+}
+
+export interface ReviewEvidenceSourceSignal {
+  source_url: string;
+  source_domain: string;
+  verdict: ManualReviewVerdict;
+  weight: number;
+}
+
+export interface ReviewEvidenceFeedback {
+  schema_version: "0.2.8";
+  generated_at: string;
+  reviewed_result_count: number;
+  approved_count: number;
+  caution_count: number;
+  source_check_count: number;
+  rejected_count: number;
+  pass_label_count: number;
+  watch_label_count: number;
+  fail_label_count: number;
+  confidence: number;
+  domain_bias: ReviewEvidenceBiasEntry[];
+  source_group_bias: ReviewEvidenceBiasEntry[];
+  provider_bias: ReviewEvidenceBiasEntry[];
+  reviewed_sources: ReviewEvidenceSourceSignal[];
+  warnings: string[];
+}
+
+export interface ReviewEvidenceCalibrationTrace {
+  enabled: boolean;
+  applied: boolean;
+  reason: string;
+  feedback_confidence: number;
+  reviewed_result_count: number;
+  approved_count: number;
+  rejected_count: number;
+  exact_source_matches: number;
+  positive_bias_hits: number;
+  negative_bias_hits: number;
+  adjusted_result_count: number;
+  top10_rejected_signal_count: number;
+  top10_approved_signal_count: number;
+  domain_bias: ReviewEvidenceBiasEntry[];
+  source_group_bias: ReviewEvidenceBiasEntry[];
+  provider_bias: ReviewEvidenceBiasEntry[];
+  before: {
+    calibration_score?: number;
+    strong_candidates?: number;
+    top10_average_overall?: number;
+    top10_source_diversity?: number;
+  };
+  after: {
+    calibration_score?: number;
+    strong_candidates?: number;
+    top10_average_overall?: number;
+    top10_source_diversity?: number;
+  };
+  warnings: string[];
+}
+
 export interface ProviderResultInspectionEntry {
   provider: SearchProviderName;
   status: ProviderStatus;
@@ -152,6 +220,7 @@ export interface ResearchRequest {
   mode: ResearchMode;
   depth: SearchDepth;
   provider_toggles?: ProviderToggleMap;
+  review_evidence_feedback?: ReviewEvidenceFeedback;
 }
 
 export interface ResultScores {
@@ -351,6 +420,7 @@ export interface SearchDiagnostics {
   quality_calibration?: RetrievalQualityCalibration;
   auto_tuning?: RetrievalAutoTuningTrace;
   evidence_tuning?: EvidenceDrivenTuningTrace;
+  review_evidence_calibration?: ReviewEvidenceCalibrationTrace;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }

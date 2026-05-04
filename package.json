@@ -1,15 +1,15 @@
 {
   "name": "visual-research-board",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "private": true,
-  "description": "Real provider result inspection and manual quality review loop package for a source-aware visual research board with broad retrieval diagnostics and review evidence exports.",
+  "description": "Review-evidence feedback into ranking calibration package for a source-aware visual research board with manual review learning, provider inspection, and evidence exports.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs && node tests/review-evidence-feedback-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
@@ -39,7 +39,8 @@
     "evidence:tuning:check": "node tests/evidence-driven-tuning-check.mjs",
     "lockfile:registry:check": "node tests/lockfile-registry-check.mjs",
     "provider:inspector:check": "node tests/provider-result-inspector-check.mjs",
-    "manual:review:check": "node tests/manual-quality-review-check.mjs"
+    "manual:review:check": "node tests/manual-quality-review-check.mjs",
+    "review:evidence:check": "node tests/review-evidence-feedback-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

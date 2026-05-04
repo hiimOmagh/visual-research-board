@@ -9,6 +9,7 @@ import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
 import { applyAutoTunedRanking, buildRetrievalAutoTunePlan, completeAutoTuningTrace } from "@/lib/retrieval-autotuning";
 import { applyEvidenceDrivenRanking, buildEvidenceDrivenTuningPlan, completeEvidenceDrivenTuningTrace } from "@/lib/evidence-driven-tuning";
 import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
+import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -99,14 +100,22 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       ? "Static demo mode cannot call live providers, so auto-tuning is limited to client-side reranking and weak-case query visibility."
       : initialAutoTuneTrace.reason
   });
-  const rankedResults = applyEvidenceDrivenRanking(autoRankedResults, {
+  const evidenceRankedResults = applyEvidenceDrivenRanking(autoRankedResults, {
     ...initialEvidenceTuningTrace,
     reason: initialEvidenceTuningTrace.applied
       ? "Static demo mode cannot call live providers, so evidence-driven tuning is limited to client-side reranking and query-hint visibility."
       : initialEvidenceTuningTrace.reason
   }, tunedPlan.original_topic);
+  const preReviewCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: evidenceRankedResults, providerHealth });
+  const rankedResults = applyReviewEvidenceRanking(evidenceRankedResults, request.review_evidence_feedback);
   const finalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
   const finalCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
+  const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({
+    feedback: request.review_evidence_feedback,
+    rankedResults,
+    beforeCalibration: preReviewCalibration,
+    afterCalibration: finalCalibration
+  });
   const autoTuning = completeAutoTuningTrace({
     trace: {
       ...initialAutoTuneTrace,
@@ -143,6 +152,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     quality_calibration: finalCalibration,
     auto_tuning: autoTuning,
     evidence_tuning: evidenceTuning,
+    review_evidence_calibration: reviewEvidenceCalibration,
     provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,
