@@ -5,13 +5,14 @@ import type { ExportTemplateId, ResearchProject, ResearchResult } from "@/types/
 import { EXPORT_TEMPLATES } from "@/types/research";
 import {
   createCsvExport,
+  createEvidencePackHtmlExport,
   createJsonExport,
   createMarkdownExport,
   createTemplateExport,
   downloadTextFile
 } from "@/lib/export";
 
-export type ExportPreviewFormat = "json" | "markdown" | "csv" | "template";
+export type ExportPreviewFormat = "json" | "markdown" | "csv" | "html" | "template";
 
 interface ExportPreviewDrawerProps {
   open: boolean;
@@ -28,6 +29,7 @@ function formatLabel(format: ExportPreviewFormat, templateId: ExportTemplateId):
   if (format === "json") return "JSON export";
   if (format === "markdown") return "Markdown export";
   if (format === "csv") return "CSV export";
+  if (format === "html") return "HTML evidence pack";
   return EXPORT_TEMPLATES.find((entry) => entry.value === templateId)?.label ?? "Template export";
 }
 
@@ -35,6 +37,7 @@ function buildExportBody(format: ExportPreviewFormat, templateId: ExportTemplate
   if (format === "json") return createJsonExport(saved, project);
   if (format === "markdown") return createMarkdownExport(saved, project);
   if (format === "csv") return createCsvExport(saved, project);
+  if (format === "html") return createEvidencePackHtmlExport(saved, project);
   return createTemplateExport(templateId, saved, project);
 }
 
@@ -42,12 +45,14 @@ function buildFilename(format: ExportPreviewFormat, templateId: ExportTemplateId
   if (format === "json") return "visual-research-board-export.json";
   if (format === "markdown") return "visual-research-board-export.md";
   if (format === "csv") return "visual-research-board-export.csv";
+  if (format === "html") return "visual-research-board-evidence-pack.html";
   return `visual-research-board-${templateId}.md`;
 }
 
 function mimeType(format: ExportPreviewFormat): string {
   if (format === "json") return "application/json";
   if (format === "csv") return "text/csv";
+  if (format === "html") return "text/html";
   return "text/markdown";
 }
 

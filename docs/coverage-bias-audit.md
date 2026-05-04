@@ -1,4 +1,4 @@
-# v0.3.4 — Coverage and Bias Audit
+# v0.4.0 — Coverage and Bias Audit
 
 This release adds a project-level coverage gate for the Visual Research Board. The audit checks whether saved sources and linked claims are defensible before export.
 

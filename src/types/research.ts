@@ -162,6 +162,68 @@ export interface CoverageBiasAudit {
   warnings: string[];
 }
 
+
+export type EvidencePackBucketId =
+  | "reusable"
+  | "check_required"
+  | "reference_only"
+  | "restricted_or_rejected";
+
+export interface EvidencePackLinkedClaim {
+  claim_id: string;
+  statement: string;
+  relation: ClaimEvidenceRelation;
+  relation_label: string;
+  note?: string;
+}
+
+export interface EvidencePackItem {
+  id: string;
+  bucket: EvidencePackBucketId;
+  bucket_label: string;
+  title: string;
+  source_url: string;
+  source_domain: string;
+  image_url?: string;
+  thumbnail_url?: string;
+  provider: ProviderName;
+  source_group: SourceGroup;
+  source_group_label: string;
+  section_id?: string;
+  section_name: string;
+  section_kind: string;
+  license_detected: LicenseDetected;
+  license_label: string;
+  license_url?: string;
+  rights_status: RightsStatus;
+  source_access_mode: SourceAccessMode;
+  reuse_risk: ReuseRisk;
+  risk_level: RiskLevel;
+  risk_label: string;
+  score: number;
+  production_usefulness: number;
+  tags: string[];
+  notes?: string;
+  manual_review: ManualQualityReview;
+  linked_claims: EvidencePackLinkedClaim[];
+  attribution_line: string;
+  warnings: string[];
+}
+
+export interface EvidencePackAudit {
+  schema_version: "0.4.0";
+  generated_at: string;
+  total_items: number;
+  reusable_count: number;
+  check_required_count: number;
+  reference_only_count: number;
+  restricted_or_rejected_count: number;
+  claim_linked_count: number;
+  attribution_ready_count: number;
+  bucket_counts: Record<EvidencePackBucketId, number>;
+  warnings: string[];
+}
+
 export type SourceAccessMode =
   | "backend_free_no_key"
   | "backend_free_key_required"
@@ -500,7 +562,8 @@ export type ExportTemplateId =
   | "attribution_pack"
   | "quality_review"
   | "claim_evidence"
-  | "coverage_audit";
+  | "coverage_audit"
+  | "evidence_pack";
 
 export interface ResearchRequest {
   topic: string;
@@ -820,6 +883,7 @@ export interface SearchDiagnostics {
   ranking_explainability?: RankingExplainabilityAudit;
   claim_mapping?: ClaimMappingAudit;
   coverage_bias?: CoverageBiasAudit;
+  evidence_pack?: EvidencePackAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }
@@ -975,6 +1039,11 @@ export const EXPORT_TEMPLATES: Array<{ value: ExportTemplateId; label: string; d
     value: "coverage_audit",
     label: "Coverage Audit",
     description: "Coverage and bias review with provider/domain concentration, rights risk, and claim-evidence gaps."
+  },
+  {
+    value: "evidence_pack",
+    label: "Evidence Pack v1",
+    description: "Complete production-ready export view grouped into reusable, check-required, reference-only, and restricted/rejected buckets."
   }
 ];
 

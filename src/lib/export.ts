@@ -7,6 +7,7 @@ import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit
 import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit } from "@/lib/board-organization";
 import { buildClaimMappingAudit, CLAIM_RELATION_LABELS, CLAIM_STATUS_LABELS, claimsForResult, normalizeResearchClaims } from "@/lib/claim-mapping";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
+import { buildEvidencePackAudit, buildEvidencePackPayload, createEvidencePackCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport } from "@/lib/evidence-pack-export";
 
 function countBy<T extends string>(items: ResearchResult[], getKey: (item: ResearchResult) => T): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -52,7 +53,7 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
   const coverageBiasAudit = project?.saved_results ? buildCoverageBiasAudit(project) : buildCoverageBiasAudit(results);
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0",
+      export_schema_version: "0.4.0",
       exported_at: new Date().toISOString(),
       project: project ? {
         id: project.id,
@@ -86,8 +87,10 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         project_review_memory: projectReviewMemoryAudit,
         board_organization: boardOrganizationAudit,
         claim_mapping: claimMappingAudit,
-        coverage_bias: coverageBiasAudit
+        coverage_bias: coverageBiasAudit,
+        evidence_pack: buildEvidencePackAudit(results, project)
       },
+      evidence_pack_buckets: buildEvidencePackPayload(results, project).buckets,
       results
     },
     null,
@@ -113,6 +116,7 @@ export function createMarkdownExport(results: ResearchResult[], project?: Pick<R
     `- Ranking explanations: ${results.filter((item) => Boolean(item.ranking_explanation)).length}`,
     `- Tagged items: ${results.filter((item) => item.tags.length > 0).length}`,
     `- Claims: ${project?.claims?.length ?? 0}`,
+    `- Evidence-pack reusable/check/reference/restricted: ${buildEvidencePackAudit(results, project).reusable_count}/${buildEvidencePackAudit(results, project).check_required_count}/${buildEvidencePackAudit(results, project).reference_only_count}/${buildEvidencePackAudit(results, project).restricted_or_rejected_count}`,
     ""
   ];
 
@@ -341,6 +345,7 @@ export function createTemplateExport(templateId: ExportTemplateId, results: Rese
   if (templateId === "quality_review") return createQualityReviewExport(results, project);
   if (templateId === "claim_evidence") return createClaimEvidenceExport(results, project);
   if (templateId === "coverage_audit") return createCoverageAuditExport(results, project);
+  if (templateId === "evidence_pack") return createEvidencePackMarkdownExport(results, project);
   return createMarkdownExport(results, project);
 }
 
@@ -353,6 +358,7 @@ function csvEscape(value: string | number | undefined): string {
 export function createCsvExport(results: ResearchResult[], project?: Pick<ResearchProject, "board_sections" | "claims" | "saved_results">): string {
   const headers = [
     "title",
+    "evidence_pack_category",
     "section_id",
     "section_name",
     "section_kind",
@@ -393,6 +399,7 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
     const linkedClaims = claimsForResult(normalizeResearchClaims(project?.claims, project?.saved_results ?? results), result.id);
     return [
     result.title,
+    buildEvidencePackAudit([result]).bucket_counts.reusable > 0 ? "reusable" : buildEvidencePackAudit([result]).bucket_counts.reference_only > 0 ? "reference_only" : buildEvidencePackAudit([result]).bucket_counts.restricted_or_rejected > 0 ? "restricted_or_rejected" : "check_required",
     result.section_id ?? "",
     sectionName(project, result.section_id),
     sectionKind(project, result.section_id),
@@ -436,7 +443,7 @@ export function createCsvExport(results: ResearchResult[], project?: Pick<Resear
 export function createProjectLibraryExport(library: ProjectLibrary): string {
   return JSON.stringify(
     {
-      export_schema_version: "0.1.0",
+      export_schema_version: "0.4.0",
       exported_at: new Date().toISOString(),
       warning: "Local project-library export. License labels and attribution lines remain candidates requiring manual verification.",
       audit: {
@@ -452,7 +459,11 @@ export function createProjectLibraryExport(library: ProjectLibrary): string {
         claim_count: library.projects.reduce((total, project) => total + project.claims.length, 0),
         claim_source_link_count: library.projects.reduce((total, project) => total + project.claims.reduce((claimTotal, claim) => claimTotal + claim.source_links.length, 0), 0),
         coverage_warning_count: library.projects.reduce((total, project) => total + buildCoverageBiasAudit(project).warnings.length, 0),
-        coverage_high_risk_count: library.projects.reduce((total, project) => total + buildCoverageBiasAudit(project).high_reuse_risk_count, 0)
+        coverage_high_risk_count: library.projects.reduce((total, project) => total + buildCoverageBiasAudit(project).high_reuse_risk_count, 0),
+        evidence_pack_reusable_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).reusable_count, 0),
+        evidence_pack_check_required_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).check_required_count, 0),
+        evidence_pack_reference_only_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).reference_only_count, 0),
+        evidence_pack_restricted_or_rejected_count: library.projects.reduce((total, project) => total + buildEvidencePackAudit(project.saved_results, project).restricted_or_rejected_count, 0)
       },
       library
     },
@@ -589,6 +600,16 @@ export function createClaimEvidenceExport(results: ResearchResult[], project?: P
 
   return lines.join("\n");
 }
+
+
+export {
+  buildEvidencePackAudit,
+  buildEvidencePackPayload,
+  createEvidencePackCsvExport,
+  createEvidencePackHtmlExport,
+  createEvidencePackJsonExport,
+  createEvidencePackMarkdownExport
+} from "@/lib/evidence-pack-export";
 
 export function downloadTextFile(filename: string, content: string, mimeType: string): void {
   const blob = new Blob([content], { type: mimeType });

@@ -26,6 +26,7 @@ import { buildReferenceSearchLinks } from "@/lib/reference-search";
 import { buildRankingExplainability } from "@/lib/ranking-explainability";
 import { buildProjectReviewEvidenceMemoryAudit } from "@/lib/project-review-memory";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
+import { buildEvidencePackAudit } from "@/lib/evidence-pack-export";
 
 const validModes: ResearchMode[] = ["person_reference", "historical_topic", "youtube_documentary", "thumbnail_inspiration", "public_domain", "news_event", "design_moodboard", "academic_source_pack"];
 const validDepths: SearchDepth[] = ["quick", "standard", "deep"];
@@ -294,6 +295,7 @@ export async function POST(request: Request) {
   const evidenceTuning = completeEvidenceDrivenTuningTrace({ trace: shouldRunTunedPass ? initialEvidenceTuningTrace : { ...initialEvidenceTuningTrace, applied: false, reason: isEvidenceTuningDisabled() ? "Evidence-driven tuning was recommended but disabled by VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING." : initialEvidenceTuningTrace.reason }, finalEvidence: retrievalEvidence, finalCalibration: qualityCalibration });
   const providerResultInspection = buildProviderResultInspection({ results: rankedResults, providerHealth, generatedAt });
   const coverageBias = buildCoverageBiasAudit(rankedResults);
+  const evidencePack = buildEvidencePackAudit(rankedResults);
   const projectReviewMemoryAudit = buildProjectReviewEvidenceMemoryAudit({
     memory: effectiveRequest.project_review_evidence_memory,
     usedForSearch: Boolean(effectiveRequest.project_review_evidence_memory),
@@ -333,6 +335,7 @@ export async function POST(request: Request) {
       project_review_memory: projectReviewMemoryAudit,
       ranking_explainability: rankingExplainability,
       coverage_bias: coverageBias,
+      evidence_pack: evidencePack,
       provider_result_inspection: providerResultInspection,
       runtime_report: runtimeReport
     }

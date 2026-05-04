@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.3.4", "package.json version must be 0.3.4");
+assert(pkg.version === "0.4.0", "package.json version must be 0.4.0");
 assert(Boolean(pkg.scripts?.["coverage:bias:check"]), "package.json must define npm run coverage:bias:check");
 assert(pkg.scripts?.qa?.includes("coverage-bias-check"), "npm run qa must include coverage-bias-check");
 
@@ -15,7 +15,7 @@ for (const file of [
   "src/lib/coverage-bias-audit.ts",
   "src/components/search/CoverageBiasAuditPanel.tsx",
   "docs/coverage-bias-audit.md"
-]) assert(existsSync(join(root, file)), `Missing v0.3.4 file: ${file}`);
+]) assert(existsSync(join(root, file)), `Missing v0.4.0 file: ${file}`);
 
 const types = read("src/types/research.ts");
 for (const token of [
@@ -42,7 +42,7 @@ for (const token of [
 const panel = read("src/components/search/CoverageBiasAuditPanel.tsx");
 for (const token of [
   "Coverage and bias audit",
-  "v0.3.4 coverage gate",
+  "v0.4.0 coverage gate",
   "Source diversity, rights risk, and claim coverage",
   "Dominant provider",
   "Claim gaps",
@@ -51,11 +51,11 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.3.4",
+  "v0.4.0",
   "CoverageBiasAuditPanel",
   "buildCoverageBiasAudit(project)",
   "coverageBiasAudit",
-  "visual-research-board-library-v0.3.4.json"
+  "visual-research-board-library-v0.4.0.json"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 
 const route = read("src/app/api/search/route.ts");
@@ -83,11 +83,11 @@ for (const token of [
 ]) assert(exportLib.includes(token), `export lib must include ${token}`);
 
 const docs = read("docs/coverage-bias-audit.md");
-assert(docs.includes("v0.3.4"), "docs must identify v0.3.4");
+assert(docs.includes("v0.4.0"), "docs must identify v0.4.0");
 assert(docs.includes("npm run coverage:bias:check"), "docs must document validation command");
 
 const manifest = read("PATCH_MANIFEST.md");
-assert(manifest.includes("v0.3.4"), "PATCH_MANIFEST must identify v0.3.4");
+assert(manifest.includes("v0.4.0"), "PATCH_MANIFEST must identify v0.4.0");
 assert(manifest.includes("Coverage and Bias Audit"), "PATCH_MANIFEST must identify the feature");
 
 if (failures.length) {
@@ -95,5 +95,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Coverage and bias audit checks passed for v0.3.4.");
+console.log("Coverage and bias audit checks passed for v0.4.0.");
 process.exit(0);

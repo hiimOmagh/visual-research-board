@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { BoardSection, ClaimEvidenceRelation, ExportTemplateId, LicenseDetected, ManualQualityReview, ResearchClaim, ResearchProject, ResearchResult, ResultType, UrlMetadataResponse } from "@/types/research";
 import { EXPORT_TEMPLATES, LICENSE_TYPES, RESULT_TYPES } from "@/types/research";
-import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
+import { createAttributionExport, createCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport, createJsonExport, createMarkdownExport, createQualityReviewExport, createSingleAttribution, createTemplateExport, downloadTextFile } from "@/lib/export";
 import { licenseLabel, riskLabel } from "@/lib/risk";
 import { createFallbackMetadata, createManualUrlResult, isValidHttpUrl } from "@/lib/manual-import";
 import { BOARD_SECTION_KIND_LABELS, buildBoardOrganizationAudit, DEFAULT_BOARD_TAGS, formatBoardTag, normalizeBoardTags, toggleBoardTag } from "@/lib/board-organization";
@@ -69,6 +69,18 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
 
   const exportSelectedTemplate = () => {
     downloadTextFile(`visual-research-board-${selectedTemplate}.md`, createTemplateExport(selectedTemplate, saved, project), "text/markdown");
+  };
+
+  const exportEvidencePackJson = () => {
+    downloadTextFile("visual-research-board-evidence-pack-v1.json", createEvidencePackJsonExport(saved, project), "application/json");
+  };
+
+  const exportEvidencePackMarkdown = () => {
+    downloadTextFile("visual-research-board-evidence-pack-v1.md", createEvidencePackMarkdownExport(saved, project), "text/markdown");
+  };
+
+  const exportEvidencePackHtml = () => {
+    downloadTextFile("visual-research-board-evidence-pack-v1.html", createEvidencePackHtmlExport(saved, project), "text/html");
   };
 
   const copyAttribution = async (item: ResearchResult) => {
@@ -206,6 +218,46 @@ export function SavedBoard({ project, saved, sections, onRemove, onClear, onUpda
               Download template
             </button>
           </div>
+        </div>
+      </section>
+
+
+      <section className="mt-4 rounded-2xl border border-lime-300/20 bg-lime-300/[0.06] p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-lime-200">Evidence Pack v1</p>
+        <p className="mt-1 text-xs leading-5 text-slate-300">Complete export grouped into reusable, check-required, reference-only, and restricted/rejected evidence buckets.</p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => setPreviewFormat("html")}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-slate-500"
+          >
+            Preview HTML pack
+          </button>
+          <button
+            type="button"
+            onClick={exportEvidencePackHtml}
+            disabled={saved.length === 0}
+            className="rounded-xl bg-lime-300 px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-lime-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
+          >
+            Download HTML pack
+          </button>
+          <button
+            type="button"
+            onClick={exportEvidencePackJson}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+          >
+            Download pack JSON
+          </button>
+          <button
+            type="button"
+            onClick={exportEvidencePackMarkdown}
+            disabled={saved.length === 0}
+            className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 disabled:cursor-not-allowed disabled:text-slate-500"
+          >
+            Download pack Markdown
+          </button>
         </div>
       </section>
 

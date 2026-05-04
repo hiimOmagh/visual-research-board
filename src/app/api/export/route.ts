@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAttributionExport, createCsvExport, createJsonExport, createMarkdownExport, createTemplateExport } from "@/lib/export";
+import { createAttributionExport, createCsvExport, createEvidencePackCsvExport, createEvidencePackHtmlExport, createEvidencePackJsonExport, createEvidencePackMarkdownExport, createJsonExport, createMarkdownExport, createTemplateExport } from "@/lib/export";
 import type { ExportTemplateId, ResearchProject, ResearchResult } from "@/types/research";
 
 export async function POST(request: Request) {
@@ -7,6 +7,39 @@ export async function POST(request: Request) {
 
   if (!body || !Array.isArray(body.results)) {
     return NextResponse.json({ error: "Invalid export request." }, { status: 400 });
+  }
+
+
+  if (body.format === "evidence_pack_json") {
+    return new Response(createEvidencePackJsonExport(body.results, body.project), {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    });
+  }
+
+  if (body.format === "evidence_pack_markdown") {
+    return new Response(createEvidencePackMarkdownExport(body.results, body.project), {
+      headers: {
+        "Content-Type": "text/markdown; charset=utf-8"
+      }
+    });
+  }
+
+  if (body.format === "evidence_pack_csv") {
+    return new Response(createEvidencePackCsvExport(body.results, body.project), {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8"
+      }
+    });
+  }
+
+  if (body.format === "evidence_pack_html") {
+    return new Response(createEvidencePackHtmlExport(body.results, body.project), {
+      headers: {
+        "Content-Type": "text/html; charset=utf-8"
+      }
+    });
   }
 
   if (body.format === "template" && body.template) {

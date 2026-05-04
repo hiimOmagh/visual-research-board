@@ -50,7 +50,7 @@ export function CoverageBiasAuditPanel({ audit }: { audit: CoverageBiasAudit }) 
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Coverage and bias audit</p>
           <h2 className="mt-1 text-xl font-bold text-white">Source diversity, rights risk, and claim coverage</h2>
           <p className="mt-2 text-sm leading-6 text-slate-400">
-            v0.3.4 coverage gate: detects provider/domain concentration, reference-only overload, rights-risk accumulation, and unsupported or uncountered claims.
+            v0.4.0 coverage gate: detects provider/domain concentration, reference-only overload, rights-risk accumulation, and unsupported or uncountered claims.
           </p>
         </div>
         <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${warningLevel === "high" ? "border-red-300/30 bg-red-300/10 text-red-100" : warningLevel === "medium" ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : "border-lime-300/30 bg-lime-300/10 text-lime-100"}`}>
