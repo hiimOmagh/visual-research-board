@@ -155,7 +155,7 @@ export function buildReviewEvidenceFeedback(results: ResearchResult[], generated
   if (rejectedCount > approvedCount + cautionCount && reviewed.length >= 3) warnings.push("Rejected references dominate the review set; next searches may be conservative until more approved examples exist.");
 
   return {
-    schema_version: "0.2.9",
+    schema_version: "0.2.10",
     generated_at: generatedAt,
     reviewed_result_count: reviewed.length,
     approved_count: approvedCount,

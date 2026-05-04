@@ -1,6 +1,6 @@
-# Review-Evidence Feedback Calibration — v0.2.9
+# Review-Evidence Feedback Calibration — v0.2.10
 
-`v0.2.9` closes the loop between manual saved-board reviews and ranking calibration.
+`v0.2.10` closes the loop between manual saved-board reviews and ranking calibration.
 
 ## What changed
 

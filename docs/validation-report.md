@@ -1,9 +1,9 @@
-# Validation Report — Visual Research Board v0.2.9
+# Validation Report — Visual Research Board v0.2.10
 
 ## Package
 
 ```text
-visual-research-board-v0.2.9.zip
+visual-research-board-v0.2.10.zip
 ```
 
 ## Validation run
@@ -65,4 +65,4 @@ artifacts/evidence-driven-tuning-report.json
 
 ## Status
 
-`v0.2.9` is an evidence-driven ranking/query tuning package. It does not claim literal all-web crawling. It measures whether broad multi-provider search results are relevant, visual, source-diverse, license-clear, and useful for creator curation, then exposes query hints, score weights, provider bias, and evidence-driven ranking changes when weak cases are detected.
+`v0.2.10` is an evidence-driven ranking/query tuning package. It does not claim literal all-web crawling. It measures whether broad multi-provider search results are relevant, visual, source-diverse, license-clear, and useful for creator curation, then exposes query hints, score weights, provider bias, and evidence-driven ranking changes when weak cases are detected.

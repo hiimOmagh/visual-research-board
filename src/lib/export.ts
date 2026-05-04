@@ -60,7 +60,9 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         by_source_group: countBy(results, (item) => item.source_group ?? classifySourceDomain(item.source_domain)),
         notes_count: results.filter((item) => Boolean(item.notes?.trim())).length,
         manual_import_count: results.filter((item) => item.provider === "manual").length,
-        manual_review_summary: summarizeManualReviews(results)
+        manual_review_summary: summarizeManualReviews(results),
+        duplicate_group_count: results.filter((item) => (item.duplicate_group_size ?? 1) > 1).length,
+        metadata_gap_count: results.reduce((total, item) => total + (item.metadata_gaps?.length ?? 0), 0)
       },
       results
     },
@@ -108,6 +110,10 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
   lines.push(`- Rights status: ${result.rights_status}`);
   lines.push(`- Source access mode: ${result.source_access_mode}`);
   lines.push(`- Reuse risk: ${result.reuse_risk}`);
+  lines.push(`- Canonical source URL: ${result.canonical_source_url ?? result.source_url}`);
+  if (result.canonical_image_url) lines.push(`- Canonical image URL: ${result.canonical_image_url}`);
+  if ((result.duplicate_group_size ?? 1) > 1) lines.push(`- Duplicate merge: ${result.duplicate_group_size} records; reasons=${result.duplicate_match_reasons?.join(", ") || "unknown"}`);
+  if (result.metadata_gaps?.length) lines.push(`- Metadata gaps: ${result.metadata_gaps.join(", ")}`);
   lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
   if (result.quality_reasons?.length) lines.push(`- Why this result: ${result.quality_reasons.join(" | ")}`);
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
@@ -295,6 +301,11 @@ export function createCsvExport(results: ResearchResult[]): string {
     "source_domain",
     "source_group",
     "source_url",
+    "canonical_source_url",
+    "canonical_image_url",
+    "duplicate_group_size",
+    "duplicate_match_reasons",
+    "metadata_gaps",
     "license_detected",
     "license_confidence",
     "risk_level",
@@ -323,6 +334,11 @@ export function createCsvExport(results: ResearchResult[]): string {
     result.source_domain,
     result.source_group ?? classifySourceDomain(result.source_domain),
     result.source_url,
+    result.canonical_source_url ?? result.source_url,
+    result.canonical_image_url ?? "",
+    result.duplicate_group_size ?? 1,
+    result.duplicate_match_reasons?.join(";") ?? "",
+    result.metadata_gaps?.join(";") ?? "",
     result.license_detected,
     Math.round(result.license_confidence * 100),
     result.risk_level,

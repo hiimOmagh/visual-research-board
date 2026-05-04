@@ -1,6 +1,6 @@
-# Live Retrieval Quality Calibration — v0.2.9
+# Live Retrieval Quality Calibration — v0.2.10
 
-`v0.2.9` adds a creator-facing quality calibration layer on top of broad retrieval evidence.
+`v0.2.10` adds a creator-facing quality calibration layer on top of broad retrieval evidence.
 
 The previous gate answered: **did the search retrieve enough candidates?**
 

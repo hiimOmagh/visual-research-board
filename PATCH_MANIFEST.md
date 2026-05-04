@@ -1,60 +1,36 @@
-# v0.2.9 Patch Manifest — Free Image Retrieval + Reference Search Hub
+# v0.2.10 Patch Manifest — Provider Normalization + Deduplication
 
-Apply this package over `visual-research-board-v0.2.8-review-evidence-feedback`. It contains only files changed or added for v0.2.9.
+Apply this package over `visual-research-board-v0.2.9-free-image-retrieval-reference-hub`. It contains only files changed or added for v0.2.10.
 
-## Added files
+## Objective
 
-- `docs/free-image-retrieval-reference-hub.md`
-- `src/components/search/ReferenceSearchHub.tsx`
-- `src/lib/providers/europeana.ts`
-- `src/lib/providers/internet-archive.ts`
-- `src/lib/providers/loc.ts`
-- `src/lib/providers/nasa.ts`
-- `src/lib/providers/openverse.ts`
-- `src/lib/providers/smithsonian.ts`
-- `src/lib/reference-search.ts`
-- `tests/free-image-retrieval-check.mjs`
+Add a normalization gate after provider retrieval so free/open provider results are canonicalized, duplicate records are merged, metadata gaps are visible, and exports preserve a traceable provider-source audit.
 
-## Modified files
+## Added
 
-- `.env.example`
-- `README.md`
-- `docs/provider-setup.md`
-- `PATCH_MANIFEST.md`
-- `package-lock.json`
-- `package.json`
-- `src/app/api/provider-runtime/route.ts`
-- `src/app/api/search/route.ts`
-- `src/components/search/ProviderRuntimePanel.tsx`
-- `src/components/search/ProviderTogglePanel.tsx`
-- `src/components/search/ResultCard.tsx`
-- `src/components/search/SearchPanel.tsx`
-- `src/lib/client-search.ts`
-- `src/lib/evidence-driven-tuning.ts`
-- `src/lib/export.ts`
-- `src/lib/manual-import.ts`
-- `src/lib/project.ts`
-- `src/lib/provider-runtime.ts`
-- `src/lib/result-normalizer.ts`
-- `src/lib/result-quality.ts`
-- `src/lib/retrieval-autotuning.ts`
-- `src/lib/review-evidence-feedback.ts`
-- `src/lib/risk.ts`
-- `src/types/research.ts`
-- `tests/fixtures/provider-smoke-stable.json`
-- `tests/provider-runtime-pack-check.mjs`
-- `tests/provider-smoke-check.mjs`
-- `tests/qa-check.mjs`
-- other version-aligned validation/documentation files touched by the v0.2.9 version bump
+- `src/components/search/NormalizationDedupePanel.tsx`
+- `docs/provider-normalization-deduplication.md`
+- `tests/normalization-dedupe-check.mjs`
 
-## Deleted files
+## Updated
 
-- none
+- `src/lib/result-normalizer.ts` — canonical source/image URL normalization, duplicate merge logic, metadata-gap detection, duplicate trace diagnostics.
+- `src/types/research.ts` — duplicate match reasons, metadata gaps, provider-source traces, normalization diagnostics, result canonical fields.
+- `src/app/api/search/route.ts` — returns `normalization_dedupe` diagnostics and removes stale duplicate `autoTuning` declaration.
+- `src/lib/client-search.ts` — static/demo responses include normalization diagnostics.
+- `src/lib/project.ts` — migrations hydrate canonical/duplicate metadata and search history persists normalization diagnostics.
+- `src/lib/export.ts` — JSON/Markdown/CSV exports include canonical URLs, duplicate merge context, and metadata gap data.
+- `src/components/search/SearchPanel.tsx` — v0.2.10 header and NormalizationDedupePanel rendering.
+- `src/components/search/ResultCard.tsx` and `ResultDetailPanel.tsx` — visible duplicate/metadata-gap cues.
+- package/docs/tests versioned to v0.2.10.
 
-## Validation performed
+## Validation
 
-- `npm run free:image:check` — passed
-- `npm run qa` — passed
-- `node tests/provider-smoke-check.mjs` — passed
-- `node tests/provider-runtime-pack-check.mjs` — passed
-- `npm run typecheck` — attempted but not completed because `node_modules` is absent in this container; failures were missing Next/React/Node/Tailwind type dependencies, not a confirmed source-level failure.
+Passed in this build container:
+
+```bash
+npm run normalization:dedupe:check
+npm run qa
+```
+
+`npm run typecheck` was not run here because the current container does not include installed Next/React/Node dependencies unless the recipient runs `npm install`.

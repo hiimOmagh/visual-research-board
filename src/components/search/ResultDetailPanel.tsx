@@ -54,6 +54,9 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
         <Field label="License confidence" value={`${Math.round(result.license_confidence * 100)}%`} />
         {result.license_url && <Field label="License URL" value={result.license_url} />}
         <Field label="Risk label" value={riskLabel(result.risk_level)} />
+        <Field label="Rights status" value={result.rights_status.replaceAll("_", " ")} />
+        <Field label="Source access mode" value={result.source_access_mode.replaceAll("_", " ")} />
+        <Field label="Reuse risk" value={result.reuse_risk} />
         <Field label="Overall score" value={`${Math.round(result.scores.overall * 100)}%`} />
         <Field label="Relevance score" value={`${Math.round(result.scores.relevance * 100)}%`} />
         <Field label="Source credibility" value={`${Math.round(result.scores.source_credibility * 100)}%`} />
@@ -61,6 +64,11 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
         <Field label="Production usefulness" value={`${Math.round(result.scores.production_usefulness * 100)}%`} />
         {result.width && result.height && <Field label="Dimensions" value={`${result.width} × ${result.height}`} />}
         {result.description && <Field label="Description" value={result.description} />}
+        <Field label="Canonical source URL" value={result.canonical_source_url ?? result.source_url} />
+        {result.canonical_image_url && <Field label="Canonical image URL" value={result.canonical_image_url} />}
+        <Field label="Duplicate group" value={`${result.duplicate_group_size ?? 1} source record(s); reasons=${result.duplicate_match_reasons?.join(", ") || "none"}`} />
+        {result.metadata_gaps?.length ? <Field label="Metadata gaps" value={result.metadata_gaps.map((gap) => gap.replaceAll("_", " ")).join(", ")} /> : null}
+        {result.provider_sources?.length && result.provider_sources.length > 1 ? <Field label="Merged provider sources" value={result.provider_sources.map((source) => `${source.provider}: ${source.source_url}`).join(" | ")} /> : null}
         <Field label="Tags" value={result.tags.join(", ") || "none"} />
         <Field label="Collected at" value={result.collected_at} />
         <Field label="Manual review verdict" value={manualReview.verdict} />

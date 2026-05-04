@@ -280,6 +280,7 @@ export async function POST(request: Request) {
       total_normalized_results: normalized.stats.normalized_count,
       total_deduped_results: rankedResults.length,
       duplicate_count: normalized.stats.duplicate_count,
+      normalization_dedupe: normalized.stats.trace,
       provider_health: providerHealth,
       provider_toggles: runtimeToggles,
       reference_searches: buildReferenceSearchLinks(tunedPlan.original_topic),

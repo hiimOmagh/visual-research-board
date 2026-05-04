@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.9 free image retrieval + reference search hub package`
+`v0.2.10 provider normalization + deduplication package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
 
@@ -33,9 +33,9 @@ Implemented:
 - Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
 
-## v0.2.9 focus
+## v0.2.10 focus
 
-This package expands image discovery through free/open backend sources and a manual Reference Search Hub. Search engines such as Google, Bing, DuckDuckGo, Yandex, Startpage, Qwant, and Mojeek are treated as user-opened reference launchers, not automated scraping targets. Results now carry source-access, rights-status, and reuse-risk labels across backend, manual, and exported data paths.
+This package adds a provider normalization and deduplication gate after free/open retrieval. Results now carry canonical source/image URLs, normalized title keys, duplicate keys, duplicate merge traces, provider-source audit trails, and metadata-gap labels. Duplicate records are merged before ranking/export instead of silently polluting the board.
 
 ## Free image retrieval boundary
 
@@ -43,7 +43,7 @@ This release is designed to retrieve more relevant visual/source candidates with
 
 It still cannot literally fetch every image on the web. The target is broad, legal, source-aware retrieval with manual reference import for search-engine discoveries.
 
-See `docs/free-image-retrieval-reference-hub.md` and `docs/provider-setup.md`.
+See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, and `docs/provider-setup.md`.
 
 ## Install and run locally
 
@@ -155,6 +155,7 @@ npm run e2e:fixtures
 npm run provider:smoke
 npm run provider:runtime:test
 npm run provider:runtime:check
+npm run normalization:dedupe:check
 npm run retrieval:quality:test
 npm run retrieval:calibration:check
 npm run retrieval:autotune:check
@@ -222,4 +223,6 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.9` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
+`v0.2.10` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
+
+- v0.2.10 adds `normalization_dedupe` diagnostics, duplicate-provider source retention, canonical URL fields, and metadata-gap export coverage.

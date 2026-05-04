@@ -1,13 +1,13 @@
-# Provider Setup — v0.2.9
+# Provider Setup — v0.2.10
 
-Visual Research Board must remain usable without API keys. v0.2.9 defaults to free/no-key backend sources, mock fallback, and manual reference-search launchers. It must not scrape Google, Bing, Yandex, or other search-result pages.
+Visual Research Board must remain usable without API keys. v0.2.10 defaults to free/no-key backend sources, mock fallback, and manual reference-search launchers. It must not scrape Google, Bing, Yandex, or other search-result pages.
 
 ## Free core providers
 
 These providers are part of the free backend retrieval core:
 
 | Provider | Key required | Role |
-| --- | ---: | --- |
+|---|---:|---|
 | Mock | No | Offline/demo fallback and deterministic fixtures. |
 | Wikimedia Commons | No | Open/reference media, maps, diagrams, public-domain and Creative Commons candidates. |
 | Openverse | No | Open-license image discovery across multiple public collections. |
@@ -25,7 +25,7 @@ EUROPEANA_API_KEY=
 ```
 
 | Provider | Role |
-| --- | --- |
+|---|---|
 | Smithsonian Open Access | Museum, science, cultural, and public-domain collection imagery. |
 | Europeana | European cultural heritage, archive, museum, and library metadata/media. |
 

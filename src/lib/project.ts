@@ -4,6 +4,7 @@ import { scoreResult } from "@/lib/scoring";
 import { buildQualityReasons, classifySourceDomain } from "@/lib/result-quality";
 import { buildRetrievalEvidence } from "@/lib/retrieval-evidence";
 import { normalizeManualReview } from "@/lib/manual-quality-review";
+import { canonicalUrl, normalizeKey, normalizeTitle } from "@/lib/result-normalizer";
 
 export const PROJECT_SCHEMA_VERSION = "0.1.0" as const;
 export const LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
@@ -89,7 +90,15 @@ export function ensureResultQuality(result: ResearchResult): ResearchResult {
     manual_review: result.manual_review ? normalizeManualReview(result.manual_review) : undefined,
     source_group,
     scores,
-    duplicate_group_key: result.duplicate_group_key ?? result.source_url.toLowerCase()
+    canonical_source_url: result.canonical_source_url ?? canonicalUrl(result.source_url),
+    canonical_image_url: result.canonical_image_url ?? canonicalUrl(result.image_url),
+    canonical_thumbnail_url: result.canonical_thumbnail_url ?? canonicalUrl(result.thumbnail_url),
+    normalized_title_key: result.normalized_title_key ?? normalizeTitle(result.title),
+    duplicate_keys: result.duplicate_keys ?? [normalizeKey(result.source_url)].filter(Boolean),
+    duplicate_group_key: result.duplicate_group_key ?? normalizeKey(result.source_url),
+    duplicate_group_size: result.duplicate_group_size ?? 1,
+    duplicate_group_members: result.duplicate_group_members ?? [result.id],
+    metadata_gaps: result.metadata_gaps ?? []
   };
   return {
     ...enriched,
@@ -151,6 +160,7 @@ function normalizeHistoryEntry(entry: Partial<SearchHistoryEntry>): SearchHistor
     query_count: entry.query_count ?? 0,
     result_count: entry.result_count ?? 0,
     duplicate_count: entry.duplicate_count ?? 0,
+    normalization_dedupe: entry.normalization_dedupe,
     provider_health: normalizeProviderHealth(entry.provider_health ?? []),
     provider_toggles: entry.provider_toggles ?? DEFAULT_PROVIDER_TOGGLES
   };
@@ -278,6 +288,7 @@ export function createSearchHistoryEntry(response: ResearchResponse, request: Re
     query_count: response.search_plan.queries.length,
     result_count: response.results.length,
     duplicate_count: response.diagnostics.duplicate_count,
+    normalization_dedupe: response.diagnostics.normalization_dedupe,
     provider_health: response.diagnostics.provider_health,
     provider_toggles: response.diagnostics.provider_toggles
   };

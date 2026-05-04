@@ -31,6 +31,59 @@ export type RightsStatus =
 
 export type ReuseRisk = "low" | "medium" | "high";
 
+export type DuplicateMatchReason =
+  | "source_url"
+  | "image_url"
+  | "thumbnail_url"
+  | "title_domain"
+  | "image_asset"
+  | "visual_shape";
+
+export type MetadataGap =
+  | "missing_visual_asset"
+  | "missing_description"
+  | "missing_dimensions"
+  | "missing_license_url"
+  | "unclear_license"
+  | "unclear_rights_status"
+  | "unknown_source_domain";
+
+export interface DuplicateProviderSource {
+  id: string;
+  provider: ProviderName;
+  source_url: string;
+  image_url?: string;
+  thumbnail_url?: string;
+  rights_status: RightsStatus;
+  reuse_risk: ReuseRisk;
+  score: number;
+}
+
+export interface DuplicateGroupTrace {
+  group_key: string;
+  survivor_id: string;
+  duplicate_count: number;
+  match_reasons: DuplicateMatchReason[];
+  member_ids: string[];
+  provider_sources: DuplicateProviderSource[];
+}
+
+export interface NormalizationDedupeTrace {
+  schema_version: "0.2.10";
+  raw_count: number;
+  normalized_count: number;
+  deduped_count: number;
+  duplicate_count: number;
+  duplicate_group_count: number;
+  merged_duplicate_count: number;
+  unique_canonical_source_count: number;
+  unique_canonical_image_count: number;
+  metadata_gap_count: number;
+  metadata_gap_counts: Partial<Record<MetadataGap, number>>;
+  duplicate_groups: DuplicateGroupTrace[];
+  warnings: string[];
+}
+
 export type ReferenceSearchEngine =
   | "google_images"
   | "bing_images"
@@ -156,7 +209,7 @@ export interface ReviewEvidenceSourceSignal {
 }
 
 export interface ReviewEvidenceFeedback {
-  schema_version: "0.2.9";
+  schema_version: "0.2.10";
   generated_at: string;
   reviewed_result_count: number;
   approved_count: number;
@@ -298,8 +351,18 @@ export interface ResearchResult {
   tags: string[];
   scores: ResultScores;
   source_group?: SourceGroup;
-  quality_reasons?: string[];
+  canonical_source_url?: string;
+  canonical_image_url?: string;
+  canonical_thumbnail_url?: string;
+  normalized_title_key?: string;
+  duplicate_keys?: string[];
   duplicate_group_key?: string;
+  duplicate_group_size?: number;
+  duplicate_group_members?: string[];
+  duplicate_match_reasons?: DuplicateMatchReason[];
+  provider_sources?: DuplicateProviderSource[];
+  metadata_gaps?: MetadataGap[];
+  quality_reasons?: string[];
   notes?: string;
   section_id?: string;
   collected_at: string;
@@ -460,6 +523,7 @@ export interface SearchDiagnostics {
   total_normalized_results: number;
   total_deduped_results: number;
   duplicate_count: number;
+  normalization_dedupe?: NormalizationDedupeTrace;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
   reference_searches?: ReferenceSearchLink[];
@@ -517,6 +581,7 @@ export interface SearchHistoryEntry {
   query_count: number;
   result_count: number;
   duplicate_count: number;
+  normalization_dedupe?: NormalizationDedupeTrace;
   provider_health: ProviderHealth[];
   provider_toggles: ProviderToggleMap;
   reference_searches?: ReferenceSearchLink[];

@@ -77,6 +77,11 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
           <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-300">
             {result.source_access_mode.replaceAll("_", " ")}
           </span>
+          {(result.duplicate_group_size ?? 1) > 1 && (
+            <span className="rounded-full border border-purple-300/20 bg-purple-300/10 px-2 py-1 text-purple-100">
+              merged ×{result.duplicate_group_size}
+            </span>
+          )}
         </div>
 
         <div className="grid grid-cols-4 gap-2 text-[11px] text-slate-300">
@@ -89,6 +94,9 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Why this result</p>
           <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">{reasons[0]}</p>
+          {result.metadata_gaps?.length ? (
+            <p className="mt-2 text-[11px] text-amber-100">Metadata gaps: {result.metadata_gaps.slice(0, 3).map((gap) => gap.replaceAll("_", " ")).join(", ")}</p>
+          ) : null}
         </div>
 
         <div className="flex gap-2">
