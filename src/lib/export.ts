@@ -62,7 +62,10 @@ export function createJsonExport(results: ResearchResult[], project?: Pick<Resea
         manual_import_count: results.filter((item) => item.provider === "manual").length,
         manual_review_summary: summarizeManualReviews(results),
         duplicate_group_count: results.filter((item) => (item.duplicate_group_size ?? 1) > 1).length,
-        metadata_gap_count: results.reduce((total, item) => total + (item.metadata_gaps?.length ?? 0), 0)
+        metadata_gap_count: results.reduce((total, item) => total + (item.metadata_gaps?.length ?? 0), 0),
+        ranking_explained_count: results.filter((item) => Boolean(item.ranking_explanation)).length,
+        ranking_confidence_counts: countBy(results.filter((item) => Boolean(item.ranking_explanation)), (item) => item.ranking_explanation?.calibration_confidence ?? "missing"),
+        review_adjusted_count: results.filter((item) => Math.abs(item.ranking_explanation?.score_delta_from_baseline ?? 0) >= 0.005).length
       },
       results
     },
@@ -86,6 +89,7 @@ export function createMarkdownExport(results: ResearchResult[], project?: Pick<R
     `- Reference-only/high-risk/avoid: ${results.filter((item) => ["reference_only", "high", "avoid"].includes(item.risk_level)).length}`,
     `- Manual imports: ${results.filter((item) => item.provider === "manual").length}`,
     `- Items with notes: ${results.filter((item) => Boolean(item.notes?.trim())).length}`,
+    `- Ranking explanations: ${results.filter((item) => Boolean(item.ranking_explanation)).length}`,
     ""
   ];
 
@@ -115,6 +119,11 @@ function appendDetailedResult(lines: string[], result: ResearchResult, index: nu
   if ((result.duplicate_group_size ?? 1) > 1) lines.push(`- Duplicate merge: ${result.duplicate_group_size} records; reasons=${result.duplicate_match_reasons?.join(", ") || "unknown"}`);
   if (result.metadata_gaps?.length) lines.push(`- Metadata gaps: ${result.metadata_gaps.join(", ")}`);
   lines.push(`- Overall score: ${Math.round(result.scores.overall * 100)}%`);
+  if (result.ranking_explanation) {
+    lines.push(`- Ranking explanation: rank #${result.ranking_explanation.final_rank} · confidence=${result.ranking_explanation.calibration_confidence} · baseline=${Math.round(result.ranking_explanation.baseline_overall * 100)}% · final=${Math.round(result.ranking_explanation.final_overall * 100)}% · review_delta=${result.ranking_explanation.score_delta_from_baseline > 0 ? "+" : ""}${Math.round(result.ranking_explanation.score_delta_from_baseline * 100)} pts`);
+    lines.push(`- Dominant ranking factors: ${result.ranking_explanation.dominant_factors.join(", ") || "none"}`);
+    if (result.ranking_explanation.warnings.length) lines.push(`- Ranking warnings: ${result.ranking_explanation.warnings.join(" | ")}`);
+  }
   if (result.quality_reasons?.length) lines.push(`- Why this result: ${result.quality_reasons.join(" | ")}`);
   lines.push(`- Tags: ${result.tags.join(", ") || "none"}`);
   if (result.description) lines.push(`- Description: ${result.description}`);
@@ -183,6 +192,7 @@ export function createProductionBriefExport(results: ResearchResult[], project?:
       .forEach((item) => {
         lines.push(`### ${item.title}`);
         lines.push(`- Production usefulness: ${Math.round(item.scores.production_usefulness * 100)}%`);
+        if (item.ranking_explanation) lines.push(`- Ranking: #${item.ranking_explanation.final_rank} · ${item.ranking_explanation.calibration_confidence} · factors=${item.ranking_explanation.dominant_factors.slice(0, 3).join(", ")}`);
         lines.push(`- Source/risk: ${item.source_domain} · ${sourceGroupLabel(item.source_group ?? classifySourceDomain(item.source_domain))} · ${riskLabel(item.risk_level)} · ${licenseLabel(item.license_detected)}`);
         if (item.quality_reasons?.length) lines.push(`- Why: ${item.quality_reasons[0]}`);
         lines.push(`- Source URL: ${item.source_url}`);

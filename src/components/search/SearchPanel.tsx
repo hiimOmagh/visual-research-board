@@ -32,6 +32,7 @@ import { ReviewEvidenceFeedbackPanel } from "@/components/search/ReviewEvidenceF
 import { ReferenceSearchHub } from "@/components/search/ReferenceSearchHub";
 import { NormalizationDedupePanel } from "@/components/search/NormalizationDedupePanel";
 import { SourceClassRoutingPanel } from "@/components/search/SourceClassRoutingPanel";
+import { RankingExplainabilityPanel } from "@/components/search/RankingExplainabilityPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -289,7 +290,7 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.2.11.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.3.0.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -322,12 +323,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.2.11</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.3.0</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, and export-ready evidence packs.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -467,6 +468,7 @@ export function SearchPanel() {
           {diagnostics?.auto_tuning && <RetrievalAutoTuningPanel trace={diagnostics.auto_tuning} />}
           {diagnostics?.evidence_tuning && <EvidenceDrivenTuningPanel trace={diagnostics.evidence_tuning} />}
           {diagnostics?.review_evidence_calibration && <ReviewEvidenceFeedbackPanel trace={diagnostics.review_evidence_calibration} />}
+          {diagnostics?.ranking_explainability && <RankingExplainabilityPanel audit={diagnostics.ranking_explainability} />}
           {diagnostics?.provider_result_inspection && <ProviderResultInspectorPanel inspection={diagnostics.provider_result_inspection} />}
           {diagnostics?.runtime_report && <ProviderRuntimePanel report={diagnostics.runtime_report} />}
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}

@@ -1,27 +1,42 @@
-# v0.2.11 — Query Expansion + Source-Class Routing Patch Manifest
+# v0.3.0 — Ranking Explainability + Calibration Audit Patch Manifest
 
 ## Release objective
 
-Add bounded query expansion and source-class routing so each provider receives query variants matched to its strengths instead of the same generic query slice.
+Make ranking inspectable after review-evidence calibration. v0.3.0 adds per-result factor explanations, review-delta visibility, confidence labels, and an aggregate calibration audit so ranking is no longer a hidden score.
 
 ## Core changes
 
-- Added query intent/source-class types and routing diagnostics.
-- Rebuilt `createSearchPlan()` to generate query variants with provider targets.
-- Added provider-specific routing entries in `search_plan.provider_routing`.
-- Added `diagnostics.source_class_routing`.
-- Added `providerQuerySlice(plan, provider)` and routed all provider adapters through it.
-- Added source-class/routing visibility in Provider Health and a new Source Class Routing panel.
-- Added `npm run query:routing:check` and included it in `npm run qa`.
-- Updated release metadata to `0.2.11`.
+- Added `src/lib/ranking-explainability.ts`.
+- Added `RankingExplanation`, `RankingExplanationFactor`, and `RankingExplainabilityAudit` types.
+- Added `ranking_explanation` on each ranked result.
+- Added `diagnostics.ranking_explainability`.
+- Added `RankingExplainabilityPanel`.
+- Result cards now show rank, confidence, review delta, and dominant factors.
+- Result detail panel now shows full factor breakdown and ranking warnings.
+- Exports now include ranking explanation summaries and confidence counts.
+- Search runtime and static client fallback both build ranking explanations from the same library.
+- Added docs: `docs/ranking-explainability-calibration-audit.md`.
+- Added validation: `npm run ranking:explain:check`.
+- Updated release metadata to `0.3.0`.
 
 ## Validation run
 
 Passed:
 
 ```bash
-npm run query:routing:check
+npm run ranking:explain:check
 npm run qa
+```
+
+Also verified the late QA gates individually:
+
+```bash
+node tests/manual-quality-review-check.mjs
+node tests/review-evidence-feedback-check.mjs
+node tests/free-image-retrieval-check.mjs
+node tests/normalization-dedupe-check.mjs
+node tests/query-routing-check.mjs
+node tests/ranking-explainability-check.mjs
 ```
 
 Not completed:
@@ -31,8 +46,8 @@ npm run typecheck
 npm run lint
 ```
 
-Reason: this container has no installed `node_modules`; TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies. After fixing the one source-level TypeScript issue found in `query-planner.ts`, remaining typecheck output is dependency-resolution noise.
+Reason: this container has no installed `node_modules`; TypeScript/ESLint fail on missing Next/React/Node/Tailwind/ESLint dependencies. The dedicated source/fixture gates passed.
 
 ## Changed-file patch
 
-This ZIP contains only files modified or added relative to v0.2.10.
+This ZIP contains files modified or added relative to v0.2.11.

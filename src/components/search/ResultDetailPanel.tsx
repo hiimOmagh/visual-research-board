@@ -16,6 +16,7 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
   const sourceGroup = result.source_group ?? classifySourceDomain(result.source_domain);
   const reasons = result.quality_reasons?.length ? result.quality_reasons : buildQualityReasons({ ...result, source_group: sourceGroup });
   const manualReview = normalizeManualReview(result.manual_review);
+  const explanation = result.ranking_explanation;
 
   return (
     <aside className="fixed inset-y-0 right-0 z-50 w-full max-w-xl overflow-y-auto border-l border-white/10 bg-slate-950/95 p-6 shadow-soft backdrop-blur md:w-[32rem]" aria-label="Result detail panel">
@@ -45,6 +46,38 @@ export function ResultDetailPanel({ result, onClose }: ResultDetailPanelProps) {
             {reasons.map((reason) => <li key={reason}>{reason}</li>)}
           </ul>
         </section>
+
+        {explanation && (
+          <section className="rounded-2xl border border-sky-300/20 bg-sky-300/[0.06] p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-sky-300">Ranking explanation</p>
+            <div className="mt-2 grid gap-2 text-xs text-slate-200 sm:grid-cols-2">
+              <span>Rank: #{explanation.final_rank}</span>
+              <span>Confidence: {explanation.calibration_confidence}</span>
+              <span>Baseline: {Math.round(explanation.baseline_overall * 100)}%</span>
+              <span>Final: {Math.round(explanation.final_overall * 100)}%</span>
+              <span>Review delta: {explanation.score_delta_from_baseline > 0 ? "+" : ""}{Math.round(explanation.score_delta_from_baseline * 100)} pts</span>
+              <span>Dominant: {explanation.dominant_factors.join(", ")}</span>
+            </div>
+            <div className="mt-3 space-y-2">
+              {explanation.factors.map((factor) => (
+                <div key={factor.key} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                  <div className="flex items-center justify-between gap-3 text-xs">
+                    <span className="font-semibold text-white">{factor.label}</span>
+                    <span className={factor.polarity === "positive" ? "text-lime-200" : factor.polarity === "negative" ? "text-amber-200" : "text-slate-300"}>
+                      {Math.round(factor.value * 100)}% · weight {Math.round(factor.weight * 100)}% · contribution {Math.round(factor.contribution * 100)}%
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">{factor.description}</p>
+                </div>
+              ))}
+            </div>
+            {explanation.warnings.length > 0 && (
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-amber-100">
+                {explanation.warnings.map((warning) => <li key={warning}>{warning}</li>)}
+              </ul>
+            )}
+          </section>
+        )}
 
         <Field label="Source domain" value={result.source_domain} />
         <Field label="Source group" value={sourceGroupLabel(sourceGroup)} />

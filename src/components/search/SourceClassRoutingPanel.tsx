@@ -11,7 +11,7 @@ export function SourceClassRoutingPanel({ trace }: { trace: SourceClassRoutingTr
     <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft" aria-label="Source-class routing diagnostics">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-lime-300">v0.2.11 routing gate</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-lime-300">v0.3.0 routing gate</p>
           <h2 className="mt-1 text-xl font-bold text-white">Query expansion + source-class routing</h2>
           <p className="mt-2 text-xs leading-5 text-slate-400">
             Query variants are routed by source class so Commons/Openverse receive open-media queries, archives receive historical/document queries, NASA receives science branches, and search engines remain manual reference launchers.

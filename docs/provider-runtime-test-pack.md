@@ -1,6 +1,6 @@
-# Provider Runtime Test Pack — v0.2.11
+# Provider Runtime Test Pack — v0.3.0
 
-`v0.2.11` adds an explicit runtime validation layer for real-provider evidence. The goal is to separate three different states:
+`v0.3.0` adds an explicit runtime validation layer for real-provider evidence. The goal is to separate three different states:
 
 1. **GitHub Pages static demo** — client-side mock only.
 2. **Next.js runtime without keys** — Wikimedia can run; Brave/Tavily report `missing_key`.

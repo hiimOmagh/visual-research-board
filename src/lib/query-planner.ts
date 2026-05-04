@@ -288,7 +288,7 @@ function buildRoutingTrace(params: {
   if ((providerQueryCounts.wikimedia ?? 0) === 0 && (sourceClassCounts.open_media ?? 0) > 0) warnings.push("Open-media query variants exist but Wikimedia received no routed queries.");
 
   return {
-    schema_version: "0.2.11",
+    schema_version: "0.3.0",
     original_topic: params.topic,
     mode: params.mode,
     depth: params.depth,

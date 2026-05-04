@@ -1,6 +1,6 @@
 # Visual Research Board
 
-`v0.2.11 query expansion + source-class routing package`
+`v0.3.0 ranking explainability + calibration audit package`
 
 A source-aware visual research workspace for creators, editors, documentary teams, thumbnail designers, and researchers. It turns a topic, person, event, or concept into a curated local reference board with source URLs, provider diagnostics, rights/risk labels, notes, board sections, review feedback, ranking calibration, and exportable production packs.
 
@@ -33,10 +33,11 @@ Implemented:
 - Deployed browser evidence capture that classifies hosted builds as Next.js runtime, GitHub Pages static demo, or broken/unknown surface.
 - Real-topic test matrix with operational thresholds across historical, documentary, thumbnail, public-domain, news, moodboard, and academic-source scenarios.
 - Query expansion and source-class routing so each provider receives source-appropriate query variants instead of the same generic front-sliced list.
+- Ranking explainability with per-result factor breakdowns, review-delta visibility, confidence labels, and calibration audit diagnostics.
 
-## v0.2.11 focus
+## v0.3.0 focus
 
-This package adds bounded query expansion and provider-specific source-class routing. The planner now creates query variants with intents and source classes, routes archive/open-media/museum/science/reference branches to the right adapters, and exposes routing diagnostics in the UI and API response.
+This package adds ranking explainability and calibration audit coverage. Every ranked candidate can now expose a factor breakdown, final rank, baseline-vs-final score delta, dominant ranking factors, confidence label, and warnings for sparse review evidence, rights ambiguity, metadata gaps, or conflicting review signals.
 
 ## Free image retrieval boundary
 
@@ -44,7 +45,7 @@ This release is designed to retrieve more relevant visual/source candidates with
 
 It still cannot literally fetch every image on the web. The target is broad, legal, source-aware retrieval with manual reference import for search-engine discoveries.
 
-See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, `docs/query-expansion-source-class-routing.md`, and `docs/provider-setup.md`.
+See `docs/free-image-retrieval-reference-hub.md`, `docs/provider-normalization-deduplication.md`, `docs/query-expansion-source-class-routing.md`, `docs/ranking-explainability-calibration-audit.md`, and `docs/provider-setup.md`.
 
 ## Install and run locally
 
@@ -224,6 +225,6 @@ The app uses cautious labels and does **not** claim commercial-use safety. Licen
 
 ## Release status
 
-`v0.2.11` is the review-evidence feedback calibration package. Future work should validate whether accumulated review evidence improves real-topic rankings across the deployed topic matrix before adding larger infrastructure.
+`v0.3.0` is the ranking explainability and calibration audit package. It closes the black-box ranking gap introduced by review-driven calibration and makes every ranked result inspectable before the next workflow layer is added.
 
-- v0.2.11 adds `normalization_dedupe` diagnostics, duplicate-provider source retention, canonical URL fields, and metadata-gap export coverage.
+- v0.3.0 adds `ranking_explainability` diagnostics, per-result `ranking_explanation`, factor-level score breakdowns, review-delta visibility, confidence labels, and export coverage.

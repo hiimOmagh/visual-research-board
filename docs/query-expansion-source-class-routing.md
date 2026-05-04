@@ -1,12 +1,12 @@
-# v0.2.11 — Query Expansion + Source-Class Routing
+# v0.3.0 — Query Expansion + Source-Class Routing
 
-v0.2.11 changes the search planner from a single shared query list into a routed query pack. The app now creates bounded query variants and routes them to providers by source class.
+v0.3.0 changes the search planner from a single shared query list into a routed query pack. The app now creates bounded query variants and routes them to providers by source class.
 
 ## Why this matters
 
 Before this release, every provider received the same front-sliced query list. That wasted free provider calls because archive providers, open-media providers, science providers, and manual reference launchers need different wording.
 
-v0.2.11 separates:
+v0.3.0 separates:
 
 - open-media queries for Wikimedia/Openverse
 - archive queries for LOC/Internet Archive/Europeana

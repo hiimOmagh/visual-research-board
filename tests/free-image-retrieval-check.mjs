@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.11", "package.json version must be 0.2.11");
+assert(pkg.version === "0.3.0", "package.json version must be 0.3.0");
 assert(Boolean(pkg.scripts?.["free:image:check"]), "package.json must define npm run free:image:check");
 assert(pkg.scripts?.qa?.includes("free-image-retrieval-check"), "npm run qa must include free-image-retrieval-check");
 
@@ -22,7 +22,7 @@ const requiredFiles = [
   "src/components/search/ReferenceSearchHub.tsx",
   "docs/free-image-retrieval-reference-hub.md"
 ];
-for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v0.2.11 file: ${file}`);
+for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v0.3.0 file: ${file}`);
 
 const types = read("src/types/research.ts");
 for (const token of ["SourceAccessMode", "RightsStatus", "ReuseRisk", "ReferenceSearchEngine", "ReferenceSearchLink", "openverse", "loc", "internet_archive", "smithsonian", "nasa", "europeana"]) {
@@ -62,8 +62,8 @@ assert(providerToggle.includes("Optional API"), "ProviderTogglePanel must label 
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("ReferenceSearchHub"), "SearchPanel must render ReferenceSearchHub");
-assert(searchPanel.includes("v0.2.11"), "SearchPanel header must show v0.2.11");
-assert(searchPanel.includes("visual-research-board-library-v0.2.11.json"), "library export filename must use v0.2.11");
+assert(searchPanel.includes("v0.3.0"), "SearchPanel header must show v0.3.0");
+assert(searchPanel.includes("visual-research-board-library-v0.3.0.json"), "library export filename must use v0.3.0");
 
 const exportLib = read("src/lib/export.ts");
 assert(exportLib.includes("by_rights_status"), "JSON export audit must include rights status counts");
@@ -71,7 +71,7 @@ assert(exportLib.includes("source_access_mode"), "exports must include source ac
 assert(exportLib.includes("reuse_risk"), "exports must include reuse risk");
 
 const docs = read("docs/free-image-retrieval-reference-hub.md");
-assert(docs.includes("v0.2.11"), "v0.2.11 docs must identify the version");
+assert(docs.includes("v0.3.0"), "v0.3.0 docs must identify the version");
 assert(docs.includes("no automated Google/Bing/Yandex scraping"), "docs must state no automated search-engine scraping");
 assert(docs.includes("npm run free:image:check"), "docs must document validation command");
 
@@ -80,4 +80,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Free image retrieval + Reference Search Hub checks passed for v0.2.11.");
+console.log("Free image retrieval + Reference Search Hub checks passed for v0.3.0.");
+process.exit(0);

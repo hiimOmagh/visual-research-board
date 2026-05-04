@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.11", "package.json version must be 0.2.11");
+assert(pkg.version === "0.3.0", "package.json version must be 0.3.0");
 assert(Boolean(pkg.scripts?.["review:evidence:check"]), "package.json must define npm run review:evidence:check");
 assert(pkg.scripts?.qa?.includes("review-evidence-feedback-check"), "npm run qa must include review-evidence-feedback-check");
 
@@ -45,8 +45,8 @@ assert(searchPanel.includes("buildReviewEvidenceFeedback(saved)"), "SearchPanel 
 assert(searchPanel.includes("review_evidence_feedback: reviewEvidenceFeedback"), "SearchPanel must send review feedback in request");
 assert(searchPanel.includes("ReviewEvidenceFeedbackPanel"), "SearchPanel must render ReviewEvidenceFeedbackPanel");
 assert(searchPanel.includes("diagnostics?.review_evidence_calibration"), "SearchPanel must gate panel by review_evidence_calibration diagnostics");
-assert(searchPanel.includes("v0.2.11"), "SearchPanel header must show v0.2.11");
-assert(searchPanel.includes("visual-research-board-library-v0.2.11.json"), "library export filename must use v0.2.11");
+assert(searchPanel.includes("v0.3.0"), "SearchPanel header must show v0.3.0");
+assert(searchPanel.includes("visual-research-board-library-v0.3.0.json"), "library export filename must use v0.3.0");
 
 const panel = read("src/components/search/ReviewEvidenceFeedbackPanel.tsx");
 assert(panel.includes("Review-evidence feedback into ranking calibration"), "panel must identify review-evidence calibration");
@@ -61,7 +61,7 @@ assert(exportLib.includes("Review-Evidence Ranking Feedback"), "quality export m
 assert(exportLib.includes("reviewEvidenceBiasSummary"), "quality export must include feedback summary");
 
 const docs = read("docs/review-evidence-feedback-calibration.md");
-assert(docs.includes("v0.2.11"), "docs must identify v0.2.11");
+assert(docs.includes("v0.3.0"), "docs must identify v0.3.0");
 assert(docs.includes("review_evidence_feedback"), "docs must document request feedback field");
 assert(docs.includes("npm run review:evidence:check"), "docs must document validation command");
 
@@ -70,4 +70,4 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Review-evidence feedback checks passed for v0.2.11.");
+console.log("Review-evidence feedback checks passed for v0.3.0.");

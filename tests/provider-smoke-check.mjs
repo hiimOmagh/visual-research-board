@@ -91,4 +91,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Provider smoke fixture checks passed for v0.2.11.");
+console.log("Provider smoke fixture checks passed for v0.3.0.");

@@ -15,7 +15,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing evidence-driven tuning file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.2.11", "package.json version must be 0.2.11");
+assert(pkg.version === "0.3.0", "package.json version must be 0.3.0");
 assert(Boolean(pkg.scripts?.["evidence:tuning:test"]), "package.json must define npm run evidence:tuning:test");
 assert(Boolean(pkg.scripts?.["evidence:tuning:check"]), "package.json must define npm run evidence:tuning:check");
 assert(pkg.scripts?.qa?.includes("evidence-driven-tuning-check"), "npm run qa must include evidence-driven-tuning-check");
@@ -55,8 +55,8 @@ assert(panel.includes("Evidence query hints"), "evidence tuning panel must show 
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("EvidenceDrivenTuningPanel"), "SearchPanel must render EvidenceDrivenTuningPanel");
-assert(searchPanel.includes("v0.2.11"), "SearchPanel header must show v0.2.11");
-assert(searchPanel.includes("visual-research-board-library-v0.2.11.json"), "library export filename must use v0.2.11");
+assert(searchPanel.includes("v0.3.0"), "SearchPanel header must show v0.3.0");
+assert(searchPanel.includes("visual-research-board-library-v0.3.0.json"), "library export filename must use v0.3.0");
 
 const matrixScript = read("scripts/real-topic-test-matrix.mjs");
 assert(matrixScript.includes("evidence_tuning"), "topic matrix script must capture evidence_tuning trace");
@@ -68,7 +68,7 @@ assert(evidenceScript.includes("artifacts/evidence-driven-tuning-report.json"), 
 assert(evidenceScript.includes("recommended_actions"), "evidence report must summarize recommended actions");
 
 const docs = read("docs/evidence-driven-ranking-query-tuning.md");
-assert(docs.includes("v0.2.11"), "evidence tuning docs must identify v0.2.11");
+assert(docs.includes("v0.3.0"), "evidence tuning docs must identify v0.3.0");
 assert(docs.includes("npm run evidence:tuning:test"), "evidence tuning docs must document the evidence report command");
 assert(docs.includes("VISUAL_RESEARCH_BOARD_DISABLE_EVIDENCE_TUNING"), "evidence tuning docs must document disable env var");
 
@@ -77,4 +77,4 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Evidence-driven tuning checks passed for v0.2.11.");
+console.log("Evidence-driven tuning checks passed for v0.3.0.");

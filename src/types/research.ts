@@ -355,6 +355,54 @@ export interface ResultScores {
   overall: number;
 }
 
+
+
+export type RankingSignalStrength = "strong" | "moderate" | "weak" | "conflicting";
+
+export type RankingFactorPolarity = "positive" | "neutral" | "negative";
+
+export interface RankingExplanationFactor {
+  key: string;
+  label: string;
+  value: number;
+  weight: number;
+  contribution: number;
+  polarity: RankingFactorPolarity;
+  description: string;
+}
+
+export interface RankingExplanation {
+  schema_version: "0.3.0";
+  result_id: string;
+  final_rank: number;
+  baseline_overall: number;
+  final_overall: number;
+  score_delta_from_baseline: number;
+  calibration_confidence: RankingSignalStrength;
+  dominant_factors: string[];
+  factors: RankingExplanationFactor[];
+  warnings: string[];
+}
+
+export interface RankingExplainabilityAudit {
+  schema_version: "0.3.0";
+  generated_at: string;
+  explained_result_count: number;
+  top_explained_count: number;
+  strong_explanation_count: number;
+  moderate_explanation_count: number;
+  weak_explanation_count: number;
+  conflicting_explanation_count: number;
+  review_adjusted_result_count: number;
+  positive_review_delta_count: number;
+  negative_review_delta_count: number;
+  average_absolute_review_delta: number;
+  sparse_review_evidence: boolean;
+  conflicting_review_evidence: boolean;
+  top_result_ids: string[];
+  warnings: string[];
+}
+
 export interface ResearchResult {
   id: string;
   type: ResultType;
@@ -394,6 +442,7 @@ export interface ResearchResult {
   collected_at: string;
   updated_at?: string;
   manual_review?: ManualQualityReview;
+  ranking_explanation?: RankingExplanation;
 }
 
 export interface QueryVariant {
@@ -417,7 +466,7 @@ export interface ProviderRoutingPlanEntry {
 }
 
 export interface SourceClassRoutingTrace {
-  schema_version: "0.2.11";
+  schema_version: "0.3.0";
   original_topic: string;
   mode: ResearchMode;
   depth: SearchDepth;
@@ -601,6 +650,7 @@ export interface SearchDiagnostics {
   auto_tuning?: RetrievalAutoTuningTrace;
   evidence_tuning?: EvidenceDrivenTuningTrace;
   review_evidence_calibration?: ReviewEvidenceCalibrationTrace;
+  ranking_explainability?: RankingExplainabilityAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
 }

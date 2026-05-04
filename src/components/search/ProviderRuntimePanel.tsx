@@ -35,7 +35,7 @@ export function ProviderRuntimePanel({ report }: { report: ProviderRuntimeReport
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Runtime validation</p>
           <h2 className="mt-1 text-xl font-bold text-white">Free provider readiness</h2>
           <p className="mt-2 text-xs leading-5 text-slate-400">
-            Shows whether this running surface can execute live provider calls. Static GitHub Pages is mock/reference-only; a Next.js runtime is required for live free backend providers. Brave/Tavily are optional and disabled by default in v0.2.11.
+            Shows whether this running surface can execute live provider calls. Static GitHub Pages is mock/reference-only; a Next.js runtime is required for live free backend providers. Brave/Tavily are optional and disabled by default in v0.3.0.
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-slate-300">

@@ -19,6 +19,13 @@ const riskClass: Record<ResearchResult["risk_level"], string> = {
   avoid: "border-zinc-400/40 bg-zinc-400/10 text-zinc-100"
 };
 
+const confidenceClass: Record<string, string> = {
+  strong: "border-lime-300/30 bg-lime-300/10 text-lime-100",
+  moderate: "border-sky-300/30 bg-sky-300/10 text-sky-100",
+  weak: "border-amber-300/30 bg-amber-300/10 text-amber-100",
+  conflicting: "border-red-300/30 bg-red-300/10 text-red-100"
+};
+
 const bucketLabel = {
   strong: "Strong candidate",
   usable: "Usable candidate",
@@ -30,6 +37,7 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
   const sourceGroup = result.source_group ?? classifySourceDomain(result.source_domain);
   const reasons = result.quality_reasons?.length ? result.quality_reasons : buildQualityReasons({ ...result, source_group: sourceGroup });
   const bucket = qualityBucket(result);
+  const explanation = result.ranking_explanation;
 
   return (
     <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-soft transition hover:border-lime-300/50">
@@ -59,6 +67,11 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
           <div className="mb-2 flex flex-wrap gap-2 text-[11px]">
             <span className="rounded-full border border-lime-300/20 bg-lime-300/10 px-2 py-1 text-lime-100">{bucketLabel[bucket]}</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-slate-200">{sourceGroupLabel(sourceGroup)}</span>
+            {explanation && (
+              <span className={`rounded-full border px-2 py-1 ${confidenceClass[explanation.calibration_confidence] ?? confidenceClass.moderate}`}>
+                rank #{explanation.final_rank} · {explanation.calibration_confidence}
+              </span>
+            )}
           </div>
           <h3 className="line-clamp-2 text-sm font-semibold text-white">{result.title}</h3>
           <p className="mt-1 text-xs text-slate-400">{result.source_domain} · {result.provider} · {result.type}</p>
@@ -94,6 +107,11 @@ export function ResultCard({ result, isSaved, onSave, onInspect }: ResultCardPro
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Why this result</p>
           <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">{reasons[0]}</p>
+          {explanation && (
+            <p className="mt-1 text-[11px] text-lime-100">
+              Review delta: {explanation.score_delta_from_baseline > 0 ? "+" : ""}{Math.round(explanation.score_delta_from_baseline * 100)} pts · factors: {explanation.dominant_factors.slice(0, 3).join(", ")}
+            </p>
+          )}
           {result.metadata_gaps?.length ? (
             <p className="mt-2 text-[11px] text-amber-100">Metadata gaps: {result.metadata_gaps.slice(0, 3).map((gap) => gap.replaceAll("_", " ")).join(", ")}</p>
           ) : null}

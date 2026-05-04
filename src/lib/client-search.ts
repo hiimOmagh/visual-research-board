@@ -12,6 +12,7 @@ import { buildProviderResultInspection } from "@/lib/provider-result-inspector";
 import { applyReviewEvidenceRanking, buildReviewEvidenceCalibrationTrace } from "@/lib/review-evidence-feedback";
 import { buildReferenceSearchLinks } from "@/lib/reference-search";
 import { providerQuerySlice } from "@/lib/providers/provider-utils";
+import { buildRankingExplainability } from "@/lib/ranking-explainability";
 
 function emptyTypeCounts(): ProviderHealth["result_type_counts"] {
   return { image: 0, web: 0, news: 0, archive: 0 };
@@ -114,15 +115,24 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       : initialEvidenceTuningTrace.reason
   }, tunedPlan.original_topic);
   const preReviewCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: evidenceRankedResults, providerHealth });
-  const rankedResults = applyReviewEvidenceRanking(evidenceRankedResults, request.review_evidence_feedback);
-  const finalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
-  const finalCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
+  const reviewRankedResults = applyReviewEvidenceRanking(evidenceRankedResults, request.review_evidence_feedback);
+  const preliminaryCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: reviewRankedResults, providerHealth });
   const reviewEvidenceCalibration = buildReviewEvidenceCalibrationTrace({
     feedback: request.review_evidence_feedback,
-    rankedResults,
+    rankedResults: reviewRankedResults,
     beforeCalibration: preReviewCalibration,
-    afterCalibration: finalCalibration
+    afterCalibration: preliminaryCalibration
   });
+  const { results: rankedResults, audit: rankingExplainability } = buildRankingExplainability({
+    finalResults: reviewRankedResults,
+    baselineResults: evidenceRankedResults,
+    providerHealth,
+    reviewFeedback: request.review_evidence_feedback,
+    reviewTrace: reviewEvidenceCalibration,
+    generatedAt
+  });
+  const finalEvidence = buildRetrievalEvidence({ plan: tunedPlan, results: rankedResults, providerHealth });
+  const finalCalibration = buildRetrievalQualityCalibration({ mode: tunedPlan.mode, depth: tunedPlan.depth, results: rankedResults, providerHealth });
   const autoTuning = completeAutoTuningTrace({
     trace: {
       ...initialAutoTuneTrace,
@@ -163,6 +173,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     auto_tuning: autoTuning,
     evidence_tuning: evidenceTuning,
     review_evidence_calibration: reviewEvidenceCalibration,
+    ranking_explainability: rankingExplainability,
     provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({
       mockOnly: true,

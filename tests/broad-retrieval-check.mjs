@@ -37,4 +37,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Broad retrieval checks passed for v0.2.11.");
+console.log("Broad retrieval checks passed for v0.3.0.");
