@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.5.1", "package.json version must be 0.5.1");
+assert(pkg.version === "0.6.0", "package.json version must be 0.6.0");
 assert(Boolean(pkg.scripts?.["ranking:explain:check"]), "package.json must define npm run ranking:explain:check");
 assert(pkg.scripts?.qa?.includes("ranking-explainability-check"), "npm run qa must include ranking-explainability-check");
 
@@ -67,10 +67,10 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.5.1",
+  "v0.6.0",
   "RankingExplainabilityPanel",
   "diagnostics?.ranking_explainability",
-  "visual-research-board-library-v0.5.1.json"
+  "visual-research-board-library-v0.6.0.json"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 
 const resultCard = read("src/components/search/ResultCard.tsx");

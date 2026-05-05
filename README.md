@@ -1,64 +1,71 @@
-# Visual Research Board v0.5.1
+# Visual Research Board v0.6.0
 
-A free-source visual research workspace for discovering, saving, reviewing, ranking, organizing, claim-mapping, auditing, attributing, exporting, backing up, and restoring image/source evidence.
+**v0.6.0 — Museum/Open-Access Provider Pack**
+
+Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, and evidence-pack exports.
 
 ## Current release
 
-**v0.5.1 — Local Storage + Import/Export Hardening**
+v0.6.0 expands the provider layer with museum, cultural-heritage, digital-library, natural-history, and public-record sources.
 
-This release adds:
+### New no-key providers enabled by default
 
-- schema-aware project-library import validation
-- backup-envelope export with integrity counts and checksum metadata
-- corrupted/unreadable JSON rejection before merge
-- migration-required and partial-import reports
-- visible storage import validation summaries
-- safer restore path for backup envelopes
-- dedicated QA check: `npm run storage:hardening:check`
+- Met Museum
+- Art Institute of Chicago
+- Cleveland Museum of Art
+- Wellcome Collection
+- Biodiversity Heritage Library
+- Gallica / BnF
+- National Archives / NARA
 
-## Previous UX reliability layer
+### New free-key providers disabled by default
 
-v0.5.1 preserves the v0.5.0 reliability layer:
+- Rijksmuseum: `RIJKSMUSEUM_API_KEY`
+- NYPL Digital Collections: `NYPL_API_KEY`
+- DPLA: `DPLA_API_KEY`
 
-- guided workflow readiness audit
-- UX reliability panel
-- deterministic demo project loading
-- demo topic setup
-- clearer empty states for no-search, no-results, and filter-hidden states
-- provider setup clarity for free-core, free-key, optional API, and manual reference launchers
-- dedicated QA check: `npm run ux:reliability:check`
+Existing free/open providers remain available: Wikimedia Commons, Openverse, Library of Congress, Internet Archive, NASA Images, Smithsonian, and Europeana. Brave and Tavily remain optional and disabled by default.
 
 ## Core workflow
 
 ```text
-Project → free-source search → manual reference launchers → saved board → quality review → claim mapping → coverage/bias audit → attribution/evidence-pack export → backup/restore
+Search topic
+→ retrieve from free/open providers
+→ launch external reference searches manually
+→ import selected URLs
+→ save to board
+→ review quality
+→ calibrate ranking
+→ map sources to claims
+→ audit coverage/rights risk
+→ export evidence/attribution packs
 ```
 
 ## Validation
 
 ```bash
+npm run museum:providers:check
 npm run qa
-npm run storage:hardening:check
-npm run ux:reliability:check
 ```
 
-Full TypeScript/lint/build validation requires installed Next/React/Node/Tailwind dependencies.
-
-## Historical validation commands retained in QA
-
-Earlier release gates remain part of the current QA chain, including the v0.3.1 provider/runtime evidence path:
+Full local validation also requires installed dependencies:
 
 ```bash
-npm run deployed:browser:check
-npm run topic:matrix:check
-npm run evidence:deploy
+npm run typecheck
+npm run lint
 ```
 
-The app version is v0.5.1; references to v0.3.1 describe retained historical gates, not the current release version.
+## Policy boundary
 
-Compatibility aliases expected by retained gates:
+Google, Bing, Yandex, and similar engines are manual reference launchers only. The app does not scrape search-engine results.
+
+## Retained evidence gates
+
+Earlier v0.3.1 evidence gates remain part of the current QA chain. Useful commands:
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
+
+The current app version is v0.6.0; v0.3.1 references identify retained historical provider/runtime and real-topic evidence gates.

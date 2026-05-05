@@ -14,6 +14,9 @@ export async function GET() {
     braveKeyPresent: Boolean(process.env.BRAVE_SEARCH_API_KEY),
     tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY),
     smithsonianKeyPresent: Boolean(process.env.SMITHSONIAN_API_KEY),
-    europeanaKeyPresent: Boolean(process.env.EUROPEANA_API_KEY)
+    europeanaKeyPresent: Boolean(process.env.EUROPEANA_API_KEY),
+    rijksmuseumKeyPresent: Boolean(process.env.RIJKSMUSEUM_API_KEY),
+    nyplKeyPresent: Boolean(process.env.NYPL_API_KEY),
+    dplaKeyPresent: Boolean(process.env.DPLA_API_KEY)
   }));
 }

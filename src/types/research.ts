@@ -379,6 +379,16 @@ export type ProviderName =
   | "smithsonian"
   | "nasa"
   | "europeana"
+  | "met"
+  | "artic"
+  | "cleveland_museum"
+  | "rijksmuseum"
+  | "wellcome"
+  | "bhl"
+  | "gallica"
+  | "nypl"
+  | "nara"
+  | "dpla"
   | "brave"
   | "tavily";
 
@@ -1054,6 +1064,16 @@ export const DEFAULT_PROVIDER_TOGGLES: ProviderToggleMap = {
   nasa: true,
   smithsonian: false,
   europeana: false,
+  met: true,
+  artic: true,
+  cleveland_museum: true,
+  rijksmuseum: false,
+  wellcome: true,
+  bhl: true,
+  gallica: true,
+  nypl: false,
+  nara: true,
+  dpla: false,
   brave: false,
   tavily: false
 };
@@ -1150,8 +1170,8 @@ export const SEARCH_DEPTHS: Array<{ value: SearchDepth; label: string; descripti
   { value: "deep", label: "Deep", description: "Maximum local breadth: more query branches, larger provider result windows, stronger dedupe." }
 ];
 
-export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "brave", "tavily"];
-export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "brave", "tavily"];
+export const SEARCH_PROVIDERS: SearchProviderName[] = ["mock", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla", "brave", "tavily"];
+export const PROVIDERS: ProviderName[] = ["mock", "manual", "wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla", "brave", "tavily"];
 export const RESULT_TYPES: ResultType[] = ["image", "web", "news", "archive"];
 export const RISK_LEVELS: RiskLevel[] = ["low", "medium", "high", "reference_only", "avoid"];
 export const LICENSE_TYPES: LicenseDetected[] = ["public_domain", "creative_commons", "copyrighted", "unknown", "unclear"];

@@ -175,8 +175,9 @@ function metadataGaps(result: ResearchResult): MetadataGap[] {
 function defaultSourceAccessMode(provider: ProviderName, sourceDomain: string): SourceAccessMode {
   if (provider === "manual") return "manual_reference_only";
   if (provider === "brave" || provider === "tavily") return "rights_check_required";
-  if (provider === "loc" || provider === "internet_archive" || provider === "nasa") return "backend_free_no_key";
-  if (provider === "smithsonian" || provider === "europeana") return "backend_free_key_required";
+  if (["loc", "nasa", "met", "artic", "cleveland_museum", "wellcome", "bhl", "gallica", "nara"].includes(provider)) return "backend_free_no_key";
+  if (provider === "internet_archive") return "archive_open_access";
+  if (["smithsonian", "europeana", "rijksmuseum", "nypl", "dpla"].includes(provider)) return "backend_free_key_required";
   if (provider === "wikimedia" || provider === "openverse" || provider === "mock") return "backend_free_no_key";
   if (sourceDomain.includes("pexels") || sourceDomain.includes("pixabay") || sourceDomain.includes("unsplash")) return "stock_illustrative";
   return "rights_check_required";

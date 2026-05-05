@@ -135,18 +135,28 @@ function providerBias(params: { actions: EvidenceDrivenTuningAction[]; providerH
     nasa: 1,
     smithsonian: 1,
     europeana: 1,
+    met: 1,
+    artic: 1,
+    cleveland_museum: 1,
+    rijksmuseum: 1,
+    wellcome: 1,
+    bhl: 1,
+    gallica: 1,
+    nypl: 1,
+    nara: 1,
+    dpla: 1,
     brave: 0.9,
     tavily: 0.9
   };
   if (params.actions.includes("penalize_mock_when_real_available")) bias.mock = 0.72;
   if (params.actions.includes("boost_open_license_sources")) {
-    for (const provider of ["wikimedia", "openverse", "smithsonian", "europeana"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
+    for (const provider of ["wikimedia", "openverse", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
   }
   if (params.actions.includes("boost_institutional_sources")) {
-    for (const provider of ["loc", "internet_archive", "nasa", "smithsonian", "europeana"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
+    for (const provider of ["loc", "internet_archive", "nasa", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
   }
   if (params.actions.includes("boost_image_density")) {
-    for (const provider of ["wikimedia", "openverse", "loc", "nasa"] as SearchProviderName[]) bias[provider] = Math.max(bias[provider] ?? 1, active.has(provider) ? 1.08 : 1.02);
+    for (const provider of ["wikimedia", "openverse", "loc", "nasa", "met", "artic", "cleveland_museum", "wellcome", "bhl", "gallica", "nara"] as SearchProviderName[]) bias[provider] = Math.max(bias[provider] ?? 1, active.has(provider) ? 1.08 : 1.02);
   }
   if (params.actions.includes("boost_topic_exactness")) bias.tavily = active.has("tavily") ? 1.02 : 0.92;
   return bias;

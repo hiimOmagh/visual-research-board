@@ -12,6 +12,16 @@ const providerCopy: Record<SearchProviderName, { label: string; description: str
   nasa: { label: "NASA Images", description: "Science, space, earth, satellite, and aerospace imagery. Free backend, no key required.", mode: "free" },
   smithsonian: { label: "Smithsonian", description: "Open Access museum/science/culture records. Free key required.", env: "SMITHSONIAN_API_KEY", mode: "free-key" },
   europeana: { label: "Europeana", description: "European cultural heritage records. Free key required.", env: "EUROPEANA_API_KEY", mode: "free-key" },
+  met: { label: "Met Museum", description: "Museum objects, artworks, artifacts, and public-domain candidates. Free backend, no key required.", mode: "free" },
+  artic: { label: "Art Institute Chicago", description: "Open-access artwork records and IIIF image candidates. Free backend, no key required.", mode: "free" },
+  cleveland_museum: { label: "Cleveland Museum", description: "Open-access artwork records and image assets. Free backend, no key required.", mode: "free" },
+  rijksmuseum: { label: "Rijksmuseum", description: "Dutch/European collection records. Free key required in this app.", env: "RIJKSMUSEUM_API_KEY", mode: "free-key" },
+  wellcome: { label: "Wellcome", description: "Medical history, science, visual culture, and archive records. Free backend, no key required.", mode: "free" },
+  bhl: { label: "BHL", description: "Biodiversity Heritage Library natural-history books and scientific plate sources. Free backend, no key required.", mode: "free" },
+  gallica: { label: "Gallica / BnF", description: "French/European digital library records, prints, maps, manuscripts, and press. Free backend, no key required.", mode: "free" },
+  nypl: { label: "NYPL", description: "NYPL Digital Collections public-domain records. Free key required.", env: "NYPL_API_KEY", mode: "free-key" },
+  nara: { label: "NARA", description: "U.S. National Archives public records and online media. Free backend, no key required.", mode: "free" },
+  dpla: { label: "DPLA", description: "U.S. cultural-heritage aggregator records. Free key required.", env: "DPLA_API_KEY", mode: "free-key" },
   brave: { label: "Brave", description: "Optional broad web/image API. Disabled by default for the free-only workflow.", env: "BRAVE_SEARCH_API_KEY", mode: "optional" },
   tavily: { label: "Tavily", description: "Optional web research API. Disabled by default for the free-only workflow.", env: "TAVILY_API_KEY", mode: "optional" }
 };
@@ -47,7 +57,14 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
     openverse: true,
     loc: true,
     internet_archive: true,
-    nasa: true
+    nasa: true,
+    met: true,
+    artic: true,
+    cleveland_museum: true,
+    wellcome: true,
+    bhl: true,
+    gallica: true,
+    nara: true
   });
 
   return (
@@ -56,14 +73,14 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider toggles</p>
           <h2 className="mt-1 text-xl font-bold text-white">Free backend sources</h2>
-          <p className="mt-2 text-xs leading-5 text-slate-400">v0.5.1 keeps provider setup explicit: free-core sources, free-key sources, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">v0.6.0 keeps provider setup explicit: free-core sources, free-key sources, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={enableFreeCore} className="rounded-2xl border border-lime-300/30 bg-lime-300/10 px-4 py-2 text-xs font-semibold text-lime-100 transition hover:border-lime-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Free-core sources</button>
           <button type="button" onClick={enableMockOnly} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Mock-only safe mode</button>
         </div>
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {SEARCH_PROVIDERS.map((provider) => (
           <button key={provider} type="button" onClick={() => toggleProvider(provider)} className={`rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60 ${toggles[provider] ? "border-lime-300/40 bg-lime-300/10" : "border-white/10 bg-black/20 hover:border-white/25"}`} aria-pressed={toggles[provider]}>
             <div className="flex items-center justify-between gap-3"><span className="font-semibold text-white">{providerCopy[provider].label}</span><span className={`rounded-full px-2 py-1 text-[11px] ${toggles[provider] ? "bg-lime-300 text-slate-950" : "bg-white/10 text-slate-300"}`}>{toggles[provider] ? "On" : "Off"}</span></div>

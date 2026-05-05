@@ -20,6 +20,16 @@ const PROVIDER_BASE_WEIGHTS: Record<SearchProviderName, number> = {
   nasa: 0.98,
   smithsonian: 1.06,
   europeana: 1.03,
+  met: 1.08,
+  artic: 1.08,
+  cleveland_museum: 1.08,
+  rijksmuseum: 1.05,
+  wellcome: 1.06,
+  bhl: 1.04,
+  gallica: 1.05,
+  nypl: 1.05,
+  nara: 1.06,
+  dpla: 1.04,
   brave: 0.82,
   tavily: 0.8
 };
@@ -143,13 +153,13 @@ function weightsForActions(actions: RetrievalAutoTuningAction[], providerHealth:
   }
 
   if (actions.includes("increase_commons_archive_bias") || actions.includes("increase_license_clarity_bias")) {
-    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "smithsonian", "europeana"] as SearchProviderName[]) {
+    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla"] as SearchProviderName[]) {
       weights[provider] = Math.min(1.18, weights[provider] + 0.12);
     }
   }
 
   if (actions.includes("increase_visual_branches")) {
-    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana"] as SearchProviderName[]) {
+    for (const provider of ["wikimedia", "openverse", "loc", "internet_archive", "nasa", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla"] as SearchProviderName[]) {
       weights[provider] = Math.min(1.16, weights[provider] + 0.05);
     }
     weights.brave = Math.min(1.02, weights.brave + 0.03);

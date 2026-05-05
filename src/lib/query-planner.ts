@@ -95,6 +95,16 @@ const providerMaxQueries: Record<SearchProviderName, Record<ResearchRequest["dep
   nasa: { quick: 2, standard: 3, deep: 5 },
   smithsonian: { quick: 2, standard: 4, deep: 6 },
   europeana: { quick: 2, standard: 4, deep: 6 },
+  met: { quick: 2, standard: 4, deep: 6 },
+  artic: { quick: 2, standard: 4, deep: 6 },
+  cleveland_museum: { quick: 2, standard: 4, deep: 6 },
+  rijksmuseum: { quick: 2, standard: 4, deep: 6 },
+  wellcome: { quick: 2, standard: 4, deep: 6 },
+  bhl: { quick: 2, standard: 4, deep: 6 },
+  gallica: { quick: 2, standard: 4, deep: 6 },
+  nypl: { quick: 2, standard: 4, deep: 6 },
+  nara: { quick: 2, standard: 4, deep: 6 },
+  dpla: { quick: 2, standard: 4, deep: 6 },
   brave: { quick: 3, standard: 5, deep: 8 },
   tavily: { quick: 3, standard: 5, deep: 8 }
 };
@@ -108,6 +118,16 @@ const providerClassMap: Record<SearchProviderName, SourceClass[]> = {
   nasa: ["science", "archive", "open_media"],
   smithsonian: ["museum", "science", "archive", "open_media"],
   europeana: ["museum", "archive", "open_media", "academic_context"],
+  met: ["museum", "archive", "open_media"],
+  artic: ["museum", "archive", "open_media"],
+  cleveland_museum: ["museum", "archive", "open_media"],
+  rijksmuseum: ["museum", "archive", "open_media"],
+  wellcome: ["museum", "archive", "science", "open_media"],
+  bhl: ["museum", "archive", "science", "academic_context"],
+  gallica: ["museum", "archive", "open_media", "academic_context"],
+  nypl: ["museum", "archive", "open_media"],
+  nara: ["archive", "open_media", "academic_context"],
+  dpla: ["museum", "archive", "open_media", "academic_context"],
   brave: ["manual_reference", "news_reference", "web_context", "open_media", "stock"],
   tavily: ["web_context", "news_reference", "academic_context", "manual_reference"]
 };
@@ -121,6 +141,16 @@ const providerTargetMap: Record<SearchProviderName, SearchSourceTarget[]> = {
   nasa: ["image", "archive"],
   smithsonian: ["archive", "image", "commons"],
   europeana: ["archive", "image"],
+  met: ["archive", "image", "commons"],
+  artic: ["archive", "image", "commons"],
+  cleveland_museum: ["archive", "image", "commons"],
+  rijksmuseum: ["archive", "image", "commons"],
+  wellcome: ["archive", "image", "commons"],
+  bhl: ["archive", "image"],
+  gallica: ["archive", "image", "commons"],
+  nypl: ["archive", "image", "commons"],
+  nara: ["archive", "image"],
+  dpla: ["archive", "image", "commons"],
   brave: ["image", "web", "news"],
   tavily: ["web", "news", "image"]
 };
@@ -213,14 +243,17 @@ function createQueryVariants(topic: string, mode: ResearchRequest["mode"], sourc
     variants.push(
       { query: `${topic} Library of Congress`, intent: "archive", source_classes: ["archive"], priority: 22, reason: "LOC-targeted archive branch" },
       { query: `${topic} Internet Archive`, intent: "archive", source_classes: ["archive", "academic_context"], priority: 23, reason: "Internet Archive targeted branch" },
-      { query: `${topic} Europeana`, intent: "museum", source_classes: ["museum", "archive"], priority: 24, reason: "Europeana cultural-heritage branch" }
+      { query: `${topic} Europeana`, intent: "museum", source_classes: ["museum", "archive"], priority: 24, reason: "Europeana cultural-heritage branch" },
+      { query: `${topic} museum open access`, intent: "museum", source_classes: ["museum", "open_media"], priority: 25, reason: "museum/open-access provider pack branch" },
+      { query: `${topic} digital collection`, intent: "museum", source_classes: ["museum", "archive"], priority: 26, reason: "digital collection branch" },
+      { query: `${topic} national archives`, intent: "archive", source_classes: ["archive", "academic_context"], priority: 27, reason: "national archive branch" }
     );
   }
 
   if (sourceTargets.includes("commons")) {
     variants.push(
-      { query: `${topic} Wikimedia Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 25, reason: "Commons-targeted branch" },
-      { query: `${topic} Creative Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 26, reason: "open-license branch" }
+      { query: `${topic} Wikimedia Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 28, reason: "Commons-targeted branch" },
+      { query: `${topic} Creative Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 29, reason: "open-license branch" }
     );
   }
 
