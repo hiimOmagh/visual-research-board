@@ -41,6 +41,7 @@ export function ProviderRuntimePanel({ report }: { report: ProviderRuntimeReport
         <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-xs text-slate-300">
           <p><span className="text-slate-500">Host:</span> {report.runtime_host.replaceAll("_", " ")}</p>
           <p><span className="text-slate-500">Live-ready providers:</span> {report.live_provider_ready_count}</p>
+          {report.key_security && <p><span className="text-slate-500">Server keys:</span> {report.key_security.configured_key_count} configured · {report.key_security.public_env_leak_count} public leaks</p>}
           <p><span className="text-slate-500">Version:</span> {report.app_version}</p>
         </div>
       </div>
@@ -64,6 +65,18 @@ export function ProviderRuntimePanel({ report }: { report: ProviderRuntimeReport
           </article>
         ))}
       </div>
+
+      {report.key_security && (
+        <div className={`mt-4 rounded-2xl border p-3 text-xs leading-5 ${report.key_security.public_env_leak_count > 0 ? "border-rose-300/25 bg-rose-300/[0.06] text-rose-100" : "border-emerald-300/20 bg-emerald-300/[0.06] text-emerald-100"}`}>
+          <p className="font-semibold">Server-only key handling</p>
+          <p className="mt-1">Provider keys are reported as presence-only diagnostics. Raw values are never rendered, exported, or required in the client bundle.</p>
+          {report.key_security.warnings.length > 0 && (
+            <ul className="mt-2 list-disc pl-5">
+              {report.key_security.warnings.map((warning) => <li key={warning}>{warning}</li>)}
+            </ul>
+          )}
+        </div>
+      )}
 
       {report.recommended_next_steps.length > 0 && (
         <div className="mt-4 rounded-2xl border border-lime-300/20 bg-lime-300/[0.06] p-3 text-xs leading-5 text-lime-100">

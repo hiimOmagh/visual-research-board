@@ -1,6 +1,7 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 interface BraveImageResult {
   title?: string;
@@ -24,7 +25,7 @@ function offsetsForDepth(depth: SearchDepth): number[] {
 }
 
 async function braveFetch<T>(path: "images/search" | "web/search", query: string, count: number, offset = 0): Promise<T | null> {
-  const apiKey = process.env.BRAVE_SEARCH_API_KEY;
+  const apiKey = readServerProviderKey("BRAVE_SEARCH_API_KEY");
   if (!apiKey) return null;
 
   const url = new URL(`https://api.search.brave.com/res/v1/${path}`);
@@ -44,7 +45,7 @@ async function braveFetch<T>(path: "images/search" | "web/search", query: string
 }
 
 export async function searchBraveImages(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.BRAVE_SEARCH_API_KEY;
+  const apiKey = readServerProviderKey("BRAVE_SEARCH_API_KEY");
   if (!apiKey || !plan.source_targets.includes("image")) return [];
 
   const count = plan.depth === "quick" ? 12 : 20;
@@ -80,7 +81,7 @@ export async function searchBraveImages(plan: SearchPlan): Promise<RawProviderRe
 }
 
 export async function searchBraveWeb(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.BRAVE_SEARCH_API_KEY;
+  const apiKey = readServerProviderKey("BRAVE_SEARCH_API_KEY");
   if (!apiKey || !plan.source_targets.includes("web")) return [];
 
   const count = plan.depth === "quick" ? 8 : plan.depth === "standard" ? 12 : 16;

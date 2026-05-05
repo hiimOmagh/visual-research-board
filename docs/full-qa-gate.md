@@ -1,6 +1,6 @@
-# v0.7.0 — Full QA Gate
+# v0.7.1 — Full QA Gate
 
-v0.7.0 consolidates the project validation surface into one categorized runner.
+v0.7.1 consolidates the project validation surface into one categorized runner.
 
 ## Commands
 
@@ -74,4 +74,15 @@ npm run build
 
 ## Why this exists
 
-Before v0.7.0, `npm run qa` was a long shell chain. That made it harder to isolate failures, run one family of checks, or attach release evidence. v0.7.0 makes the validation layer inspectable without changing product behavior.
+Before v0.7.1, `npm run qa` was a long shell chain. That made it harder to isolate failures, run one family of checks, or attach release evidence. v0.7.1 makes the validation layer inspectable without changing product behavior.
+
+## v0.7.1 security category
+
+Additional gate:
+
+```bash
+npm run qa:security
+npm run security:key:check
+```
+
+The security category verifies server-only provider key handling, redacted diagnostics, and public-env leak checks.

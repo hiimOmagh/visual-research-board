@@ -1,4 +1,4 @@
-# Release Checklist — v0.7.0 stable
+# Release Checklist — v0.7.1 stable
 
 Run before publishing or deploying.
 
@@ -32,7 +32,7 @@ The report must show:
 ```text
 status: passed
 failed_gate_count: 0
-app_version: 0.7.0
+app_version: 0.7.1
 ```
 
 ## Manual browser checks
@@ -62,3 +62,9 @@ app_version: 0.7.0
 - GitHub Pages static demo loads the dark workspace using client-side mock search.
 - Static demo clearly reports that real providers require a Next.js runtime.
 - CI uploads `artifacts/full-qa-gate-report.json` as `full-qa-gate-report`.
+
+## v0.7.1 security/key handling
+
+- Run `npm run security:key:check`.
+- Confirm provider keys use server-only env names, not `NEXT_PUBLIC_*`.
+- Confirm provider runtime diagnostics show key presence only as redacted status.

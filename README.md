@@ -1,12 +1,12 @@
-# Visual Research Board v0.7.0
+# Visual Research Board v0.7.1
 
-**v0.7.0 — Full QA Gate**
+**v0.7.1 — Security and Key Handling**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v0.7.0 does not add another product feature. It hardens the release process with a consolidated **Full QA Gate**.
+v0.7.1 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
 
 The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
@@ -37,7 +37,7 @@ npm run test:ci:no-browser
 That command runs:
 
 ```text
-Full QA Gate → Typecheck → Lint
+Security and Key Handling → Typecheck → Lint
 ```
 
 ## QA categories
@@ -75,7 +75,7 @@ Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, 
 
 ## Release rule
 
-v0.7.0 is a validation-hardening release. A successful release needs:
+v0.7.1 is a validation-hardening release. A successful release needs:
 
 ```bash
 npm run qa
@@ -88,9 +88,19 @@ CI uploads the full QA evidence artifact so failed or passed runs can be inspect
 
 ## Retained evidence gates
 
-The current app version is v0.7.0. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
+The current app version is v0.7.1. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
+
+## v0.7.1 security validation
+
+```bash
+npm run security:key:check
+npm run qa:security
+npm run qa
+```
+
+Provider keys are server-only and diagnostics report only redacted presence. Do not create `NEXT_PUBLIC_*API_KEY`, `NEXT_PUBLIC_*ACCESS_KEY`, `NEXT_PUBLIC_*TOKEN`, or `NEXT_PUBLIC_*SECRET` variables.

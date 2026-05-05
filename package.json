@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
-  "description": "Full QA Gate release for consolidated deterministic validation, categorized QA execution, release evidence artifacts, and CI no-browser gate hardening.",
+  "description": "Security and Key Handling release for server-only provider keys, redacted key diagnostics, public-env leak checks, and privacy-safe exports.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -62,7 +62,9 @@
     "qa:workflow": "node scripts/full-qa-gate.mjs --category=workflow",
     "qa:exports": "node scripts/full-qa-gate.mjs --category=exports",
     "qa:release": "node scripts/full-qa-gate.mjs --category=release",
-    "full:qa:check": "node tests/full-qa-gate-check.mjs"
+    "full:qa:check": "node tests/full-qa-gate-check.mjs",
+    "security:key:check": "node tests/security-key-handling-check.mjs",
+    "qa:security": "node scripts/full-qa-gate.mjs --category=security"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

@@ -1,6 +1,7 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 interface EuropeanaItem {
   id?: string;
@@ -31,7 +32,7 @@ function licenseFromRights(rights?: string[]): Pick<RawProviderResult, "license_
 }
 
 async function searchEuropeanaQuery(query: string, queryIndex: number, plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.EUROPEANA_API_KEY;
+  const apiKey = readServerProviderKey("EUROPEANA_API_KEY");
   if (!apiKey) return [];
   const url = new URL("https://api.europeana.eu/record/v2/search.json");
   url.searchParams.set("wskey", apiKey);

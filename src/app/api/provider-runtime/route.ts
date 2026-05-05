@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { buildProviderRuntimeReport } from "@/lib/provider-runtime";
+import { detectPublicSecretEnvKeys, getProviderKeyPresenceFromEnv } from "@/lib/provider-key-security";
 
 const MOCK_ONLY_ENV_VALUES = new Set(["1", "true", "yes", "on"]);
 
@@ -11,15 +12,7 @@ export async function GET() {
   return NextResponse.json(buildProviderRuntimeReport({
     mockOnly: isMockOnlyMode(),
     staticDemo: false,
-    braveKeyPresent: Boolean(process.env.BRAVE_SEARCH_API_KEY),
-    tavilyKeyPresent: Boolean(process.env.TAVILY_API_KEY),
-    smithsonianKeyPresent: Boolean(process.env.SMITHSONIAN_API_KEY),
-    europeanaKeyPresent: Boolean(process.env.EUROPEANA_API_KEY),
-    rijksmuseumKeyPresent: Boolean(process.env.RIJKSMUSEUM_API_KEY),
-    nyplKeyPresent: Boolean(process.env.NYPL_API_KEY),
-    dplaKeyPresent: Boolean(process.env.DPLA_API_KEY),
-    pixabayKeyPresent: Boolean(process.env.PIXABAY_API_KEY),
-    pexelsKeyPresent: Boolean(process.env.PEXELS_API_KEY),
-    unsplashKeyPresent: Boolean(process.env.UNSPLASH_ACCESS_KEY)
+    ...getProviderKeyPresenceFromEnv(),
+    publicSecretEnvNames: detectPublicSecretEnvKeys()
   }));
 }

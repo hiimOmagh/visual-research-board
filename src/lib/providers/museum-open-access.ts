@@ -1,6 +1,7 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { domainFromUrl, fetchJsonWithTimeout, fetchTextWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 function rowsForDepth(depth: SearchDepth): number {
   if (depth === "quick") return 8;
@@ -180,7 +181,7 @@ interface RijksItem {
 }
 
 export async function searchRijksmuseum(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.RIJKSMUSEUM_API_KEY;
+  const apiKey = readServerProviderKey("RIJKSMUSEUM_API_KEY");
   if (!apiKey || !shouldRunMuseumProvider(plan)) return [];
   const tasks = providerQuerySlice(plan, "rijksmuseum").map((query, queryIndex) => async () => {
     const url = new URL("https://www.rijksmuseum.nl/api/en/collection");
@@ -337,7 +338,7 @@ interface NyplCapture { imageLink?: string; highResLink?: string; }
 interface NyplItem { uuid?: string; title?: string; imageID?: string; apiItemURL?: string; itemLink?: string; captures?: NyplCapture[]; }
 
 export async function searchNyplDigitalCollections(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.NYPL_API_KEY;
+  const apiKey = readServerProviderKey("NYPL_API_KEY");
   if (!apiKey || !shouldRunMuseumProvider(plan)) return [];
   const tasks = providerQuerySlice(plan, "nypl").map((query, queryIndex) => async () => {
     const url = new URL("https://api.repo.nypl.org/api/v1/items/search.json");
@@ -406,7 +407,7 @@ export async function searchNaraCatalog(plan: SearchPlan): Promise<RawProviderRe
 interface DplaDoc { id?: string; title?: string | string[]; object?: string; isShownAt?: string; sourceResource?: { title?: string | string[]; creator?: string[]; date?: Array<{ displayDate?: string }> }; provider?: { name?: string } }
 
 export async function searchDpla(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.DPLA_API_KEY;
+  const apiKey = readServerProviderKey("DPLA_API_KEY");
   if (!apiKey || !shouldRunMuseumProvider(plan)) return [];
   const tasks = providerQuerySlice(plan, "dpla").map((query, queryIndex) => async () => {
     const url = new URL("https://api.dp.la/v2/items");

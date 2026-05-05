@@ -610,6 +610,34 @@ export type ProviderStatus = "active" | "no_results" | "missing_key" | "skipped"
 
 export type ProviderRuntimeHost = "nextjs_runtime" | "static_client_demo";
 
+export type ProviderKeyExposure = "server_only" | "public_env_leak_detected";
+
+export type ProviderKeyClass = "free_key_backend" | "stock_illustrative" | "optional_legacy_api";
+
+export interface ProviderKeySecurityEntry {
+  provider: SearchProviderName;
+  required_env: string;
+  configured: boolean;
+  server_only: boolean;
+  client_exposed: boolean;
+  exposure: ProviderKeyExposure;
+  redacted_value: "configured:redacted" | "missing";
+  provider_class: ProviderKeyClass;
+  message: string;
+}
+
+export interface ProviderKeySecurityReport {
+  schema_version: "0.7.1";
+  app_version: string;
+  generated_at: string;
+  secret_source: "server_env_only";
+  configured_key_count: number;
+  missing_key_count: number;
+  public_env_leak_count: number;
+  entries: ProviderKeySecurityEntry[];
+  warnings: string[];
+}
+
 export type ProviderRuntimeReadiness =
   | "configured"
   | "missing_key"
@@ -821,6 +849,7 @@ export interface ProviderRuntimeReport {
   live_provider_ready_count: number;
   providers: ProviderRuntimeEntry[];
   recommended_next_steps: string[];
+  key_security?: ProviderKeySecurityReport;
 }
 
 export interface RetrievalEvidence {
@@ -953,6 +982,7 @@ export interface SearchDiagnostics {
   attribution_generator?: AttributionAudit;
   provider_result_inspection?: ProviderResultInspection;
   runtime_report?: ProviderRuntimeReport;
+  key_security?: ProviderKeySecurityReport;
 }
 
 export interface ReferenceSearchLink {

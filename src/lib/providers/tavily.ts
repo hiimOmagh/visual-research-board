@@ -1,6 +1,7 @@
 import type { SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 interface TavilyResult {
   title?: string;
@@ -28,7 +29,7 @@ function imageDescriptionFromTavilyImage(image: string | TavilyImageObject): str
 }
 
 export async function searchTavily(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.TAVILY_API_KEY;
+  const apiKey = readServerProviderKey("TAVILY_API_KEY");
   if (!apiKey || !plan.source_targets.includes("web")) return [];
 
   const maxResults = plan.depth === "quick" ? 5 : plan.depth === "standard" ? 8 : 10;

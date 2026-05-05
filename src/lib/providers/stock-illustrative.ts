@@ -1,6 +1,7 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { domainFromUrl, fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 function rowsForDepth(depth: SearchDepth): number {
   if (depth === "quick") return 8;
@@ -43,7 +44,7 @@ interface PixabayHit {
 }
 
 export async function searchPixabay(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.PIXABAY_API_KEY;
+  const apiKey = readServerProviderKey("PIXABAY_API_KEY");
   if (!apiKey || !shouldRunStockProvider(plan)) return [];
 
   const tasks = providerQuerySlice(plan, "pixabay").map((query, queryIndex) => async () => {
@@ -99,7 +100,7 @@ interface PexelsPhoto {
 }
 
 export async function searchPexels(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.PEXELS_API_KEY;
+  const apiKey = readServerProviderKey("PEXELS_API_KEY");
   if (!apiKey || !shouldRunStockProvider(plan)) return [];
 
   const tasks = providerQuerySlice(plan, "pexels").map((query, queryIndex) => async () => {
@@ -144,7 +145,7 @@ interface UnsplashPhoto {
 }
 
 export async function searchUnsplash(plan: SearchPlan): Promise<RawProviderResult[]> {
-  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+  const accessKey = readServerProviderKey("UNSPLASH_ACCESS_KEY");
   if (!accessKey || !shouldRunStockProvider(plan)) return [];
 
   const tasks = providerQuerySlice(plan, "unsplash").map((query, queryIndex) => async () => {

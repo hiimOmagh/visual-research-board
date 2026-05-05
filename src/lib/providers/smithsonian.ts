@@ -1,6 +1,7 @@
 import type { SearchDepth, SearchPlan } from "@/types/research";
 import type { RawProviderResult } from "@/lib/result-normalizer";
 import { fetchJsonWithTimeout, providerQuerySlice, runLimited, stripHtml } from "@/lib/providers/provider-utils";
+import { readServerProviderKey } from "@/lib/provider-key-security";
 
 interface SmithsonianContent {
   title?: string;
@@ -21,7 +22,7 @@ function rowsForDepth(depth: SearchDepth): number {
 }
 
 async function searchSmithsonianQuery(query: string, queryIndex: number, plan: SearchPlan): Promise<RawProviderResult[]> {
-  const apiKey = process.env.SMITHSONIAN_API_KEY;
+  const apiKey = readServerProviderKey("SMITHSONIAN_API_KEY");
   if (!apiKey) return [];
   const url = new URL("https://api.si.edu/openaccess/api/v1.0/search");
   url.searchParams.set("api_key", apiKey);

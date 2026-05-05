@@ -1,9 +1,9 @@
-# Validation Report — Visual Research Board v0.7.0
+# Validation Report — Visual Research Board v0.7.1
 
 ## Package
 
 ```text
-visual-research-board-v0.7.0-full-qa-gate-patch.zip
+visual-research-board-v0.7.1-full-qa-gate-patch.zip
 ```
 
 ## Release focus
@@ -58,7 +58,7 @@ VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=http://localhost:3000 npm run retrieval:q
 
 ## Status standard
 
-A v0.7.0 validation pass requires:
+A v0.7.1 validation pass requires:
 
 ```text
 npm run qa: passed
@@ -66,4 +66,8 @@ artifacts/full-qa-gate-report.json: generated
 failed_gate_count: 0
 ```
 
-v0.7.0 does not expand scraping, provider access, or search-engine automation. It hardens the project’s ability to prove that the current research workflow remains intact.
+v0.7.1 does not expand scraping, provider access, or search-engine automation. It hardens the project’s ability to prove that the current research workflow remains intact.
+
+## v0.7.1 Security and Key Handling
+
+Security and Key Handling adds provider-key diagnostics to the Full QA Gate. It validates server-only env usage, redacted key presence, and public-env leakage detection while preserving the existing `artifacts/full-qa-gate-report.json` evidence artifact.

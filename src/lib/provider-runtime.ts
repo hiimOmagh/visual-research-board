@@ -1,6 +1,7 @@
 import type { ProviderRuntimeEntry, ProviderRuntimeReport, SearchProviderName } from "@/types/research";
+import { buildProviderKeySecurityReport } from "@/lib/provider-key-security";
 
-export const APP_VERSION = "0.7.0";
+export const APP_VERSION = "0.7.1";
 
 const ENDPOINT_SAMPLES: Record<SearchProviderName, string[]> = {
   mock: ["local/mock"],
@@ -59,11 +60,30 @@ export function buildProviderRuntimeReport(params: {
   pixabayKeyPresent?: boolean;
   pexelsKeyPresent?: boolean;
   unsplashKeyPresent?: boolean;
+  publicSecretEnvNames?: string[];
   generatedAt?: string;
 }): ProviderRuntimeReport {
   const generatedAt = params.generatedAt ?? new Date().toISOString();
   const staticDemo = Boolean(params.staticDemo);
   const runtimeHost = staticDemo ? "static_client_demo" : "nextjs_runtime";
+  const keySecurity = buildProviderKeySecurityReport({
+    generatedAt,
+    staticDemo,
+    mockOnly: params.mockOnly,
+    publicSecretEnvNames: params.publicSecretEnvNames,
+    keyPresence: {
+      brave: params.braveKeyPresent,
+      tavily: params.tavilyKeyPresent,
+      smithsonian: params.smithsonianKeyPresent,
+      europeana: params.europeanaKeyPresent,
+      rijksmuseum: params.rijksmuseumKeyPresent,
+      nypl: params.nyplKeyPresent,
+      dpla: params.dplaKeyPresent,
+      pixabay: params.pixabayKeyPresent,
+      pexels: params.pexelsKeyPresent,
+      unsplash: params.unsplashKeyPresent
+    }
+  });
 
   const providers: ProviderRuntimeEntry[] = [
     { provider: "mock", readiness: "configured", requires_key: false, endpoint_sample: ENDPOINT_SAMPLES.mock, access_mode: "backend_free_no_key", message: "Mock provider is always available and keeps the app usable without API keys." },
@@ -108,6 +128,7 @@ export function buildProviderRuntimeReport(params: {
     mock_only: params.mockOnly,
     live_provider_ready_count: liveProviderReadyCount,
     providers,
-    recommended_next_steps: recommendedNextSteps
+    recommended_next_steps: recommendedNextSteps,
+    key_security: keySecurity
   };
 }
