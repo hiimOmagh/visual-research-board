@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { ProjectLibrary, ResearchProject } from "@/types/research";
+import type { StorageImportValidationReport } from "@/lib/storage-hardening";
 
 interface ProjectLibraryPanelProps {
   library: ProjectLibrary;
@@ -12,6 +13,8 @@ interface ProjectLibraryPanelProps {
   onDuplicateProject: () => void;
   onDeleteProject: (projectId: string) => void;
   onExportLibrary: () => void;
+  onExportBackup: () => void;
+  storageImportReport: StorageImportValidationReport | null;
   onImportLibraryFile: (file: File) => void;
 }
 
@@ -24,6 +27,8 @@ export function ProjectLibraryPanel({
   onDuplicateProject,
   onDeleteProject,
   onExportLibrary,
+  onExportBackup,
+  storageImportReport,
   onImportLibraryFile
 }: ProjectLibraryPanelProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -90,6 +95,13 @@ export function ProjectLibraryPanel({
         </button>
         <button
           type="button"
+          onClick={onExportBackup}
+          className="rounded-2xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70"
+        >
+          Export backup
+        </button>
+        <button
+          type="button"
           onClick={() => fileInputRef.current?.click()}
           className="rounded-2xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-lime-300/60"
         >
@@ -117,8 +129,15 @@ export function ProjectLibraryPanel({
       </div>
 
       <p className="mt-3 text-xs leading-5 text-slate-500">
-        v0.5.0 stores a local multi-project library with persistent result snapshots, conflict-safe import/export bundles, and guided demo/onboarding support in browser localStorage. Existing projects are never overwritten by an import.
+        v0.5.1 stores a local multi-project library with persistent result snapshots, conflict-safe import/export bundles, backup envelopes, validation reports, corrupted-file warnings, and guided demo/onboarding support in browser localStorage. Existing projects are never overwritten by an import.
       </p>
+      {storageImportReport && (
+        <div className="mt-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-3 text-xs text-amber-100">
+          <p className="font-semibold text-amber-50">Latest import validation</p>
+          <p className="mt-1">{storageImportReport.message}</p>
+          <p className="mt-1 text-amber-100/80">Source kind: {storageImportReport.source_kind} · Status: {storageImportReport.status} · Accepted: {storageImportReport.accepted_project_count}</p>
+        </div>
+      )}
     </section>
   );
 }

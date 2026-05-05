@@ -1,12 +1,24 @@
-# Visual Research Board v0.5.0
+# Visual Research Board v0.5.1
 
-A free-source visual research workspace for discovering, saving, reviewing, ranking, organizing, claim-mapping, auditing, attributing, and exporting image/source evidence.
+A free-source visual research workspace for discovering, saving, reviewing, ranking, organizing, claim-mapping, auditing, attributing, exporting, backing up, and restoring image/source evidence.
 
 ## Current release
 
-**v0.5.0 — UX Reliability + Empty State Polish**
+**v0.5.1 — Local Storage + Import/Export Hardening**
 
 This release adds:
+
+- schema-aware project-library import validation
+- backup-envelope export with integrity counts and checksum metadata
+- corrupted/unreadable JSON rejection before merge
+- migration-required and partial-import reports
+- visible storage import validation summaries
+- safer restore path for backup envelopes
+- dedicated QA check: `npm run storage:hardening:check`
+
+## Previous UX reliability layer
+
+v0.5.1 preserves the v0.5.0 reliability layer:
 
 - guided workflow readiness audit
 - UX reliability panel
@@ -19,13 +31,14 @@ This release adds:
 ## Core workflow
 
 ```text
-Project → free-source search → manual reference launchers → saved board → quality review → claim mapping → coverage/bias audit → attribution/evidence-pack export
+Project → free-source search → manual reference launchers → saved board → quality review → claim mapping → coverage/bias audit → attribution/evidence-pack export → backup/restore
 ```
 
 ## Validation
 
 ```bash
 npm run qa
+npm run storage:hardening:check
 npm run ux:reliability:check
 ```
 
@@ -41,7 +54,7 @@ npm run topic:matrix:check
 npm run evidence:deploy
 ```
 
-The app version is v0.5.0; references to v0.3.1 describe retained historical gates, not the current release version.
+The app version is v0.5.1; references to v0.3.1 describe retained historical gates, not the current release version.
 
 Compatibility aliases expected by retained gates:
 

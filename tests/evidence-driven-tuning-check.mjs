@@ -15,7 +15,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing evidence-driven tuning file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.5.0", "package.json version must be 0.5.0");
+assert(pkg.version === "0.5.1", "package.json version must be 0.5.1");
 assert(Boolean(pkg.scripts?.["evidence:tuning:test"]), "package.json must define npm run evidence:tuning:test");
 assert(Boolean(pkg.scripts?.["evidence:tuning:check"]), "package.json must define npm run evidence:tuning:check");
 assert(pkg.scripts?.qa?.includes("evidence-driven-tuning-check"), "npm run qa must include evidence-driven-tuning-check");
@@ -55,8 +55,8 @@ assert(panel.includes("Evidence query hints"), "evidence tuning panel must show 
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("EvidenceDrivenTuningPanel"), "SearchPanel must render EvidenceDrivenTuningPanel");
-assert(searchPanel.includes("v0.5.0"), "SearchPanel header must show v0.5.0");
-assert(searchPanel.includes("visual-research-board-library-v0.5.0.json"), "library export filename must use v0.5.0");
+assert(searchPanel.includes("v0.5.1"), "SearchPanel header must show v0.5.1");
+assert(searchPanel.includes("visual-research-board-library-v0.5.1.json"), "library export filename must use v0.5.1");
 
 const matrixScript = read("scripts/real-topic-test-matrix.mjs");
 assert(matrixScript.includes("evidence_tuning"), "topic matrix script must capture evidence_tuning trace");

@@ -42,6 +42,7 @@ import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
 import { createProjectLibraryExport, downloadTextFile } from "@/lib/export";
+import { createStorageBackupExport, parseProjectLibraryImportText, type StorageImportValidationReport } from "@/lib/storage-hardening";
 import { createClientMockResearchResponse, isStaticClientDemo } from "@/lib/client-search";
 import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
@@ -83,6 +84,7 @@ export function SearchPanel() {
   const [error, setError] = useState<string | null>(null);
   const [importNotice, setImportNotice] = useState<string | null>(null);
   const [importSummary, setImportSummary] = useState<LibraryImportSummary | null>(null);
+  const [storageImportReport, setStorageImportReport] = useState<StorageImportValidationReport | null>(null);
   const [searchPlan, setSearchPlan] = useState<SearchPlan | null>(null);
   const [diagnostics, setDiagnostics] = useState<SearchDiagnostics | null>(null);
   const [results, setResults] = useState<ResearchResult[]>([]);
@@ -374,45 +376,55 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.5.0.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.5.1.json", createProjectLibraryExport(library), "application/json");
+  };
+
+  const exportBackup = () => {
+    downloadTextFile("visual-research-board-backup-v0.5.1.json", createStorageBackupExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
     setError(null);
     setImportNotice(null);
     setImportSummary(null);
+    setStorageImportReport(null);
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text) as { library?: unknown } | ProjectLibrary;
-      const candidate = parsed && typeof parsed === "object" && "library" in parsed && parsed.library
-        ? parsed.library
-        : parsed;
-      const { library: merged, summary } = mergeLibraries(library, candidate as Partial<ProjectLibrary>);
+      const { candidate, report } = parseProjectLibraryImportText(text);
+      setStorageImportReport(report);
+      if (!candidate || !report.can_merge) {
+        setError(report.message);
+        return;
+      }
+      const { library: merged, summary } = mergeLibraries(library, candidate);
       setLibrary(merged);
       setImportSummary(summary);
       if (summary.status === "rejected") {
         setError(summary.message);
       } else {
-        setImportNotice(`${summary.message} Source file: ${file.name}.`);
+        setImportNotice(`${summary.message} Validation: ${report.message} Source file: ${file.name}.`);
       }
     } catch (importError) {
       setError(importError instanceof Error ? `Library import failed: ${importError.message}` : "Library import failed.");
     }
   };
 
-  const dismissImportSummary = () => setImportSummary(null);
+  const dismissImportSummary = () => {
+    setImportSummary(null);
+    setStorageImportReport(null);
+  };
 
   return (
     <main className="mx-auto min-h-screen max-w-[96rem] px-4 py-6 sm:px-6 lg:px-8">
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.5.0</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.5.1</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, coverage/bias auditing, attribution generation, evidence-pack exports, guided onboarding, demo project loading, and workflow-specific empty states.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, coverage/bias auditing, attribution generation, evidence-pack exports, guided onboarding, demo project loading, workflow-specific empty states, and local storage import/export hardening.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -430,6 +442,8 @@ export function SearchPanel() {
         onDuplicateProject={duplicateActiveProject}
         onDeleteProject={deleteProject}
         onExportLibrary={exportLibrary}
+        onExportBackup={exportBackup}
+        storageImportReport={storageImportReport}
         onImportLibraryFile={importLibraryFile}
       />
 
@@ -440,6 +454,10 @@ export function SearchPanel() {
           onSearchDemoTopic={useDemoSearchTopic}
         />
       </div>
+
+      {storageImportReport && (
+        <StorageImportReportNotice report={storageImportReport} onDismiss={dismissImportSummary} />
+      )}
 
       {importSummary && (
         <section
@@ -484,7 +502,7 @@ export function SearchPanel() {
         </section>
       )}
 
-      {importNotice && !importSummary && (
+      {importNotice && !importSummary && !storageImportReport && (
         <p
           className="mb-4 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-3 text-sm text-lime-100"
           role="status"
@@ -604,6 +622,51 @@ export function SearchPanel() {
 
       <ResultDetailPanel result={selectedResult} onClose={() => setSelectedResult(null)} />
     </main>
+  );
+}
+
+
+function StorageImportReportNotice({ report, onDismiss }: { report: StorageImportValidationReport; onDismiss: () => void }) {
+  const tone = report.status === "rejected" ? "red" : report.status === "valid" ? "lime" : "amber";
+  const borderClass = tone === "red" ? "border-red-300/30 bg-red-300/[0.06] text-red-100" : tone === "lime" ? "border-lime-300/30 bg-lime-300/[0.06] text-lime-100" : "border-amber-300/30 bg-amber-300/[0.06] text-amber-100";
+
+  return (
+    <section
+      className={`mb-4 rounded-2xl border p-4 text-sm ${borderClass}`}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] opacity-80">Storage import validation</p>
+          <p className="mt-1 font-semibold text-white">{report.message}</p>
+          <div className="mt-2 grid gap-2 text-xs sm:grid-cols-3">
+            <span className="rounded-xl bg-white/5 px-3 py-2">Status: {report.status}</span>
+            <span className="rounded-xl bg-white/5 px-3 py-2">Source: {report.source_kind}</span>
+            <span className="rounded-xl bg-white/5 px-3 py-2">Projects: {report.accepted_project_count}/{report.project_count}</span>
+            <span className="rounded-xl bg-white/5 px-3 py-2">Migration: {report.migration_required ? "required" : "not required"}</span>
+            <span className="rounded-xl bg-white/5 px-3 py-2">Checksum: {report.checksum_match === undefined ? "not provided" : report.checksum_match ? "matched" : "mismatch"}</span>
+            <span className="rounded-xl bg-white/5 px-3 py-2">Fingerprint: {report.integrity.fingerprint}</span>
+          </div>
+          {(report.warnings.length > 0 || report.rejected_reasons.length > 0) && (
+            <details className="mt-2 text-xs">
+              <summary className="cursor-pointer">Validation warnings and rejected entries</summary>
+              <ul className="mt-1 list-disc space-y-1 pl-5">
+                {[...report.warnings, ...report.rejected_reasons].map((item, index) => <li key={index}>{item}</li>)}
+              </ul>
+            </details>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="rounded-xl border border-white/10 px-3 py-1 text-xs text-slate-200 hover:border-lime-300/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60"
+          aria-label="Dismiss storage import validation report"
+        >
+          Dismiss
+        </button>
+      </div>
+    </section>
   );
 }
 
