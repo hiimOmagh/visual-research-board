@@ -1,0 +1,115 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+const root = process.cwd();
+const failures = [];
+function assert(condition, message) { if (!condition) failures.push(message); }
+function read(path) { return readFileSync(join(root, path), "utf8"); }
+
+const requiredFiles = [
+  "scripts/full-qa-gate.mjs",
+  "tests/full-qa-gate-check.mjs",
+  "docs/full-qa-gate.md",
+  "docs/release-checklist.md",
+  "docs/validation-report.md",
+  ".github/workflows/ci.yml"
+];
+for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing full QA gate file: ${file}`);
+
+const pkg = JSON.parse(read("package.json"));
+assert(pkg.version === "0.7.0", "package.json version must be 0.7.0");
+assert(pkg.description.includes("Full QA Gate"), "package description must identify Full QA Gate");
+assert(pkg.scripts?.qa === "node scripts/full-qa-gate.mjs", "npm run qa must delegate to scripts/full-qa-gate.mjs");
+assert(pkg.scripts?.["qa:list"] === "node scripts/full-qa-gate.mjs --list", "package.json must expose npm run qa:list");
+assert(pkg.scripts?.["qa:baseline"]?.includes("--category=baseline"), "package.json must expose baseline QA category");
+assert(pkg.scripts?.["qa:retrieval"]?.includes("--category=retrieval"), "package.json must expose retrieval QA category");
+assert(pkg.scripts?.["qa:providers"]?.includes("--category=providers"), "package.json must expose providers QA category");
+assert(pkg.scripts?.["qa:workflow"]?.includes("--category=workflow"), "package.json must expose workflow QA category");
+assert(pkg.scripts?.["qa:exports"]?.includes("--category=exports"), "package.json must expose exports QA category");
+assert(pkg.scripts?.["qa:release"]?.includes("--category=release"), "package.json must expose release QA category");
+assert(pkg.scripts?.["full:qa:check"] === "node tests/full-qa-gate-check.mjs", "package.json must expose npm run full:qa:check");
+assert(pkg.scripts?.["test:ci:no-browser"]?.includes("npm run qa"), "test:ci:no-browser must run the full QA gate");
+assert(pkg.scripts?.["test:ci:no-browser"]?.includes("npm run typecheck"), "test:ci:no-browser must run typecheck");
+assert(pkg.scripts?.["test:ci:no-browser"]?.includes("npm run lint"), "test:ci:no-browser must run lint");
+
+const fullGate = read("scripts/full-qa-gate.mjs");
+const expectedCategories = ["baseline", "retrieval", "providers", "workflow", "exports", "release"];
+for (const category of expectedCategories) assert(fullGate.includes(`category: "${category}"`), `full QA gate must include ${category} category`);
+const expectedChecks = [
+  "tests/qa-check.mjs",
+  "tests/normalization-check.mjs",
+  "tests/e2e-fixture-check.mjs",
+  "tests/provider-smoke-check.mjs",
+  "tests/library-conflict-check.mjs",
+  "tests/broad-retrieval-check.mjs",
+  "tests/retrieval-evidence-check.mjs",
+  "tests/provider-runtime-pack-check.mjs",
+  "tests/retrieval-calibration-check.mjs",
+  "tests/retrieval-autotuning-check.mjs",
+  "tests/deployed-browser-evidence-check.mjs",
+  "tests/real-topic-matrix-check.mjs",
+  "tests/evidence-driven-tuning-check.mjs",
+  "tests/lockfile-registry-check.mjs",
+  "tests/provider-result-inspector-check.mjs",
+  "tests/manual-quality-review-check.mjs",
+  "tests/review-evidence-feedback-check.mjs",
+  "tests/free-image-retrieval-check.mjs",
+  "tests/normalization-dedupe-check.mjs",
+  "tests/query-routing-check.mjs",
+  "tests/ranking-explainability-check.mjs",
+  "tests/project-review-memory-check.mjs",
+  "tests/board-organization-check.mjs",
+  "tests/claim-mapping-check.mjs",
+  "tests/coverage-bias-check.mjs",
+  "tests/evidence-pack-export-check.mjs",
+  "tests/attribution-generator-check.mjs",
+  "tests/ux-reliability-check.mjs",
+  "tests/storage-hardening-check.mjs",
+  "tests/museum-open-access-provider-pack-check.mjs",
+  "tests/stock-illustrative-provider-pack-check.mjs",
+  "tests/full-qa-gate-check.mjs"
+];
+for (const check of expectedChecks) assert(fullGate.includes(check), `full QA gate must include ${check}`);
+assert(fullGate.includes("artifacts/full-qa-gate-report.json"), "full QA gate must write a report artifact");
+assert(fullGate.includes("--category="), "full QA gate must support category execution");
+assert(fullGate.includes("--list"), "full QA gate must support list mode");
+assert(fullGate.includes('schema_version: "0.7.0"'), "full QA gate report schema must identify v0.7.0");
+
+const ci = read(".github/workflows/ci.yml");
+assert(ci.includes("npm run test:ci:no-browser"), "CI must run the consolidated no-browser CI gate");
+assert(ci.includes("npm run build"), "CI must still run runtime build");
+assert(ci.includes("actions/upload-artifact"), "CI must upload full QA evidence artifacts");
+assert(ci.includes("full-qa-gate-report"), "CI artifact name must identify the full QA gate report");
+
+const docs = read("docs/full-qa-gate.md");
+for (const token of ["v0.7.0", "npm run qa", "npm run qa:list", "qa:baseline", "qa:retrieval", "qa:providers", "qa:workflow", "qa:exports", "qa:release", "artifacts/full-qa-gate-report.json"]) {
+  assert(docs.includes(token), `full QA docs must include ${token}`);
+}
+
+const release = read("docs/release-checklist.md");
+assert(release.includes("v0.7.0"), "release checklist must identify v0.7.0");
+assert(release.includes("npm run test:ci:no-browser"), "release checklist must include no-browser CI gate");
+assert(release.includes("artifacts/full-qa-gate-report.json"), "release checklist must mention full QA artifact");
+
+const validation = read("docs/validation-report.md");
+assert(validation.includes("Visual Research Board v0.7.0"), "validation report must identify v0.7.0");
+assert(validation.includes("Full QA Gate"), "validation report must describe the Full QA Gate");
+assert(validation.includes("artifacts/full-qa-gate-report.json"), "validation report must mention the QA artifact");
+
+const readme = read("README.md");
+assert(readme.includes("Visual Research Board v0.7.0"), "README must identify v0.7.0");
+assert(readme.includes("Full QA Gate"), "README must identify the release capability");
+assert(readme.includes("npm run qa:list"), "README must document qa:list");
+
+const manifest = read("PATCH_MANIFEST.md");
+assert(manifest.includes("v0.7.0"), "PATCH_MANIFEST must identify v0.7.0");
+assert(manifest.includes("Full QA Gate"), "PATCH_MANIFEST must identify Full QA Gate");
+assert(manifest.includes("scripts/full-qa-gate.mjs"), "PATCH_MANIFEST must list the full QA script");
+
+if (failures.length) {
+  console.error("Full QA gate checks failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("Full QA Gate checks passed for v0.7.0.");

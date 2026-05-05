@@ -1,40 +1,55 @@
-# Visual Research Board v0.6.1
+# Visual Research Board v0.7.0
 
-**v0.6.1 — Stock/Illustrative Provider Pack**
+**v0.7.0 — Full QA Gate**
 
-Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, and evidence-pack exports.
+Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v0.6.1 adds optional stock/illustrative image providers for moodboards, thumbnails, backgrounds, and visual inspiration. These providers are **free-key**, disabled by default, and explicitly labeled as `stock_illustrative` so they are not confused with factual/archive evidence.
+v0.7.0 does not add another product feature. It hardens the release process with a consolidated **Full QA Gate**.
 
-### New optional stock/illustrative providers
+The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
-- Pixabay: `PIXABAY_API_KEY`
-- Pexels: `PEXELS_API_KEY`
-- Unsplash: `UNSPLASH_ACCESS_KEY`
+```text
+artifacts/full-qa-gate-report.json
+```
 
-### Existing provider foundation
+## QA commands
 
-The free/open provider layer remains available:
+```bash
+npm run qa
+npm run qa:list
+npm run qa:baseline
+npm run qa:retrieval
+npm run qa:providers
+npm run qa:workflow
+npm run qa:exports
+npm run qa:release
+npm run full:qa:check
+```
 
-- Wikimedia Commons
-- Openverse
-- Library of Congress
-- Internet Archive
-- NASA Images
-- Smithsonian Open Access
-- Europeana
-- Met Museum
-- Art Institute of Chicago
-- Cleveland Museum of Art
-- Wellcome Collection
-- Biodiversity Heritage Library
-- Gallica / BnF
-- National Archives / NARA
-- Rijksmuseum, NYPL, and DPLA when free keys are configured
+The no-browser CI gate remains:
 
-Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, and similar search engines remain manual reference launchers only.
+```bash
+npm run test:ci:no-browser
+```
+
+That command runs:
+
+```text
+Full QA Gate → Typecheck → Lint
+```
+
+## QA categories
+
+| Category | Purpose |
+|---|---|
+| baseline | Core static checks, fixtures, lockfile, library conflict handling. |
+| retrieval | Retrieval evidence, query routing, calibration, dedupe, ranking explainability. |
+| providers | Runtime/provider diagnostics, free/open museum pack, stock/illustrative pack. |
+| workflow | Manual review, review memory, board organization, claims, coverage, UX, storage. |
+| exports | Evidence pack and attribution generator checks. |
+| release | Browser-evidence fixtures and full QA manifest integrity. |
 
 ## Core workflow
 
@@ -52,32 +67,30 @@ Search topic
 → export evidence/attribution packs
 ```
 
-## Validation
+## Provider foundation
+
+The free/open provider layer includes Wikimedia Commons, Openverse, Library of Congress, Internet Archive, NASA Images, Smithsonian Open Access, Europeana, Met Museum, Art Institute of Chicago, Cleveland Museum of Art, Wellcome Collection, Biodiversity Heritage Library, Gallica/BnF, NARA, and optional free-key providers such as Rijksmuseum, NYPL, DPLA, Pixabay, Pexels, and Unsplash.
+
+Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, and similar search engines remain manual reference launchers only.
+
+## Release rule
+
+v0.7.0 is a validation-hardening release. A successful release needs:
 
 ```bash
-npm run stock:providers:check
-npm run museum:providers:check
 npm run qa
-```
-
-Full local validation also requires installed dependencies:
-
-```bash
 npm run typecheck
 npm run lint
+npm run build
 ```
 
-## Policy boundary
-
-Stock providers are useful for visual inspiration and production illustration, not primary factual evidence. Every stock candidate is labeled with `source_access_mode: stock_illustrative`, `rights_status: likely_reusable`, and `reuse_risk: medium` so users verify terms before publication.
+CI uploads the full QA evidence artifact so failed or passed runs can be inspected without guessing which gate executed.
 
 ## Retained evidence gates
 
-Earlier v0.3.1 evidence gates remain part of the current QA chain. Useful commands:
+The current app version is v0.7.0. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
-
-The current app version is v0.6.1; v0.3.1 references identify retained historical provider/runtime and real-topic evidence gates.

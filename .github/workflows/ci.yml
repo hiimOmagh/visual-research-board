@@ -19,11 +19,15 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Run QA fixtures
-        run: npm run qa
-      - name: Typecheck
-        run: npm run typecheck
-      - name: Lint
-        run: npm run lint
+      # npm run test:ci:no-browser executes npm run qa, npm run typecheck, and npm run lint.
+      - name: Run consolidated no-browser CI gate
+        run: npm run test:ci:no-browser
+      - name: Upload full QA gate report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-qa-gate-report
+          path: artifacts/full-qa-gate-report.json
+          if-no-files-found: warn
       - name: Build runtime app
         run: npm run build

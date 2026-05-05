@@ -1,65 +1,93 @@
-# v0.6.1 — Stock/Illustrative Provider Pack
+# v0.7.0 — Full QA Gate
 
 ## Baseline
 
-Built on v0.6.0 — Museum/Open-Access Provider Pack.
+Built on v0.6.1 — Stock/Illustrative Provider Pack.
 
 ## Changed files
 
-- `src/types/research.ts`
-- `src/lib/query-planner.ts`
-- `src/lib/provider-runtime.ts`
-- `src/lib/result-normalizer.ts`
-- `src/lib/result-quality.ts`
-- `src/lib/retrieval-autotuning.ts`
-- `src/lib/evidence-driven-tuning.ts`
-- `src/lib/providers/stock-illustrative.ts`
-- `src/app/api/search/route.ts`
-- `src/app/api/provider-runtime/route.ts`
-- `src/lib/client-search.ts`
-- `src/components/search/ProviderTogglePanel.tsx`
-- `src/components/search/SearchPanel.tsx`
-- `src/components/search/ProjectLibraryPanel.tsx`
-- `src/components/search/UXReliabilityPanel.tsx`
-- `.env.example`
 - `package.json`
 - `package-lock.json`
+- `.github/workflows/ci.yml`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
 - `README.md`
-- `docs/stock-illustrative-provider-pack.md`
-- `tests/stock-illustrative-provider-pack-check.mjs`
+- `PATCH_MANIFEST.md`
+- `docs/full-qa-gate.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+- version references in current app/test/docs files updated from `0.6.1` to `0.7.0`
 
 ## Summary
 
-v0.6.1 adds optional stock/illustrative providers while preserving the free-source architecture and no-scraping policy.
+v0.7.0 adds a consolidated Full QA Gate. It does not add product scope. The release converts the long chained QA command into a categorized Node runner with deterministic execution, category filtering, list mode, and a JSON evidence artifact.
 
-Added free-key providers, disabled by default:
+## Added commands
 
-- Pixabay via `PIXABAY_API_KEY`
-- Pexels via `PEXELS_API_KEY`
-- Unsplash via `UNSPLASH_ACCESS_KEY`
+```bash
+npm run qa
+npm run qa:list
+npm run qa:baseline
+npm run qa:retrieval
+npm run qa:providers
+npm run qa:workflow
+npm run qa:exports
+npm run qa:release
+npm run full:qa:check
+```
 
-The provider pack is integrated into provider toggles, provider runtime readiness, source-class routing, the search API route, source-access normalization, result-quality classification, ranking/tuning weights, and deterministic QA.
+## Evidence artifact
+
+```text
+artifacts/full-qa-gate-report.json
+```
+
+## CI changes
+
+The main CI workflow now runs:
+
+```bash
+npm run test:ci:no-browser
+npm run build
+```
+
+It uploads `artifacts/full-qa-gate-report.json` as `full-qa-gate-report` using `actions/upload-artifact`.
 
 ## Guardrails
 
-- Stock providers are not treated as institutional/archive evidence.
-- Results are labeled `source_access_mode: stock_illustrative`.
-- Results use `rights_status: likely_reusable` and `reuse_risk: medium` to force rights verification before publication.
-- Providers require free keys and remain off by default.
+- v0.7.0 is validation hardening only.
+- No provider expansion was added.
+- No scraping behavior was added.
+- Existing free-source/reference-search boundaries remain unchanged.
+- Typecheck, lint, and build remain separate from deterministic fixture QA.
 
 ## Validation
 
 Expected checks:
 
 ```bash
-npm run stock:providers:check
+npm run full:qa:check
 npm run qa
 ```
 
-`npm run typecheck` and `npm run lint` require installed dependencies.
+Full CI validation with installed dependencies:
 
-## Retained prior gates
+```bash
+npm run test:ci:no-browser
+npm run build
+```
 
-The v0.4.1 Coverage and Bias Audit gate remains active in QA, alongside Attribution Generator Upgrade, Evidence Pack Export v1, UX Reliability, Local Storage Hardening, and the v0.6.0 Museum/Open-Access Provider Pack.
+## Retained prior feature gates
 
-Retained feature gates include UX Reliability + Empty State Polish and Local Storage + Import/Export Hardening.
+The v0.4.1 feature gates remain active in the Full QA Gate:
+
+- Coverage and Bias Audit
+- Evidence Pack Export v1
+- Attribution Generator Upgrade
+
+The v0.6.0/v0.6.1 provider-pack gates also remain active.
+
+Retained v0.7.0 workflow/storage gates:
+
+- UX Reliability + Empty State Polish
+- Local Storage + Import/Export Hardening

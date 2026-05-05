@@ -1,46 +1,48 @@
-# Validation Report — Visual Research Board v0.3.1
+# Validation Report — Visual Research Board v0.7.0
 
 ## Package
 
 ```text
-visual-research-board-v0.3.1.zip
+visual-research-board-v0.7.0-full-qa-gate-patch.zip
 ```
 
-## Validation run
+## Release focus
 
-The package includes executable QA gates for:
+**Full QA Gate**. This release consolidates deterministic validation into a categorized runner and generates machine-readable release evidence.
+
+## Expected command
+
+```bash
+npm run qa
+```
+
+## Evidence artifact
 
 ```text
-QA checks
-normalization fixtures
-E2E fixture checks
-provider smoke fixture checks
-library conflict checks
-broad retrieval checks
-retrieval evidence checks
-provider runtime pack checks
-retrieval calibration checks
-retrieval auto-tuning checks
-evidence-driven tuning checks
+artifacts/full-qa-gate-report.json
 ```
 
-Expected command:
+## Included gate categories
 
-```bash
-npm run qa
+```text
+baseline
+retrieval
+providers
+workflow
+exports
+release
 ```
 
-Additional local validation before deployment:
+## Additional local validation before deployment
 
 ```bash
-npm install
-npm run qa
 npm run typecheck
 npm run lint
 npm run build
+npm run build:static
 ```
 
-## Runtime evidence commands
+## Runtime evidence commands retained
 
 Provider readiness/runtime smoke:
 
@@ -54,15 +56,14 @@ Live retrieval quality calibration:
 VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=http://localhost:3000 npm run retrieval:quality:test
 ```
 
-## Evidence artifacts
+## Status standard
+
+A v0.7.0 validation pass requires:
 
 ```text
-artifacts/provider-runtime-evidence.json
-artifacts/retrieval-quality-calibration.json
-artifacts/real-topic-test-matrix.json
-artifacts/evidence-driven-tuning-report.json
+npm run qa: passed
+artifacts/full-qa-gate-report.json: generated
+failed_gate_count: 0
 ```
 
-## Status
-
-`v0.3.1` is an evidence-driven ranking/query tuning package. It does not claim literal all-web crawling. It measures whether broad multi-provider search results are relevant, visual, source-diverse, license-clear, and useful for creator curation, then exposes query hints, score weights, provider bias, and evidence-driven ranking changes when weak cases are detected.
+v0.7.0 does not expand scraping, provider access, or search-engine automation. It hardens the project’s ability to prove that the current research workflow remains intact.

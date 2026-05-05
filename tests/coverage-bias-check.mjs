@@ -7,9 +7,9 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.6.1", "package.json version must be 0.6.1");
+assert(pkg.version === "0.7.0", "package.json version must be 0.7.0");
 assert(Boolean(pkg.scripts?.["coverage:bias:check"]), "package.json must define npm run coverage:bias:check");
-assert(pkg.scripts?.qa?.includes("coverage-bias-check"), "npm run qa must include coverage-bias-check");
+assert((pkg.scripts?.qa?.includes("coverage-bias-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include coverage-bias-check");
 
 for (const file of [
   "src/lib/coverage-bias-audit.ts",
@@ -51,11 +51,11 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.6.1",
+  "v0.7.0",
   "CoverageBiasAuditPanel",
   "buildCoverageBiasAudit(project)",
   "coverageBiasAudit",
-  "visual-research-board-library-v0.6.1.json"
+  "visual-research-board-library-v0.7.0.json"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 
 const route = read("src/app/api/search/route.ts");
