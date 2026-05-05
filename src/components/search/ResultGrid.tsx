@@ -7,22 +7,55 @@ import { classifySourceDomain, SOURCE_GROUP_ORDER, sourceGroupLabel } from "@/li
 
 interface ResultGridProps {
   results: ResearchResult[];
+  totalCount?: number;
+  hasSearched?: boolean;
+  filtersActive?: boolean;
   savedIds: Set<string>;
   onSave: (result: ResearchResult) => void;
   onInspect: (result: ResearchResult) => void;
+  onResetFilters?: () => void;
 }
 
 function getSourceGroup(result: ResearchResult): SourceGroup {
   return result.source_group ?? classifySourceDomain(result.source_domain);
 }
 
-export function ResultGrid({ results, savedIds, onSave, onInspect }: ResultGridProps) {
+export function ResultGrid({ results, totalCount = results.length, hasSearched = totalCount > 0, filtersActive = false, savedIds, onSave, onInspect, onResetFilters }: ResultGridProps) {
   if (results.length === 0) {
+    if (!hasSearched) {
+      return (
+        <EmptyState
+          eyebrow="Search results"
+          title="Run a search to populate the visual evidence grid"
+          description="Use the topic field, free-core provider toggles, and Reference Search Hub. First-time users can load the demo project from the UX reliability panel."
+        />
+      );
+    }
+
+    if (filtersActive && totalCount > 0) {
+      return (
+        <EmptyState
+          eyebrow="Filtered results"
+          title="Filters are hiding all available results"
+          description={`${totalCount} result${totalCount === 1 ? "" : "s"} exist in the latest search state, but none match the current filter combination.`}
+          action={onResetFilters ? (
+            <button
+              type="button"
+              onClick={onResetFilters}
+              className="rounded-xl border border-lime-300/30 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:border-lime-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60"
+            >
+              Reset filters
+            </button>
+          ) : undefined}
+        />
+      );
+    }
+
     return (
       <EmptyState
-        eyebrow="Results"
-        title="No results to display yet"
-        description="Run a search above to populate this grid. If filters are active, reset them to view hidden results."
+        eyebrow="Search results"
+        title="No results returned for this search"
+        description="Try a broader topic, use Standard or Deep depth, enable free-core providers, or use the Reference Search Hub to manually import external source URLs."
       />
     );
   }

@@ -5,6 +5,7 @@ import { licenseLabel, riskLabel } from "@/lib/risk";
 import { buildQualityReasons, classifySourceDomain, qualityBucket, sourceGroupLabel } from "@/lib/result-quality";
 
 interface ResultCardProps {
+  key?: string;
   result: ResearchResult;
   isSaved: boolean;
   onSave: (result: ResearchResult) => void;

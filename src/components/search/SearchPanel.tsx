@@ -37,6 +37,7 @@ import { RankingExplainabilityPanel } from "@/components/search/RankingExplainab
 import { ProjectReviewMemoryPanel } from "@/components/search/ProjectReviewMemoryPanel";
 import { ClaimMappingPanel } from "@/components/search/ClaimMappingPanel";
 import { CoverageBiasAuditPanel } from "@/components/search/CoverageBiasAuditPanel";
+import { UXReliabilityPanel } from "@/components/search/UXReliabilityPanel";
 import { ProjectLibraryPanel } from "@/components/search/ProjectLibraryPanel";
 import { SearchHistoryPanel } from "@/components/search/SearchHistoryPanel";
 import { createFreshProject, loadProjectLibrary, persistProjectLibrary } from "@/lib/local-storage";
@@ -46,6 +47,8 @@ import { applyManualReviewPatch } from "@/lib/manual-quality-review";
 import { buildReviewEvidenceFeedback } from "@/lib/review-evidence-feedback";
 import { normalizeBoardTags } from "@/lib/board-organization";
 import { buildCoverageBiasAudit } from "@/lib/coverage-bias-audit";
+import { createDemoProject } from "@/lib/demo-project";
+import { buildUxReliabilityAudit } from "@/lib/ux-reliability";
 import { buildProjectReviewEvidenceMemory, buildProjectReviewEvidenceMemoryAudit, isProjectReviewEvidenceMemoryStale, resetProjectReviewEvidenceMemory } from "@/lib/project-review-memory";
 import {
   addProjectClaim,
@@ -106,6 +109,14 @@ export function SearchPanel() {
     usedForSearch: false
   }), [projectReviewMemory, projectReviewMemoryStale]);
   const coverageBiasAudit = useMemo(() => buildCoverageBiasAudit(project), [project]);
+  const uxReliabilityAudit = useMemo(() => buildUxReliabilityAudit({
+    library,
+    project,
+    results,
+    diagnostics,
+    providerToggles,
+    topic
+  }), [diagnostics, library, project, providerToggles, results, topic]);
 
   const updateLibrary = (updater: (current: ProjectLibrary) => ProjectLibrary) => {
     setLibrary((current) => updater(current));
@@ -339,13 +350,31 @@ export function SearchPanel() {
     updateLibrary((current) => upsertProject(current, duplicateProject(getActiveProject(current))));
   };
 
+  const loadDemoProject = () => {
+    updateLibrary((current) => upsertProject(current, createDemoProject()));
+    setTopic("Carthage Hannibal historical map");
+    setMode("historical_topic");
+    setDepth("standard");
+    setProviderToggles(DEFAULT_PROVIDER_TOGGLES);
+    resetVisibleSearchState();
+    setImportNotice("Loaded demo project with saved references, claim links, review labels, and export-ready workflow data.");
+  };
+
+  const useDemoSearchTopic = () => {
+    setTopic("Carthage Hannibal historical map");
+    setMode("historical_topic");
+    setDepth("standard");
+    setProviderToggles(DEFAULT_PROVIDER_TOGGLES);
+    setImportNotice("Demo topic loaded. Run Search to generate free-source results and reference launchers.");
+  };
+
   const deleteProject = (projectId: string) => {
     updateLibrary((current) => removeProject(current, projectId));
     resetVisibleSearchState();
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.4.1.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.5.0.json", createProjectLibraryExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -378,12 +407,12 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.4.1</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.5.0</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, coverage/bias auditing, editable tags/notes, organization audits, and export-ready evidence packs.
+              A multi-project, source-aware visual research workspace with free backend image retrieval, manual reference search launchers, canonical provider normalization, duplicate merging, query expansion, source-class routing, rights/risk labels, review-based ranking calibration, ranking explainability, project-specific review evidence memory, board-section organization, claim-to-source mapping, coverage/bias auditing, attribution generation, evidence-pack exports, guided onboarding, demo project loading, and workflow-specific empty states.
             </p>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100 lg:max-w-md" role="note">
@@ -403,6 +432,14 @@ export function SearchPanel() {
         onExportLibrary={exportLibrary}
         onImportLibraryFile={importLibraryFile}
       />
+
+      <div className="mb-6">
+        <UXReliabilityPanel
+          audit={uxReliabilityAudit}
+          onLoadDemoProject={loadDemoProject}
+          onSearchDemoTopic={useDemoSearchTopic}
+        />
+      </div>
 
       {importSummary && (
         <section
@@ -537,7 +574,16 @@ export function SearchPanel() {
           {diagnostics && <ProviderHealthPanel health={diagnostics.provider_health} />}
           <SearchHistoryPanel history={project.search_history} onRestoreSnapshot={restoreSnapshot} />
           <ResultFilters filters={filters} onChange={setFilters} totalCount={results.length} visibleCount={filteredResults.length} />
-          <ResultGrid results={filteredResults} savedIds={savedIds} onSave={saveResult} onInspect={setSelectedResult} />
+          <ResultGrid
+            results={filteredResults}
+            totalCount={results.length}
+            hasSearched={Boolean(searchPlan || diagnostics || results.length > 0)}
+            filtersActive={JSON.stringify(filters) !== JSON.stringify(defaultResultFilters)}
+            savedIds={savedIds}
+            onSave={saveResult}
+            onInspect={setSelectedResult}
+            onResetFilters={() => setFilters(defaultResultFilters)}
+          />
         </div>
         <SavedBoard
           project={project}

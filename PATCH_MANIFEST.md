@@ -1,8 +1,4 @@
-# v0.4.1 — Attribution Generator Upgrade
-
-## Scope
-
-This patch upgrades attribution handling after Evidence Pack Export v1.
+# v0.5.0 — UX Reliability + Empty State Polish
 
 ## Changed files
 
@@ -10,45 +6,32 @@ This patch upgrades attribution handling after Evidence Pack Export v1.
 - `package-lock.json`
 - `README.md`
 - `PATCH_MANIFEST.md`
-- `src/types/research.ts`
-- `src/lib/attribution-generator.ts`
-- `src/lib/export.ts`
-- `src/lib/evidence-pack-export.ts`
-- `src/lib/client-search.ts`
-- `src/app/api/search/route.ts`
-- `src/app/api/export/route.ts`
-- `src/components/search/SavedBoard.tsx`
+- `docs/ux-reliability-empty-state-polish.md`
+- `src/lib/ux-reliability.ts`
+- `src/lib/demo-project.ts`
+- `src/components/search/UXReliabilityPanel.tsx`
 - `src/components/search/SearchPanel.tsx`
-- `docs/attribution-generator-upgrade.md`
-- `docs/evidence-pack-export-v1.md`
-- `tests/attribution-generator-check.mjs`
-- version-aligned QA gate files under `tests/`
+- `src/components/search/ResultGrid.tsx`
+- `src/components/search/ProviderTogglePanel.tsx`
+- `src/components/search/ProjectLibraryPanel.tsx`
+- `tests/ux-reliability-check.mjs`
+- Existing QA tests updated to accept app version `0.5.0`.
 
-## Feature additions
+## Summary
 
-- License-aware attribution generator.
-- Multiple attribution formats:
-  - simple
-  - creator/title/source/license
-  - Markdown citation block
-  - video description block
-  - article source list
-  - rough bibliography entry
-- Attribution clearance labels:
-  - attribution-ready candidate
-  - verify before use
-  - reference only
-  - do not use
-- Attribution warnings for unclear rights, missing license URLs, reference-only records, restricted/rejected records, manual-reference imports, reuse risk, metadata gaps, and manual review verdicts.
-- Attribution JSON/Markdown/CSV exports.
-- Attribution audit integration in JSON export, project-library export, API search diagnostics, and static client search diagnostics.
-- Evidence Pack v1 attribution lines now use the upgraded attribution generator.
+v0.5.0 adds a UX reliability layer for first-time and demo usage. It introduces workflow readiness scoring, a guided checklist, reliability notes, demo-project loading, demo-topic setup, clearer empty states, provider setup wording, and a dedicated validation gate.
 
 ## Validation
 
-- `npm run attribution:generator:check`
-- `npm run qa`
+```bash
+npm run ux:reliability:check
+npm run qa
+```
 
-## Retained prior gates
+## Retained previous release gates
 
-This patch preserves earlier release capabilities including Coverage and Bias Audit and Evidence Pack Export v1 while adding the attribution generator upgrade.
+This v0.5.0 patch is built on the v0.4.1 baseline and keeps the previous release features/gates visible for deterministic QA compatibility:
+
+- v0.4.1 — Attribution Generator Upgrade
+- v0.4.0 / v0.4.1 — Evidence Pack Export v1
+- v0.3.4 / v0.4.1 coverage gate — Coverage and Bias Audit

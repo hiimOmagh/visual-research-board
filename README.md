@@ -1,47 +1,51 @@
-# Visual Research Board
+# Visual Research Board v0.5.0
 
-`v0.4.1 attribution generator upgrade package`
+A free-source visual research workspace for discovering, saving, reviewing, ranking, organizing, claim-mapping, auditing, attributing, and exporting image/source evidence.
 
-A free-source visual research board for discovering, reviewing, ranking, organizing, and exporting image/source evidence with rights-risk labels, claim mapping, coverage audits, evidence packs, and license-aware attribution drafts.
+## Current release
 
-## v0.4.1 focus
+**v0.5.0 — UX Reliability + Empty State Polish**
 
-v0.4.1 upgrades attribution from a single generic line into a **license-aware attribution generator**.
+This release adds:
 
-It supports:
+- guided workflow readiness audit
+- UX reliability panel
+- deterministic demo project loading
+- demo topic setup
+- clearer empty states for no-search, no-results, and filter-hidden states
+- provider setup clarity for free-core, free-key, optional API, and manual reference launchers
+- dedicated QA check: `npm run ux:reliability:check`
 
-- simple attribution
-- creator/title/source/license attribution
-- Markdown citation blocks
-- video description blocks
-- article source-list entries
-- rough bibliography entries
-- attribution JSON/Markdown/CSV exports
-- clearance labels: attribution-ready candidate, verify before use, reference only, do not use
-- warning trails for unclear rights, missing license URLs, reference-only material, rejected material, and metadata gaps
+## Core workflow
+
+```text
+Project → free-source search → manual reference launchers → saved board → quality review → claim mapping → coverage/bias audit → attribution/evidence-pack export
+```
 
 ## Validation
 
 ```bash
-npm run attribution:generator:check
 npm run qa
+npm run ux:reliability:check
 ```
 
-Full TypeScript/lint validation still requires project dependencies to be installed locally:
+Full TypeScript/lint/build validation requires installed Next/React/Node/Tailwind dependencies.
+
+## Historical validation commands retained in QA
+
+Earlier release gates remain part of the current QA chain, including the v0.3.1 provider/runtime evidence path:
 
 ```bash
-npm install
-npm run typecheck
-npm run lint
+npm run deployed:browser:check
+npm run topic:matrix:check
+npm run evidence:deploy
 ```
 
-## Earlier evidence gates retained
+The app version is v0.5.0; references to v0.3.1 describe retained historical gates, not the current release version.
 
-The current package preserves earlier v0.3.1 evidence gates and commands:
+Compatibility aliases expected by retained gates:
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
-
-These remain part of the broader QA/evidence path even though the current release focus is v0.4.1.

@@ -117,7 +117,7 @@ export function ProjectLibraryPanel({
       </div>
 
       <p className="mt-3 text-xs leading-5 text-slate-500">
-        Alpha.8 stores a local multi-project library with persistent result snapshots and conflict-safe import/export bundles in browser localStorage. Existing projects are never overwritten by an import.
+        v0.5.0 stores a local multi-project library with persistent result snapshots, conflict-safe import/export bundles, and guided demo/onboarding support in browser localStorage. Existing projects are never overwritten by an import.
       </p>
     </section>
   );
