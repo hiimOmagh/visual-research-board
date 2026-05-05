@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.8.0",
+  "app_version": "0.8.0",
+  "gate": "full_qa_gate",
+  "started_at": "2026-05-05T19:55:48.036Z",
+  "finished_at": "2026-05-05T19:55:48.106Z",
+  "selected_category": null,
+  "total_gate_count": 34,
+  "passed_gate_count": 0,
+  "failed_gate_count": 1,
+  "status": "failed",
+  "categories": [
+    "baseline",
+    "retrieval",
+    "providers",
+    "security",
+    "public-demo",
+    "workflow",
+    "exports",
+    "release"
+  ],
+  "results": [
+    {
+      "category": "baseline",
+      "name": "core-static-qa",
+      "command": "node tests/qa-check.mjs",
+      "status": "failed",
+      "exit_code": 1,
+      "duration_ms": 69
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "private": true,
-  "description": "Security and Key Handling release for server-only provider keys, redacted key diagnostics, public-env leak checks, and privacy-safe exports.",
+  "description": "Public Demo Release Candidate for demo-safe sample data, visible limitations, release-candidate QA, and non-misleading provider/runtime presentation.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -64,7 +64,10 @@
     "qa:release": "node scripts/full-qa-gate.mjs --category=release",
     "full:qa:check": "node tests/full-qa-gate-check.mjs",
     "security:key:check": "node tests/security-key-handling-check.mjs",
-    "qa:security": "node scripts/full-qa-gate.mjs --category=security"
+    "qa:security": "node scripts/full-qa-gate.mjs --category=security",
+    "public-demo:check": "node tests/public-demo-release-candidate-check.mjs",
+    "qa:public-demo": "node scripts/full-qa-gate.mjs --category=public-demo",
+    "clean:rc": "node scripts/clean-release-candidate.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

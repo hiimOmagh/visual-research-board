@@ -1,12 +1,12 @@
-# Visual Research Board v0.7.1
+# Visual Research Board v0.8.0
 
-**v0.7.1 — Security and Key Handling**
+**v0.8.0 — Security and Key Handling**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v0.7.1 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
+v0.8.0 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
 
 The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
@@ -75,7 +75,7 @@ Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, 
 
 ## Release rule
 
-v0.7.1 is a validation-hardening release. A successful release needs:
+v0.8.0 is a validation-hardening release. A successful release needs:
 
 ```bash
 npm run qa
@@ -88,14 +88,14 @@ CI uploads the full QA evidence artifact so failed or passed runs can be inspect
 
 ## Retained evidence gates
 
-The current app version is v0.7.1. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
+The current app version is v0.8.0. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-## v0.7.1 security validation
+## v0.8.0 security validation
 
 ```bash
 npm run security:key:check
@@ -104,3 +104,20 @@ npm run qa
 ```
 
 Provider keys are server-only and diagnostics report only redacted presence. Do not create `NEXT_PUBLIC_*API_KEY`, `NEXT_PUBLIC_*ACCESS_KEY`, `NEXT_PUBLIC_*TOKEN`, or `NEXT_PUBLIC_*SECRET` variables.
+
+## Public Demo Release Candidate
+
+The current target is **v0.8.0 — Public Demo Release Candidate**.
+
+This release hardens the app for public inspection. It does not add live scraping, production OAuth, paid-provider assumptions, or fake-live provider behavior.
+
+The public demo must remain usable without private credentials. Provider keys are optional and must remain server-only. Attribution and rights labels are assistance layers, not legal clearance.
+
+Run:
+
+```bash
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+```

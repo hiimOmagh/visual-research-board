@@ -1,3 +1,49 @@
+# v0.8.0 — Public Demo Release Candidate Patch Manifest
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `scripts/clean-release-candidate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/public-demo-release-candidate-check.mjs`
+- `docs/public-demo.md`
+- `docs/release-candidate-checklist.md`
+- `docs/full-qa-gate.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+- `src/lib/public-demo-release-candidate.ts`
+- `src/components/PublicDemoReleaseCandidatePanel.tsx`
+
+## Scope
+
+v0.8.0 prepares the app as a Public Demo Release Candidate while preserving the v0.7.1 Security and Key Handling layer.
+
+## Non-goals
+
+- No new scraping behavior
+- No production OAuth
+- No paid-provider assumptions
+- No fake-live providers
+- No legal-clearance claims
+- No source-verification guarantees
+
+## Validation
+
+```bash
+npm run clean:rc
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+```
+
 # v0.7.1 — Security and Key Handling Patch Manifest
 
 ## Changed files
