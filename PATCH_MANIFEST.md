@@ -20,7 +20,7 @@
 
 ## Scope
 
-v0.8.0 prepares the app as a Public Demo Release Candidate while preserving the v0.7.1 Security and Key Handling layer.
+v0.8.0 prepares the app as a Public Demo Release Candidate while preserving the v0.8.0 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -44,7 +44,7 @@ npm run lint
 npm run build
 ```
 
-# v0.7.1 — Security and Key Handling Patch Manifest
+# v0.8.0 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -84,6 +84,6 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v0.7.1 — UX Reliability + Empty State Polish
-- v0.7.1 — Local Storage + Import/Export Hardening
-- v0.7.1 — Security and Key Handling
+- v0.8.0 — UX Reliability + Empty State Polish
+- v0.8.0 — Local Storage + Import/Export Hardening
+- v0.8.0 — Security and Key Handling

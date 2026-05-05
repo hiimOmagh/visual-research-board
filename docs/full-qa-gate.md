@@ -96,4 +96,4 @@ npm run qa:public-demo
 npm run public-demo:check
 ```
 
-The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v0.7.1 server-only provider key handling.
+The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v0.8.0 server-only provider key handling.

@@ -50,8 +50,8 @@ function prependOnce(relativePath, marker, content) {
 function replaceVersionReferences(relativePath) {
   if (!exists(relativePath)) return;
   let text = read(relativePath);
-  text = text.replaceAll("v0.7.1", `v${VERSION}`);
-  text = text.replaceAll("0.7.1", VERSION);
+  text = text.replaceAll("v0.8.0", `v${VERSION}`);
+  text = text.replaceAll("0.8.0", VERSION);
   write(relativePath, text);
 }
 
@@ -95,7 +95,7 @@ function updatePackageLock() {
 function updateFullQaGate() {
   const relativePath = "scripts/full-qa-gate.mjs";
   if (!exists(relativePath)) {
-    throw new Error("scripts/full-qa-gate.mjs not found. v0.8.0 expects the v0.7.1 Full QA Gate baseline.");
+    throw new Error("scripts/full-qa-gate.mjs not found. v0.8.0 expects the v0.8.0 Full QA Gate baseline.");
   }
 
   let text = read(relativePath);
@@ -110,8 +110,8 @@ function updateFullQaGate() {
     }
   }
 
-  text = text.replaceAll("0.7.1", VERSION);
-  text = text.replaceAll("v0.7.1", `v${VERSION}`);
+  text = text.replaceAll("0.8.0", VERSION);
+  text = text.replaceAll("v0.8.0", `v${VERSION}`);
   text = text.replace(/Full QA gate passed for v[0-9.]+\./, `Full QA gate passed for v${VERSION}.`);
   write(relativePath, text);
 }
@@ -121,8 +121,8 @@ function updateFullQaGateCheck() {
   if (!exists(relativePath)) return;
 
   let text = read(relativePath);
-  text = text.replaceAll("0.7.1", VERSION);
-  text = text.replaceAll("v0.7.1", `v${VERSION}`);
+  text = text.replaceAll("0.8.0", VERSION);
+  text = text.replaceAll("v0.8.0", `v${VERSION}`);
 
   text = text.replace(
     /assert\(pkg\.description\.includes\("Security and Key Handling"\),[^\n]+\n/,
@@ -230,7 +230,7 @@ npm run qa
 
 ## Scope
 
-v0.8.0 prepares the app as a Public Demo Release Candidate while preserving the v0.7.1 Security and Key Handling layer.
+v0.8.0 prepares the app as a Public Demo Release Candidate while preserving the v0.8.0 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -266,7 +266,7 @@ npm run qa:public-demo
 npm run public-demo:check
 \`\`\`
 
-The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v0.7.1 server-only provider key handling.
+The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v0.8.0 server-only provider key handling.
 `;
   appendOnce("docs/full-qa-gate.md", "v0.8.0 public-demo category", fullQaGateAddition);
 
@@ -332,7 +332,7 @@ updateFullQaGateCheck();
 updateDocs();
 
 console.log("Applied v0.8.0 Public Demo Release Candidate patch files.");
-console.log("v0.7.1 Security and Key Handling scripts are preserved.");
+console.log("v0.8.0 Security and Key Handling scripts are preserved.");
 console.log("Next commands:");
 console.log("npm run clean:rc");
 console.log("npm install");

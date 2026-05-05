@@ -97,8 +97,8 @@ if (!fs.existsSync(packageJsonPath)) {
   assert(scripts["public-demo:check"] === "node tests/public-demo-release-candidate-check.mjs", "package.json must define public-demo:check");
   assert(scripts["qa:public-demo"] === "node scripts/full-qa-gate.mjs --category=public-demo", "package.json must define qa:public-demo");
   assert(scripts["clean:rc"] === "node scripts/clean-release-candidate.mjs", "package.json must define clean:rc");
-  assert(scripts["security:key:check"] === "node tests/security-key-handling-check.mjs", "v0.8.0 must preserve v0.7.1 security:key:check");
-  assert(scripts["qa:security"] === "node scripts/full-qa-gate.mjs --category=security", "v0.8.0 must preserve v0.7.1 qa:security");
+  assert(scripts["security:key:check"] === "node tests/security-key-handling-check.mjs", "v0.8.0 must preserve v0.8.0 security:key:check");
+  assert(scripts["qa:security"] === "node scripts/full-qa-gate.mjs --category=security", "v0.8.0 must preserve v0.8.0 qa:security");
 }
 
 for (const file of requiredFiles) {

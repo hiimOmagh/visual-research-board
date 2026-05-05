@@ -627,7 +627,7 @@ export interface ProviderKeySecurityEntry {
 }
 
 export interface ProviderKeySecurityReport {
-  schema_version: "0.7.1";
+  schema_version: "0.8.0";
   app_version: string;
   generated_at: string;
   secret_source: "server_env_only";

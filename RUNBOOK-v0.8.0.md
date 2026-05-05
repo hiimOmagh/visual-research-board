@@ -2,9 +2,9 @@
 
 ## Preconditions
 
-Apply `visual-research-board-v0.7.1-security-key-handling-patch.zip` first if the repo is not already on v0.7.1.
+Apply `visual-research-board-v0.8.0-security-key-handling-patch.zip` first if the repo is not already on v0.8.0.
 
-The v0.8.0 patch expects the v0.7.1 Full QA Gate and Security/Key Handling baseline:
+The v0.8.0 patch expects the v0.8.0 Full QA Gate and Security/Key Handling baseline:
 
 - `scripts/full-qa-gate.mjs`
 - `tests/full-qa-gate-check.mjs`

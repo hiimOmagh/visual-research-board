@@ -2,11 +2,11 @@
   "schema_version": "0.8.0",
   "app_version": "0.8.0",
   "gate": "full_qa_gate",
-  "started_at": "2026-05-05T19:55:48.036Z",
-  "finished_at": "2026-05-05T19:55:48.106Z",
+  "started_at": "2026-05-05T20:26:43.006Z",
+  "finished_at": "2026-05-05T20:26:44.108Z",
   "selected_category": null,
   "total_gate_count": 34,
-  "passed_gate_count": 0,
+  "passed_gate_count": 20,
   "failed_gate_count": 1,
   "status": "failed",
   "categories": [
@@ -24,9 +24,169 @@
       "category": "baseline",
       "name": "core-static-qa",
       "command": "node tests/qa-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 78
+    },
+    {
+      "category": "baseline",
+      "name": "normalization-fixtures",
+      "command": "node tests/normalization-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 50
+    },
+    {
+      "category": "baseline",
+      "name": "e2e-fixtures",
+      "command": "node tests/e2e-fixture-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 46
+    },
+    {
+      "category": "baseline",
+      "name": "provider-smoke-fixtures",
+      "command": "node tests/provider-smoke-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 44
+    },
+    {
+      "category": "baseline",
+      "name": "library-conflict-fixtures",
+      "command": "node tests/library-conflict-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 43
+    },
+    {
+      "category": "baseline",
+      "name": "lockfile-registry",
+      "command": "node tests/lockfile-registry-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 48
+    },
+    {
+      "category": "retrieval",
+      "name": "broad-retrieval",
+      "command": "node tests/broad-retrieval-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 44
+    },
+    {
+      "category": "retrieval",
+      "name": "retrieval-evidence",
+      "command": "node tests/retrieval-evidence-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 45
+    },
+    {
+      "category": "retrieval",
+      "name": "retrieval-calibration",
+      "command": "node tests/retrieval-calibration-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 44
+    },
+    {
+      "category": "retrieval",
+      "name": "retrieval-autotuning",
+      "command": "node tests/retrieval-autotuning-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 72
+    },
+    {
+      "category": "retrieval",
+      "name": "real-topic-matrix",
+      "command": "node tests/real-topic-matrix-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 65
+    },
+    {
+      "category": "retrieval",
+      "name": "evidence-driven-tuning",
+      "command": "node tests/evidence-driven-tuning-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 56
+    },
+    {
+      "category": "retrieval",
+      "name": "free-image-retrieval",
+      "command": "node tests/free-image-retrieval-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 45
+    },
+    {
+      "category": "retrieval",
+      "name": "normalization-dedupe",
+      "command": "node tests/normalization-dedupe-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 43
+    },
+    {
+      "category": "retrieval",
+      "name": "query-routing",
+      "command": "node tests/query-routing-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 44
+    },
+    {
+      "category": "retrieval",
+      "name": "ranking-explainability",
+      "command": "node tests/ranking-explainability-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 43
+    },
+    {
+      "category": "providers",
+      "name": "provider-runtime-pack",
+      "command": "node tests/provider-runtime-pack-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 75
+    },
+    {
+      "category": "providers",
+      "name": "provider-result-inspector",
+      "command": "node tests/provider-result-inspector-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 54
+    },
+    {
+      "category": "providers",
+      "name": "museum-open-access-pack",
+      "command": "node tests/museum-open-access-provider-pack-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 65
+    },
+    {
+      "category": "providers",
+      "name": "stock-illustrative-pack",
+      "command": "node tests/stock-illustrative-provider-pack-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 52
+    },
+    {
+      "category": "security",
+      "name": "provider-key-handling",
+      "command": "node tests/security-key-handling-check.mjs",
       "status": "failed",
       "exit_code": 1,
-      "duration_ms": 69
+      "duration_ms": 44
     }
   ]
 }
