@@ -33,7 +33,7 @@ const institutionalArchiveHints = [
 const commonsHints = ["commons.wikimedia.org", "wikimedia", "wikipedia.org", "wikidata.org", "openverse.org"];
 const officialAcademicHints = [".gov", ".edu", ".ac.", "who.int", "un.org", "worldbank.org", "oecd.org", "jstor.org", "springer.com", "nature.com", "sciencedirect.com"];
 const newsHints = ["reuters", "apnews", "bbc.", "cnn.", "nytimes", "guardian", "aljazeera", "dw.com", "lemonde", "politico", "ft.com", "bloomberg"];
-const commercialStockHints = ["shutterstock", "alamy", "gettyimages", "istockphoto", "adobestock", "depositphotos"];
+const commercialStockHints = ["pixabay", "pexels", "unsplash", "shutterstock", "alamy", "gettyimages", "istockphoto", "adobestock", "depositphotos"];
 const searchSocialHints = ["search.brave.com", "google.com", "bing.com", "youtube.com", "x.com", "twitter.com", "instagram.com", "tiktok.com", "pinterest.", "reddit.com"];
 
 export const SOURCE_GROUP_ORDER: SourceGroup[] = [

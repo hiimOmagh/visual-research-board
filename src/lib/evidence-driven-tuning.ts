@@ -145,6 +145,9 @@ function providerBias(params: { actions: EvidenceDrivenTuningAction[]; providerH
     nypl: 1,
     nara: 1,
     dpla: 1,
+    pixabay: 0.84,
+    pexels: 0.84,
+    unsplash: 0.84,
     brave: 0.9,
     tavily: 0.9
   };
@@ -156,7 +159,7 @@ function providerBias(params: { actions: EvidenceDrivenTuningAction[]; providerH
     for (const provider of ["loc", "internet_archive", "nasa", "smithsonian", "europeana", "met", "artic", "cleveland_museum", "rijksmuseum", "wellcome", "bhl", "gallica", "nypl", "nara", "dpla"] as SearchProviderName[]) bias[provider] = active.has(provider) ? 1.14 : 1.04;
   }
   if (params.actions.includes("boost_image_density")) {
-    for (const provider of ["wikimedia", "openverse", "loc", "nasa", "met", "artic", "cleveland_museum", "wellcome", "bhl", "gallica", "nara"] as SearchProviderName[]) bias[provider] = Math.max(bias[provider] ?? 1, active.has(provider) ? 1.08 : 1.02);
+    for (const provider of ["wikimedia", "openverse", "loc", "nasa", "met", "artic", "cleveland_museum", "wellcome", "bhl", "gallica", "nara", "pixabay", "pexels", "unsplash"] as SearchProviderName[]) bias[provider] = Math.max(bias[provider] ?? 1, active.has(provider) ? 1.08 : 1.02);
   }
   if (params.actions.includes("boost_topic_exactness")) bias.tavily = active.has("tavily") ? 1.02 : 0.92;
   return bias;

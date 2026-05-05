@@ -189,7 +189,7 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
     project_review_memory: projectReviewMemoryAudit,
     ranking_explainability: rankingExplainability,
     coverage_bias: coverageBias,
-      evidence_pack: evidencePack,
+    evidence_pack: evidencePack,
     attribution_generator: attributionAudit,
     provider_result_inspection: providerResultInspection,
     runtime_report: buildProviderRuntimeReport({
@@ -199,6 +199,12 @@ export async function createClientMockResearchResponse(request: ResearchRequest)
       tavilyKeyPresent: false,
       smithsonianKeyPresent: false,
       europeanaKeyPresent: false,
+      rijksmuseumKeyPresent: false,
+      nyplKeyPresent: false,
+      dplaKeyPresent: false,
+      pixabayKeyPresent: false,
+      pexelsKeyPresent: false,
+      unsplashKeyPresent: false,
       generatedAt
     })
   };

@@ -105,6 +105,9 @@ const providerMaxQueries: Record<SearchProviderName, Record<ResearchRequest["dep
   nypl: { quick: 2, standard: 4, deep: 6 },
   nara: { quick: 2, standard: 4, deep: 6 },
   dpla: { quick: 2, standard: 4, deep: 6 },
+  pixabay: { quick: 2, standard: 3, deep: 5 },
+  pexels: { quick: 2, standard: 3, deep: 5 },
+  unsplash: { quick: 2, standard: 3, deep: 5 },
   brave: { quick: 3, standard: 5, deep: 8 },
   tavily: { quick: 3, standard: 5, deep: 8 }
 };
@@ -128,6 +131,9 @@ const providerClassMap: Record<SearchProviderName, SourceClass[]> = {
   nypl: ["museum", "archive", "open_media"],
   nara: ["archive", "open_media", "academic_context"],
   dpla: ["museum", "archive", "open_media", "academic_context"],
+  pixabay: ["stock", "open_media", "manual_reference"],
+  pexels: ["stock", "manual_reference"],
+  unsplash: ["stock", "manual_reference"],
   brave: ["manual_reference", "news_reference", "web_context", "open_media", "stock"],
   tavily: ["web_context", "news_reference", "academic_context", "manual_reference"]
 };
@@ -151,6 +157,9 @@ const providerTargetMap: Record<SearchProviderName, SearchSourceTarget[]> = {
   nypl: ["archive", "image", "commons"],
   nara: ["archive", "image"],
   dpla: ["archive", "image", "commons"],
+  pixabay: ["image"],
+  pexels: ["image"],
+  unsplash: ["image"],
   brave: ["image", "web", "news"],
   tavily: ["web", "news", "image"]
 };
@@ -254,6 +263,15 @@ function createQueryVariants(topic: string, mode: ResearchRequest["mode"], sourc
     variants.push(
       { query: `${topic} Wikimedia Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 28, reason: "Commons-targeted branch" },
       { query: `${topic} Creative Commons`, intent: "public_domain", source_classes: ["open_media"], priority: 29, reason: "open-license branch" }
+    );
+  }
+
+
+  if (mode === "thumbnail_inspiration" || mode === "design_moodboard" || mode === "youtube_documentary") {
+    variants.push(
+      { query: `${topic} stock photo`, intent: "stock", source_classes: ["stock", "manual_reference"], priority: 30, reason: "stock/illustrative provider branch" },
+      { query: `${topic} editorial photo reference`, intent: "stock", source_classes: ["stock", "manual_reference"], priority: 31, reason: "editorial stock reference branch" },
+      { query: `${topic} background photo`, intent: "stock", source_classes: ["stock"], priority: 32, reason: "background/thumbnail stock branch" }
     );
   }
 

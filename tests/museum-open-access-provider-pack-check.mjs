@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.6.0", "package.json version must be 0.6.0");
+assert(pkg.version === "0.6.1", "package.json version must be 0.6.1");
 assert(Boolean(pkg.scripts?.["museum:providers:check"]), "package.json must define npm run museum:providers:check");
 assert(pkg.scripts?.qa?.includes("museum-open-access-provider-pack-check"), "npm run qa must include museum-open-access-provider-pack-check");
 
@@ -15,7 +15,7 @@ const requiredFiles = [
   "src/lib/providers/museum-open-access.ts",
   "docs/museum-open-access-provider-pack.md"
 ];
-for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v0.6.0 file: ${file}`);
+for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v0.6.1 file: ${file}`);
 
 const providerTokens = [
   "met",
@@ -87,7 +87,7 @@ for (const env of ["RIJKSMUSEUM_API_KEY", "NYPL_API_KEY", "DPLA_API_KEY"]) asser
 assert(!route.includes("const { results: rankedResults, audit: rankingExplainability } = buildRankingExplainability({\n  const { results"), "search route must not contain duplicated ranking declaration");
 
 const runtime = read("src/lib/provider-runtime.ts");
-assert(runtime.includes('APP_VERSION = "0.6.0"'), "provider runtime report must expose app version 0.6.0");
+assert(runtime.includes('APP_VERSION = "0.6.1"'), "provider runtime report must expose app version 0.6.1");
 for (const token of [...providerTokens, "RIJKSMUSEUM_API_KEY", "NYPL_API_KEY", "DPLA_API_KEY"]) {
   assert(runtime.includes(token), `provider runtime must include ${token}`);
 }
@@ -117,11 +117,11 @@ const env = read(".env.example");
 for (const key of ["RIJKSMUSEUM_API_KEY", "NYPL_API_KEY", "DPLA_API_KEY"]) assert(env.includes(key), `.env.example must document ${key}`);
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
-assert(searchPanel.includes("v0.6.0"), "SearchPanel header must show v0.6.0");
-assert(searchPanel.includes("visual-research-board-library-v0.6.0.json"), "library export filename must use v0.6.0");
+assert(searchPanel.includes("v0.6.1"), "SearchPanel header must show v0.6.1");
+assert(searchPanel.includes("visual-research-board-library-v0.6.1.json"), "library export filename must use v0.6.1");
 
 const docs = read("docs/museum-open-access-provider-pack.md");
-for (const token of ["v0.6.0", "Met Museum", "Art Institute of Chicago", "Cleveland Museum", "Wellcome Collection", "Biodiversity Heritage Library", "Gallica", "NARA", "npm run museum:providers:check"]) {
+for (const token of ["v0.6.1", "Met Museum", "Art Institute of Chicago", "Cleveland Museum", "Wellcome Collection", "Biodiversity Heritage Library", "Gallica", "NARA", "npm run museum:providers:check"]) {
   assert(docs.includes(token), `docs must include ${token}`);
 }
 
@@ -130,5 +130,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Museum/Open-Access Provider Pack checks passed for v0.6.0.");
+console.log("Museum/Open-Access Provider Pack checks passed for v0.6.1.");
 process.exit(0);

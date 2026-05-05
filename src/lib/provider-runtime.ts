@@ -1,6 +1,6 @@
 import type { ProviderRuntimeEntry, ProviderRuntimeReport, SearchProviderName } from "@/types/research";
 
-export const APP_VERSION = "0.6.0";
+export const APP_VERSION = "0.6.1";
 
 const ENDPOINT_SAMPLES: Record<SearchProviderName, string[]> = {
   mock: ["local/mock"],
@@ -21,6 +21,9 @@ const ENDPOINT_SAMPLES: Record<SearchProviderName, string[]> = {
   nypl: ["api.repo.nypl.org/api/v1/items/search.json"],
   nara: ["catalog.archives.gov/api/v1"],
   dpla: ["api.dp.la/v2/items"],
+  pixabay: ["pixabay.com/api"],
+  pexels: ["api.pexels.com/v1/search"],
+  unsplash: ["api.unsplash.com/search/photos"],
   brave: ["api.search.brave.com/res/v1/images/search", "api.search.brave.com/res/v1/web/search"],
   tavily: ["api.tavily.com/search"]
 };
@@ -53,6 +56,9 @@ export function buildProviderRuntimeReport(params: {
   rijksmuseumKeyPresent?: boolean;
   nyplKeyPresent?: boolean;
   dplaKeyPresent?: boolean;
+  pixabayKeyPresent?: boolean;
+  pexelsKeyPresent?: boolean;
+  unsplashKeyPresent?: boolean;
   generatedAt?: string;
 }): ProviderRuntimeReport {
   const generatedAt = params.generatedAt ?? new Date().toISOString();
@@ -78,6 +84,9 @@ export function buildProviderRuntimeReport(params: {
     { provider: "nypl", readiness: readinessForFreeKeyProvider(staticDemo, params.mockOnly, Boolean(params.nyplKeyPresent)), requires_key: true, required_env: "NYPL_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.nypl, access_mode: "backend_free_key_required", message: staticDemo ? "Static demo cannot run NYPL fetches." : params.mockOnly ? "Mock-only mode disabled NYPL." : params.nyplKeyPresent ? "NYPL free key is present." : "NYPL is free-key only in this app; add NYPL_API_KEY or keep it disabled." },
     { provider: "nara", readiness: readinessForFreeProvider(staticDemo, params.mockOnly), requires_key: false, endpoint_sample: ENDPOINT_SAMPLES.nara, access_mode: "archive_open_access", message: staticDemo ? "Static demo cannot run NARA fetches." : params.mockOnly ? "Mock-only mode disabled NARA." : "National Archives/NARA is a free no-key government archive provider." },
     { provider: "dpla", readiness: readinessForFreeKeyProvider(staticDemo, params.mockOnly, Boolean(params.dplaKeyPresent)), requires_key: true, required_env: "DPLA_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.dpla, access_mode: "backend_free_key_required", message: staticDemo ? "Static demo cannot run DPLA fetches." : params.mockOnly ? "Mock-only mode disabled DPLA." : params.dplaKeyPresent ? "DPLA free key is present." : "DPLA is free-key only in this app; add DPLA_API_KEY or keep it disabled." },
+    { provider: "pixabay", readiness: readinessForFreeKeyProvider(staticDemo, params.mockOnly, Boolean(params.pixabayKeyPresent)), requires_key: true, required_env: "PIXABAY_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.pixabay, access_mode: "stock_illustrative", message: staticDemo ? "Static demo cannot run Pixabay fetches." : params.mockOnly ? "Mock-only mode disabled Pixabay." : params.pixabayKeyPresent ? "Pixabay free key is present." : "Pixabay is free-key stock/illustrative only; add PIXABAY_API_KEY or keep it disabled." },
+    { provider: "pexels", readiness: readinessForFreeKeyProvider(staticDemo, params.mockOnly, Boolean(params.pexelsKeyPresent)), requires_key: true, required_env: "PEXELS_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.pexels, access_mode: "stock_illustrative", message: staticDemo ? "Static demo cannot run Pexels fetches." : params.mockOnly ? "Mock-only mode disabled Pexels." : params.pexelsKeyPresent ? "Pexels free key is present." : "Pexels is free-key stock/illustrative only; add PEXELS_API_KEY or keep it disabled." },
+    { provider: "unsplash", readiness: readinessForFreeKeyProvider(staticDemo, params.mockOnly, Boolean(params.unsplashKeyPresent)), requires_key: true, required_env: "UNSPLASH_ACCESS_KEY", endpoint_sample: ENDPOINT_SAMPLES.unsplash, access_mode: "stock_illustrative", message: staticDemo ? "Static demo cannot run Unsplash fetches." : params.mockOnly ? "Mock-only mode disabled Unsplash." : params.unsplashKeyPresent ? "Unsplash free key is present." : "Unsplash is free-key stock/illustrative only; add UNSPLASH_ACCESS_KEY or keep it disabled." },
     { provider: "brave", readiness: optionalProviderReadiness(staticDemo, params.mockOnly, Boolean(params.braveKeyPresent)), requires_key: true, required_env: "BRAVE_SEARCH_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.brave, access_mode: "rights_check_required", message: params.braveKeyPresent ? "Brave key is present, but Brave remains optional outside the free-only core." : "Brave is optional and disabled by default for free-only sourcing." },
     { provider: "tavily", readiness: optionalProviderReadiness(staticDemo, params.mockOnly, Boolean(params.tavilyKeyPresent)), requires_key: true, required_env: "TAVILY_API_KEY", endpoint_sample: ENDPOINT_SAMPLES.tavily, access_mode: "rights_check_required", message: params.tavilyKeyPresent ? "Tavily key is present, but Tavily remains optional outside the free-only core." : "Tavily is optional and disabled by default for free-only sourcing." }
   ];
@@ -88,8 +97,8 @@ export function buildProviderRuntimeReport(params: {
   const recommendedNextSteps = (() => {
     if (staticDemo) return ["Static GitHub Pages is mock/reference-only. Use a Next.js runtime for free backend provider calls.", "Use the Reference Search Hub for manual Google/Bing/Yandex discovery and import selected URLs manually."];
     if (params.mockOnly) return ["Disable VISUAL_RESEARCH_BOARD_MOCK_ONLY to validate live free providers.", "Keep mock enabled as fallback while Wikimedia/Openverse/LOC/Archive/NASA run."];
-    if (missingFreeKeys.length > 0) return [`Optional free-key providers missing: ${missingFreeKeys.join(", ")}.`, "The no-key free core can still run: Wikimedia, Openverse, LOC, Internet Archive, NASA Images, Met, ArtIC, Cleveland Museum, Wellcome, BHL, Gallica, and NARA."];
-    return ["Run npm run free:image:check and provider runtime smoke checks after deployment.", "Review provider health for rights_status and source_access_mode coverage."];
+    if (missingFreeKeys.length > 0) return [`Optional free-key providers missing: ${missingFreeKeys.join(", ")}.`, "The no-key free core can still run: Wikimedia, Openverse, LOC, Internet Archive, NASA Images, Met, ArtIC, Cleveland Museum, Wellcome, BHL, Gallica, and NARA. Stock providers are optional illustrative sources and can remain disabled."];
+    return ["Run npm run stock:providers:check, npm run free:image:check, and provider runtime smoke checks after deployment.", "Review provider health for rights_status and source_access_mode coverage."];
   })();
 
   return {

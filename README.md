@@ -1,15 +1,30 @@
-# Visual Research Board v0.6.0
+# Visual Research Board v0.6.1
 
-**v0.6.0 — Museum/Open-Access Provider Pack**
+**v0.6.1 — Stock/Illustrative Provider Pack**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, and evidence-pack exports.
 
 ## Current release
 
-v0.6.0 expands the provider layer with museum, cultural-heritage, digital-library, natural-history, and public-record sources.
+v0.6.1 adds optional stock/illustrative image providers for moodboards, thumbnails, backgrounds, and visual inspiration. These providers are **free-key**, disabled by default, and explicitly labeled as `stock_illustrative` so they are not confused with factual/archive evidence.
 
-### New no-key providers enabled by default
+### New optional stock/illustrative providers
 
+- Pixabay: `PIXABAY_API_KEY`
+- Pexels: `PEXELS_API_KEY`
+- Unsplash: `UNSPLASH_ACCESS_KEY`
+
+### Existing provider foundation
+
+The free/open provider layer remains available:
+
+- Wikimedia Commons
+- Openverse
+- Library of Congress
+- Internet Archive
+- NASA Images
+- Smithsonian Open Access
+- Europeana
 - Met Museum
 - Art Institute of Chicago
 - Cleveland Museum of Art
@@ -17,20 +32,16 @@ v0.6.0 expands the provider layer with museum, cultural-heritage, digital-librar
 - Biodiversity Heritage Library
 - Gallica / BnF
 - National Archives / NARA
+- Rijksmuseum, NYPL, and DPLA when free keys are configured
 
-### New free-key providers disabled by default
-
-- Rijksmuseum: `RIJKSMUSEUM_API_KEY`
-- NYPL Digital Collections: `NYPL_API_KEY`
-- DPLA: `DPLA_API_KEY`
-
-Existing free/open providers remain available: Wikimedia Commons, Openverse, Library of Congress, Internet Archive, NASA Images, Smithsonian, and Europeana. Brave and Tavily remain optional and disabled by default.
+Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, and similar search engines remain manual reference launchers only.
 
 ## Core workflow
 
 ```text
 Search topic
 → retrieve from free/open providers
+→ optionally add stock/illustrative candidates
 → launch external reference searches manually
 → import selected URLs
 → save to board
@@ -44,6 +55,7 @@ Search topic
 ## Validation
 
 ```bash
+npm run stock:providers:check
 npm run museum:providers:check
 npm run qa
 ```
@@ -57,7 +69,7 @@ npm run lint
 
 ## Policy boundary
 
-Google, Bing, Yandex, and similar engines are manual reference launchers only. The app does not scrape search-engine results.
+Stock providers are useful for visual inspiration and production illustration, not primary factual evidence. Every stock candidate is labeled with `source_access_mode: stock_illustrative`, `rights_status: likely_reusable`, and `reuse_risk: medium` so users verify terms before publication.
 
 ## Retained evidence gates
 
@@ -68,4 +80,4 @@ npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-The current app version is v0.6.0; v0.3.1 references identify retained historical provider/runtime and real-topic evidence gates.
+The current app version is v0.6.1; v0.3.1 references identify retained historical provider/runtime and real-topic evidence gates.

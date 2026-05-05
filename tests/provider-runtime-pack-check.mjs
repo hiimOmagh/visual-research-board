@@ -18,7 +18,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing provider runtime file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.6.0", "package.json version must be 0.6.0");
+assert(pkg.version === "0.6.1", "package.json version must be 0.6.1");
 assert(Boolean(pkg.scripts?.["provider:runtime:test"]), "package.json must define npm run provider:runtime:test");
 assert(Boolean(pkg.scripts?.["provider:runtime:check"]), "package.json must define npm run provider:runtime:check");
 assert(pkg.scripts?.qa?.includes("provider-runtime-pack-check"), "npm run qa must include provider-runtime-pack-check");
@@ -29,7 +29,7 @@ assert(types.includes("ProviderRuntimeReadiness"), "types must define ProviderRu
 assert(types.includes("runtime_report"), "SearchDiagnostics must include runtime_report");
 
 const runtimeLib = read("src/lib/provider-runtime.ts");
-assert(runtimeLib.includes("APP_VERSION = \"0.6.0\""), "provider runtime report must expose app version 0.6.0");
+assert(runtimeLib.includes("APP_VERSION = \"0.6.1\""), "provider runtime report must expose app version 0.6.1");
 assert(runtimeLib.includes("SMITHSONIAN_API_KEY"), "provider runtime report must check Smithsonian free-key readiness");
 assert(runtimeLib.includes("EUROPEANA_API_KEY"), "provider runtime report must check Europeana free-key readiness");
 assert(runtimeLib.includes("BRAVE_SEARCH_API_KEY"), "provider runtime report may expose optional Brave readiness");
@@ -57,7 +57,7 @@ assert(runtimePanel.includes("recommended_next_steps"), "runtime panel must show
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("ProviderRuntimePanel"), "SearchPanel must render ProviderRuntimePanel");
-assert(searchPanel.includes("v0.6.0"), "SearchPanel header must show v0.6.0");
+assert(searchPanel.includes("v0.6.1"), "SearchPanel header must show v0.6.1");
 
 const script = read("scripts/provider-runtime-smoke.mjs");
 assert(script.includes("VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL"), "runtime smoke script must support runtime base URL env");

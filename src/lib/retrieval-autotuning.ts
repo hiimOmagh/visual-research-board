@@ -30,6 +30,9 @@ const PROVIDER_BASE_WEIGHTS: Record<SearchProviderName, number> = {
   nypl: 1.05,
   nara: 1.06,
   dpla: 1.04,
+  pixabay: 0.72,
+  pexels: 0.72,
+  unsplash: 0.72,
   brave: 0.82,
   tavily: 0.8
 };

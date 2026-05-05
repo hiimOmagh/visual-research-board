@@ -1,15 +1,15 @@
 {
   "name": "visual-research-board",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
-  "description": "Museum/Open-Access Provider Pack for a free-source visual research board with expanded public museum, archive, cultural heritage, and open-access image retrieval.",
+  "description": "Stock/Illustrative Provider Pack for optional free-key Pixabay, Pexels, and Unsplash image retrieval with stock-source labeling and rights-aware exports.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs && node tests/review-evidence-feedback-check.mjs && node tests/free-image-retrieval-check.mjs && node tests/normalization-dedupe-check.mjs && node tests/query-routing-check.mjs && node tests/ranking-explainability-check.mjs && node tests/project-review-memory-check.mjs && node tests/board-organization-check.mjs && node tests/claim-mapping-check.mjs && node tests/coverage-bias-check.mjs && node tests/evidence-pack-export-check.mjs && node tests/attribution-generator-check.mjs && node tests/ux-reliability-check.mjs && node tests/storage-hardening-check.mjs && node tests/museum-open-access-provider-pack-check.mjs",
+    "qa": "node tests/qa-check.mjs && node tests/normalization-check.mjs && node tests/e2e-fixture-check.mjs && node tests/provider-smoke-check.mjs && node tests/library-conflict-check.mjs && node tests/broad-retrieval-check.mjs && node tests/retrieval-evidence-check.mjs && node tests/provider-runtime-pack-check.mjs && node tests/retrieval-calibration-check.mjs && node tests/retrieval-autotuning-check.mjs && node tests/deployed-browser-evidence-check.mjs && node tests/real-topic-matrix-check.mjs && node tests/evidence-driven-tuning-check.mjs && node tests/lockfile-registry-check.mjs && node tests/provider-result-inspector-check.mjs && node tests/manual-quality-review-check.mjs && node tests/review-evidence-feedback-check.mjs && node tests/free-image-retrieval-check.mjs && node tests/normalization-dedupe-check.mjs && node tests/query-routing-check.mjs && node tests/ranking-explainability-check.mjs && node tests/project-review-memory-check.mjs && node tests/board-organization-check.mjs && node tests/claim-mapping-check.mjs && node tests/coverage-bias-check.mjs && node tests/evidence-pack-export-check.mjs && node tests/attribution-generator-check.mjs && node tests/ux-reliability-check.mjs && node tests/storage-hardening-check.mjs && node tests/museum-open-access-provider-pack-check.mjs && node tests/stock-illustrative-provider-pack-check.mjs",
     "test:ci:no-browser": "npm run qa && npm run typecheck && npm run lint",
     "normalization:test": "node tests/normalization-check.mjs",
     "e2e:fixtures": "node tests/e2e-fixture-check.mjs",
@@ -53,7 +53,8 @@
     "attribution:generator:check": "node tests/attribution-generator-check.mjs",
     "ux:reliability:check": "node tests/ux-reliability-check.mjs",
     "storage:hardening:check": "node tests/storage-hardening-check.mjs",
-    "museum:providers:check": "node tests/museum-open-access-provider-pack-check.mjs"
+    "museum:providers:check": "node tests/museum-open-access-provider-pack-check.mjs",
+    "stock:providers:check": "node tests/stock-illustrative-provider-pack-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

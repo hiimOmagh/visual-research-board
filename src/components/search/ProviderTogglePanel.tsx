@@ -3,7 +3,7 @@
 import type { ProviderToggleMap, SearchProviderName } from "@/types/research";
 import { SEARCH_PROVIDERS } from "@/types/research";
 
-const providerCopy: Record<SearchProviderName, { label: string; description: string; env?: string; mode: "free" | "free-key" | "optional" | "demo" }> = {
+const providerCopy: Record<SearchProviderName, { label: string; description: string; env?: string; mode: "free" | "free-key" | "stock" | "optional" | "demo" }> = {
   mock: { label: "Mock", description: "Always available deterministic demo results. Keep this on for safe local validation.", mode: "demo" },
   wikimedia: { label: "Wikimedia", description: "Commons public-domain / Creative Commons candidates. Free backend, no key required.", mode: "free" },
   openverse: { label: "Openverse", description: "Open-license image discovery across many source collections. Free backend, no key required.", mode: "free" },
@@ -22,6 +22,9 @@ const providerCopy: Record<SearchProviderName, { label: string; description: str
   nypl: { label: "NYPL", description: "NYPL Digital Collections public-domain records. Free key required.", env: "NYPL_API_KEY", mode: "free-key" },
   nara: { label: "NARA", description: "U.S. National Archives public records and online media. Free backend, no key required.", mode: "free" },
   dpla: { label: "DPLA", description: "U.S. cultural-heritage aggregator records. Free key required.", env: "DPLA_API_KEY", mode: "free-key" },
+  pixabay: { label: "Pixabay", description: "Optional stock/illustrative photo and image candidates. Free key required; not treated as factual evidence by default.", env: "PIXABAY_API_KEY", mode: "stock" },
+  pexels: { label: "Pexels", description: "Optional stock/illustrative photo candidates for backgrounds, thumbnails, and moodboards. Free key required.", env: "PEXELS_API_KEY", mode: "stock" },
+  unsplash: { label: "Unsplash", description: "Optional stock/illustrative editorial-style photos. Free key required; verify publication terms.", env: "UNSPLASH_ACCESS_KEY", mode: "stock" },
   brave: { label: "Brave", description: "Optional broad web/image API. Disabled by default for the free-only workflow.", env: "BRAVE_SEARCH_API_KEY", mode: "optional" },
   tavily: { label: "Tavily", description: "Optional web research API. Disabled by default for the free-only workflow.", env: "TAVILY_API_KEY", mode: "optional" }
 };
@@ -39,6 +42,7 @@ function offToggles(): ProviderToggleMap {
 function modeBadge(mode: (typeof providerCopy)[SearchProviderName]["mode"]): string {
   if (mode === "free") return "Free / no key";
   if (mode === "free-key") return "Free key";
+  if (mode === "stock") return "Stock / illustrative";
   if (mode === "optional") return "Optional API";
   return "Demo";
 }
@@ -67,16 +71,24 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
     nara: true
   });
 
+  const enableStockIllustrative = () => onChange({
+    ...toggles,
+    pixabay: true,
+    pexels: true,
+    unsplash: true
+  });
+
   return (
     <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider toggles</p>
           <h2 className="mt-1 text-xl font-bold text-white">Free backend sources</h2>
-          <p className="mt-2 text-xs leading-5 text-slate-400">v0.6.0 keeps provider setup explicit: free-core sources, free-key sources, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">v0.6.1 keeps provider setup explicit: free-core sources, free-key sources, optional stock/illustrative providers, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={enableFreeCore} className="rounded-2xl border border-lime-300/30 bg-lime-300/10 px-4 py-2 text-xs font-semibold text-lime-100 transition hover:border-lime-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Free-core sources</button>
+          <button type="button" onClick={enableStockIllustrative} className="rounded-2xl border border-sky-300/30 bg-sky-300/10 px-4 py-2 text-xs font-semibold text-sky-100 transition hover:border-sky-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/60">Stock illustrative</button>
           <button type="button" onClick={enableMockOnly} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Mock-only safe mode</button>
         </div>
       </div>

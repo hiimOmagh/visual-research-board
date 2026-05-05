@@ -174,6 +174,7 @@ function metadataGaps(result: ResearchResult): MetadataGap[] {
 
 function defaultSourceAccessMode(provider: ProviderName, sourceDomain: string): SourceAccessMode {
   if (provider === "manual") return "manual_reference_only";
+  if (["pixabay", "pexels", "unsplash"].includes(provider)) return "stock_illustrative";
   if (provider === "brave" || provider === "tavily") return "rights_check_required";
   if (["loc", "nasa", "met", "artic", "cleveland_museum", "wellcome", "bhl", "gallica", "nara"].includes(provider)) return "backend_free_no_key";
   if (provider === "internet_archive") return "archive_open_access";
