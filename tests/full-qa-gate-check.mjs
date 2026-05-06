@@ -91,6 +91,10 @@ for (const token of ["v0.8.3", "npm run qa", "npm run qa:list", "qa:baseline", "
   assert(docs.includes(token), `full QA docs must include ${token}`);
 }
 
+function exists(relativePath) {
+  return fs.existsSync(path.join(root, relativePath));
+}
+
 const release = read("docs/release-checklist.md");
 assert(release.includes("v0.8.3"), "release checklist must identify v0.8.3");
 assert(release.includes("npm run test:ci:no-browser"), "release checklist must include no-browser CI gate");
