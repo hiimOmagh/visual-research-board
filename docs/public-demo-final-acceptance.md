@@ -1,6 +1,6 @@
-# Public Demo Final Acceptance — v1.0.0
+# Public Demo Final Acceptance — v1.1.0
 
-v1.0.0 is the final public-demo acceptance milestone before the stable public-demo release.
+v1.1.0 is the final public-demo acceptance milestone before the stable public-demo release.
 
 ## Scope
 

@@ -1,8 +1,8 @@
-# Public Demo Stable Release — v1.0.0
+# Public Demo Stable Release — v1.1.0
 
 Public demo stable release baseline.
 
-v1.0.0 is the stable public-demo release.
+v1.1.0 is the stable public-demo release.
 
 ## Scope
 
@@ -25,7 +25,7 @@ v1.0.0 is the stable public-demo release.
 - Full QA gate has passed.
 - Typecheck, lint, and build have passed.
 - No root apply scripts are committed.
-- The full QA artifact shows `app_version: 1.0.0`, `status: passed`, and `failed_gate_count: 0`.
+- The full QA artifact shows `app_version: 1.1.0`, `status: passed`, and `failed_gate_count: 0`.
 
 ## Release posture
 
