@@ -1,4 +1,4 @@
-# Release Candidate Checklist — v1.5.0
+# Release Candidate Checklist — v1.6.0
 
 ## Required checks
 
