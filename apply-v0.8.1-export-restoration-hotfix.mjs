@@ -23,7 +23,7 @@ function ensurePackageVersion() {
   const pkgPath = "package.json";
   if (!exists(pkgPath)) throw new Error("package.json not found. Run from repo root.");
   const pkg = JSON.parse(read(pkgPath));
-  pkg.version = "0.8.1";
+  pkg.version = "0.8.2";
   pkg.description =
     "Release Warning Cleanup preserving Public Demo Release Candidate and Security and Key Handling for server-only provider keys, redacted diagnostics, demo-safe limitations, and non-misleading provider/runtime presentation.";
   pkg.scripts = pkg.scripts || {};
@@ -33,8 +33,8 @@ function ensurePackageVersion() {
   const lockPath = "package-lock.json";
   if (exists(lockPath)) {
     const lock = JSON.parse(read(lockPath));
-    lock.version = "0.8.1";
-    if (lock.packages?.[""]) lock.packages[""].version = "0.8.1";
+    lock.version = "0.8.2";
+    if (lock.packages?.[""]) lock.packages[""].version = "0.8.2";
     write(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
   }
 }
@@ -162,8 +162,8 @@ function fail(message) {
 
 const pkg = JSON.parse(read("package.json"));
 
-if (pkg.version !== "0.8.1") {
-  fail(\`package.json version must be 0.8.1, got \${pkg.version}\`);
+if (pkg.version !== "0.8.2") {
+  fail(\`package.json version must be 0.8.2, got \${pkg.version}\`);
 }
 
 const description = pkg.description || "";
@@ -229,7 +229,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Release warning cleanup checks passed for v0.8.1.");
+console.log("Release warning cleanup checks passed for v0.8.2.");
 `;
 
   write(target, text);
@@ -251,8 +251,8 @@ function appendMetadata() {
   const manifest = "PATCH_MANIFEST.md";
   if (exists(manifest)) {
     let text = read(manifest);
-    if (!text.includes("v0.8.1 — Export Restoration + Warning Check Hotfix")) {
-      text += `\n\n# v0.8.1 — Export Restoration + Warning Check Hotfix\n\nRestores evidence-pack export compatibility after warning cleanup, removes the remaining targeted lint warnings, and corrects the release warning check so it rejects stale Node 20-era action versions without rejecting Node 24-capable action versions.\n`;
+    if (!text.includes("v0.8.2 — Export Restoration + Warning Check Hotfix")) {
+      text += `\n\n# v0.8.2 — Export Restoration + Warning Check Hotfix\n\nRestores evidence-pack export compatibility after warning cleanup, removes the remaining targeted lint warnings, and corrects the release warning check so it rejects stale Node 20-era action versions without rejecting Node 24-capable action versions.\n`;
       write(manifest, text);
     }
   }
@@ -266,7 +266,7 @@ updateWorkflow();
 fixReleaseWarningCheck();
 appendMetadata();
 
-console.log("Applied v0.8.1 export restoration + warning-check hotfix.");
+console.log("Applied v0.8.2 export restoration + warning-check hotfix.");
 console.log("Next commands:");
 console.log("npm run release:warning:check");
 console.log("npm run public-demo:check");

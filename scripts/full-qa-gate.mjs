@@ -7,7 +7,8 @@ const root = process.cwd();
 const startedAt = new Date().toISOString();
 
 const gates = [
-  { category: "baseline", name: "core-static-qa", command: ["node", "tests/qa-check.mjs"] },
+    { category: "release", name: "public-demo-evidence-lock", command: ["node", "tests/public-demo-evidence-lock-check.mjs"] },
+{ category: "baseline", name: "core-static-qa", command: ["node", "tests/qa-check.mjs"] },
   { category: "baseline", name: "normalization-fixtures", command: ["node", "tests/normalization-check.mjs"] },
   { category: "baseline", name: "e2e-fixtures", command: ["node", "tests/e2e-fixture-check.mjs"] },
   { category: "baseline", name: "provider-smoke-fixtures", command: ["node", "tests/provider-smoke-check.mjs"] },
@@ -102,8 +103,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "0.8.1",
-  app_version: "0.8.1",
+  schema_version: "0.8.2",
+  app_version: "0.8.2",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -124,5 +125,5 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v0.8.1.");
+console.log("\nFull QA gate passed for v0.8.2.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");

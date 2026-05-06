@@ -1,15 +1,15 @@
-# v0.8.1 — Release Warning Cleanup Runbook
+# v0.8.2 — Release Warning Cleanup Runbook
 
 ## Scope
 
-Warning-only cleanup after v0.8.1 Public Demo Release Candidate.
+Warning-only cleanup after v0.8.2 Public Demo Release Candidate.
 
 ## Apply
 
-Copy `apply-v0.8.1-release-warning-cleanup.mjs` into the repository root, then run:
+Copy `apply-v0.8.2-release-warning-cleanup.mjs` into the repository root, then run:
 
 ```bash
-node apply-v0.8.1-release-warning-cleanup.mjs
+node apply-v0.8.2-release-warning-cleanup.mjs
 ```
 
 ## Validate
@@ -30,7 +30,7 @@ npm run build
 ```bash
 git status --short
 git add package.json package-lock.json .github/workflows/ci.yml PATCH_MANIFEST.md docs/validation-report.md src/lib/attribution-generator.ts src/lib/evidence-pack-export.ts src/lib/export.ts tests/release-warning-cleanup-check.mjs
-git commit -m "chore: clean up v0.8.1 release warnings"
+git commit -m "chore: clean up v0.8.2 release warnings"
 ```
 
 ## Non-goals

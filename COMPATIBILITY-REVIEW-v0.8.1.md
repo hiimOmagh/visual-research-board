@@ -1,4 +1,4 @@
-# Compatibility Review — v0.8.1 Release Warning Cleanup
+# Compatibility Review — v0.8.2 Release Warning Cleanup
 
 ## Preserved
 
@@ -11,7 +11,7 @@
 
 ## Changed
 
-- Package version and lockfile version to `0.8.1`
+- Package version and lockfile version to `0.8.2`
 - Package description now includes all required release phrases:
   - Release Warning Cleanup
   - Public Demo Release Candidate

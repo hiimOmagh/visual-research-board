@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const FROM_VERSION = "0.8.1";
-const TO_VERSION = "0.8.1";
+const FROM_VERSION = "0.8.2";
+const TO_VERSION = "0.8.2";
 const FROM_LABEL = `v${FROM_VERSION}`;
 const TO_LABEL = `v${TO_VERSION}`;
 
@@ -132,38 +132,38 @@ function verify() {
   if (fs.existsSync(fullGatePath)) {
     const fullGate = fs.readFileSync(fullGatePath, "utf8");
     if (!fullGate.includes("public-demo-release-candidate")) failures.push("full QA gate does not include public-demo release-candidate gate");
-    if (!fullGate.includes(`schema_version: "${TO_VERSION}"`)) failures.push("full QA gate schema_version is not aligned to 0.8.1");
-    if (!fullGate.includes(`app_version: "${TO_VERSION}"`)) failures.push("full QA gate app_version is not aligned to 0.8.1");
+    if (!fullGate.includes(`schema_version: "${TO_VERSION}"`)) failures.push("full QA gate schema_version is not aligned to 0.8.2");
+    if (!fullGate.includes(`app_version: "${TO_VERSION}"`)) failures.push("full QA gate app_version is not aligned to 0.8.2");
   }
 
   const qaCheckPath = path.join(root, "tests/qa-check.mjs");
   if (fs.existsSync(qaCheckPath)) {
     const qaCheck = fs.readFileSync(qaCheckPath, "utf8");
-    if (qaCheck.includes('pkg.version === "0.8.1"')) failures.push("tests/qa-check.mjs still expects package version 0.8.1");
-    if (qaCheck.includes('SearchPanel header must show v0.8.1')) failures.push("tests/qa-check.mjs still expects SearchPanel header v0.8.1");
+    if (qaCheck.includes('pkg.version === "0.8.2"')) failures.push("tests/qa-check.mjs still expects package version 0.8.2");
+    if (qaCheck.includes('SearchPanel header must show v0.8.2')) failures.push("tests/qa-check.mjs still expects SearchPanel header v0.8.2");
   }
 
   const searchPanelPath = path.join(root, "src/components/search/SearchPanel.tsx");
   if (fs.existsSync(searchPanelPath)) {
     const searchPanel = fs.readFileSync(searchPanelPath, "utf8");
-    if (searchPanel.includes("v0.8.1")) failures.push("SearchPanel still contains v0.8.1");
-    if (searchPanel.includes("visual-research-board-library-v0.8.1.json")) failures.push("SearchPanel library export filename still contains v0.8.1");
+    if (searchPanel.includes("v0.8.2")) failures.push("SearchPanel still contains v0.8.2");
+    if (searchPanel.includes("visual-research-board-library-v0.8.2.json")) failures.push("SearchPanel library export filename still contains v0.8.2");
   }
 
   const allFiles = walk(root);
   const stale = [];
   for (const filePath of allFiles) {
     const relative = rel(filePath);
-    if (relative.includes("RUNBOOK-v0.8.1") || relative.includes("COMPATIBILITY-REVIEW-v0.8.1")) continue;
+    if (relative.includes("RUNBOOK-v0.8.2") || relative.includes("COMPATIBILITY-REVIEW-v0.8.2")) continue;
     const text = fs.readFileSync(filePath, "utf8");
-    if (text.includes('pkg.version === "0.8.1"') || text.includes('APP_VERSION = "0.8.1"') || text.includes('schema_version: "0.8.1"') || text.includes('app_version: "0.8.1"')) {
+    if (text.includes('pkg.version === "0.8.2"') || text.includes('APP_VERSION = "0.8.2"') || text.includes('schema_version: "0.8.2"') || text.includes('app_version: "0.8.2"')) {
       stale.push(relative);
     }
   }
-  if (stale.length) failures.push(`stale hard-coded 0.8.1 assertions/constants remain: ${stale.join(", ")}`);
+  if (stale.length) failures.push(`stale hard-coded 0.8.2 assertions/constants remain: ${stale.join(", ")}`);
 
   if (failures.length) {
-    console.error("v0.8.1 CI hotfix verification failed:");
+    console.error("v0.8.2 CI hotfix verification failed:");
     for (const failure of failures) console.error(`- ${failure}`);
     process.exit(1);
   }
@@ -174,8 +174,8 @@ updateFullQaGate();
 const changed = versionAlignFiles();
 verify();
 
-console.log("Applied v0.8.1 CI hotfix: version alignment completed.");
-console.log(`Updated ${changed.length} files containing stale v0.8.1 references.`);
+console.log("Applied v0.8.2 CI hotfix: version alignment completed.");
+console.log(`Updated ${changed.length} files containing stale v0.8.2 references.`);
 console.log("Next commands:");
 console.log("npm run public-demo:check");
 console.log("npm run qa:public-demo");

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const VERSION = "0.8.1";
+const VERSION = "0.8.2";
 
 function filePath(relativePath) {
   return path.join(root, relativePath);
@@ -132,10 +132,10 @@ assert(
 );
 
 const fullQaGate = read("scripts/full-qa-gate.mjs");
-assert(fullQaGate.includes("0.8.1"), "Full QA gate must reference v0.8.1");
+assert(fullQaGate.includes("0.8.2"), "Full QA gate must reference v0.8.2");
 
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Release Warning Cleanup checks passed for v0.8.1.");
+console.log("Release Warning Cleanup checks passed for v0.8.2.");

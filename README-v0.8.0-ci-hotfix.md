@@ -1,4 +1,4 @@
-# v0.8.1 CI Hotfix — Version Alignment
+# v0.8.2 CI Hotfix — Version Alignment
 
 ## Diagnosis
 
@@ -11,22 +11,22 @@ command: node tests/qa-check.mjs
 status: failed
 ```
 
-The v0.8.1 patch bumped `package.json` and the Full QA gate to `0.8.1`, but retained older v0.8.1 hard-coded assertions in cumulative static checks such as `tests/qa-check.mjs`. Those checks still expected `package.json` and the SearchPanel header/export filenames to contain `0.8.1`.
+The v0.8.2 patch bumped `package.json` and the Full QA gate to `0.8.2`, but retained older v0.8.2 hard-coded assertions in cumulative static checks such as `tests/qa-check.mjs`. Those checks still expected `package.json` and the SearchPanel header/export filenames to contain `0.8.2`.
 
 ## What this hotfix does
 
-- Aligns stale `0.8.1` / `v0.8.1` literals to `0.8.1` / `v0.8.1` across source, tests, docs, workflow files, and package files.
+- Aligns stale `0.8.2` / `v0.8.2` literals to `0.8.2` / `v0.8.2` across source, tests, docs, workflow files, and package files.
 - Preserves `security:key:check` and `qa:security`.
 - Ensures `public-demo:check`, `qa:public-demo`, and `clean:rc` exist.
 - Ensures the Full QA gate includes the public-demo release-candidate gate.
-- Verifies that `tests/qa-check.mjs` no longer expects `0.8.1`.
+- Verifies that `tests/qa-check.mjs` no longer expects `0.8.2`.
 
 ## Apply
 
-Copy `apply-v0.8.1-ci-hotfix.mjs` to the repository root, then run:
+Copy `apply-v0.8.2-ci-hotfix.mjs` to the repository root, then run:
 
 ```bash
-node apply-v0.8.1-ci-hotfix.mjs
+node apply-v0.8.2-ci-hotfix.mjs
 ```
 
 ## Validate
@@ -46,9 +46,9 @@ npm run build
 ```bash
 git status --short
 git add package.json package-lock.json README.md PATCH_MANIFEST.md .env.example .github/workflows/ci.yml docs scripts src tests
-git commit -m "fix: align v0.8.1 release candidate QA expectations"
+git commit -m "fix: align v0.8.2 release candidate QA expectations"
 ```
 
 ## Scope boundary
 
-This is not a feature patch. It only fixes release-version alignment and CI gate consistency after v0.8.1.
+This is not a feature patch. It only fixes release-version alignment and CI gate consistency after v0.8.2.

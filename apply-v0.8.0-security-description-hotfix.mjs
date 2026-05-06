@@ -8,7 +8,7 @@ if (!fs.existsSync(pkgPath)) {
 
 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 
-pkg.version = "0.8.1";
+pkg.version = "0.8.2";
 pkg.description = "Public Demo Release Candidate preserving Security and Key Handling for server-only provider keys, redacted diagnostics, demo-safe limitations, and non-misleading provider/runtime presentation.";
 pkg.scripts = pkg.scripts || {};
 
@@ -20,7 +20,7 @@ pkg.scripts["qa:security"] = pkg.scripts["qa:security"] || "node scripts/full-qa
 
 fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
 
-console.log("Applied v0.8.1 security-description hotfix.");
+console.log("Applied v0.8.2 security-description hotfix.");
 console.log("package.json description now includes both Public Demo Release Candidate and Security and Key Handling.");
 console.log("Next commands:");
 console.log("npm run security:key:check");

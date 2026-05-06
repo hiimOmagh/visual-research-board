@@ -1,4 +1,46 @@
-# v0.8.1 — Public Demo Release Candidate Patch Manifest
+# v0.8.2 — Public Demo Evidence Lock Patch Manifest
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/public-demo-evidence-lock-check.mjs`
+- `docs/public-demo-evidence-lock.md`
+- `docs/release-evidence-lock.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+
+## Scope
+
+v0.8.2 locks public-demo release evidence without changing product behavior.
+
+## Non-goals
+
+- No provider changes
+- No retrieval changes
+- No export changes
+- No security/key-handling changes
+- No new scraping behavior
+
+## Validation
+
+```bash
+npm run public-demo:evidence:check
+npm run release:warning:check
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+```
+
+# v0.8.2 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -20,7 +62,7 @@
 
 ## Scope
 
-v0.8.1 prepares the app as a Public Demo Release Candidate while preserving the v0.8.1 Security and Key Handling layer.
+v0.8.2 prepares the app as a Public Demo Release Candidate while preserving the v0.8.2 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -44,7 +86,7 @@ npm run lint
 npm run build
 ```
 
-# v0.8.1 — Security and Key Handling Patch Manifest
+# v0.8.2 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -84,13 +126,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v0.8.1 — UX Reliability + Empty State Polish
-- v0.8.1 — Local Storage + Import/Export Hardening
-- v0.8.1 — Security and Key Handling
+- v0.8.2 — UX Reliability + Empty State Polish
+- v0.8.2 — Local Storage + Import/Export Hardening
+- v0.8.2 — Security and Key Handling
 
-## v0.8.1 — Release Warning Cleanup
+## v0.8.2 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.1 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.2 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 

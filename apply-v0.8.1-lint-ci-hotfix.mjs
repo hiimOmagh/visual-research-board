@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const VERSION = "0.8.1";
+const VERSION = "0.8.2";
 
 function p(relativePath) {
   return path.join(root, relativePath);
@@ -167,8 +167,8 @@ function updateMetadataDocs() {
   for (const file of ["PATCH_MANIFEST.md", "docs/validation-report.md", "docs/release-checklist.md"]) {
     if (!exists(file)) continue;
     let text = read(file);
-    if (!text.includes("v0.8.1 — Release Warning Cleanup")) {
-      text = `${text.trimEnd()}\n\n## v0.8.1 — Release Warning Cleanup\n\nThis micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.0 Public Demo Release Candidate and Security and Key Handling behavior.\n\nValidation:\n\n\`\`\`bash\nnpm run release:warning:check\nnpm run public-demo:check\nnpm run qa:public-demo\nnpm run security:key:check\nnpm run qa\nnpm run typecheck\nnpm run lint\nnpm run build\n\`\`\`\n`;
+    if (!text.includes("v0.8.2 — Release Warning Cleanup")) {
+      text = `${text.trimEnd()}\n\n## v0.8.2 — Release Warning Cleanup\n\nThis micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.0 Public Demo Release Candidate and Security and Key Handling behavior.\n\nValidation:\n\n\`\`\`bash\nnpm run release:warning:check\nnpm run public-demo:check\nnpm run qa:public-demo\nnpm run security:key:check\nnpm run qa\nnpm run typecheck\nnpm run lint\nnpm run build\n\`\`\`\n`;
     }
     text = text.replaceAll("0.8.0", VERSION).replaceAll("v0.8.0", `v${VERSION}`);
     write(file, text);
@@ -186,7 +186,7 @@ if (updateReleaseWarningCheck()) changed.push("tests/release-warning-cleanup-che
 updateMetadataDocs();
 changed.push("release metadata docs");
 
-console.log("Applied v0.8.1 lint/CI hotfix.");
+console.log("Applied v0.8.2 lint/CI hotfix.");
 console.log("Changed:");
 for (const item of changed) console.log(`- ${item}`);
 console.log("\nNext commands:");

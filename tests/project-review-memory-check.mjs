@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.8.1", "package.json version must be 0.8.1");
+assert(pkg.version === "0.8.2", "package.json version must be 0.8.2");
 assert(Boolean(pkg.scripts?.["project:review:memory:check"]), "package.json must define npm run project:review:memory:check");
 assert((pkg.scripts?.qa?.includes("project-review-memory-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include project-review-memory-check");
 
@@ -42,13 +42,13 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v0.8.1",
+  "v0.8.2",
   "ProjectReviewMemoryPanel",
   "buildProjectReviewEvidenceMemory(project)",
   "project_review_evidence_memory: freshProjectReviewMemory",
   "review_evidence_memory: freshProjectReviewMemory",
   "resetProjectReviewEvidenceMemory",
-  "visual-research-board-library-v0.8.1.json"
+  "visual-research-board-library-v0.8.2.json"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 
 const route = read("src/app/api/search/route.ts");

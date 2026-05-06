@@ -1,6 +1,6 @@
-# v0.8.1 Lint/CI Hotfix Runbook
+# v0.8.2 Lint/CI Hotfix Runbook
 
-This hotfix is for a partially applied v0.8.1 warning-cleanup patch.
+This hotfix is for a partially applied v0.8.2 warning-cleanup patch.
 
 ## Fixes
 
@@ -17,7 +17,7 @@ This hotfix is for a partially applied v0.8.1 warning-cleanup patch.
 ## Apply
 
 ```bash
-node apply-v0.8.1-lint-ci-hotfix.mjs
+node apply-v0.8.2-lint-ci-hotfix.mjs
 ```
 
 ## Validate
@@ -38,5 +38,5 @@ npm run build
 ```bash
 git status --short
 git add package.json package-lock.json .github/workflows/ci.yml PATCH_MANIFEST.md docs/release-checklist.md docs/validation-report.md src/lib/attribution-generator.ts src/lib/evidence-pack-export.ts src/lib/export.ts tests/release-warning-cleanup-check.mjs
-git commit -m "fix: complete v0.8.1 release warning cleanup"
+git commit -m "fix: complete v0.8.2 release warning cleanup"
 ```

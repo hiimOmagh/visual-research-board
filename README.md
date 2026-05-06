@@ -1,12 +1,12 @@
-# Visual Research Board v0.8.1
+# Visual Research Board v0.8.2
 
-**v0.8.1 — Security and Key Handling**
+**v0.8.2 — Security and Key Handling**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v0.8.1 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
+v0.8.2 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
 
 The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
@@ -75,7 +75,7 @@ Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, 
 
 ## Release rule
 
-v0.8.1 is a validation-hardening release. A successful release needs:
+v0.8.2 is a validation-hardening release. A successful release needs:
 
 ```bash
 npm run qa
@@ -88,14 +88,14 @@ CI uploads the full QA evidence artifact so failed or passed runs can be inspect
 
 ## Retained evidence gates
 
-The current app version is v0.8.1. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
+The current app version is v0.8.2. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-## v0.8.1 security validation
+## v0.8.2 security validation
 
 ```bash
 npm run security:key:check
@@ -107,7 +107,7 @@ Provider keys are server-only and diagnostics report only redacted presence. Do 
 
 ## Public Demo Release Candidate
 
-The current target is **v0.8.1 — Public Demo Release Candidate**.
+The current target is **v0.8.2 — Public Demo Release Candidate**.
 
 This release hardens the app for public inspection. It does not add live scraping, production OAuth, paid-provider assumptions, or fake-live provider behavior.
 
@@ -120,4 +120,24 @@ npm run public-demo:check
 npm run qa:public-demo
 npm run security:key:check
 npm run qa
+```
+
+## Public Demo Evidence Lock
+
+The current target is **v0.8.2 — Public Demo Evidence Lock**.
+
+This patch locks release evidence for the public demo. It does not add features, providers, scraping behavior, OAuth, or source-verification guarantees.
+
+Run:
+
+```bash
+npm run public-demo:evidence:check
+npm run release:warning:check
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
 ```

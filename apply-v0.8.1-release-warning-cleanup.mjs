@@ -2,9 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const VERSION = "0.8.1";
-const PREVIOUS_VERSION = "0.8.1";
-const RELEASE_LABEL = "v0.8.1 — Release Warning Cleanup";
+const VERSION = "0.8.2";
+const PREVIOUS_VERSION = "0.8.2";
+const RELEASE_LABEL = "v0.8.2 — Release Warning Cleanup";
 
 function filePath(relativePath) {
   return path.join(root, relativePath);
@@ -174,7 +174,7 @@ function prependPatchManifest() {
 
 ## Scope
 
-v0.8.1 is a release-warning cleanup patch. It removes known lint warnings, updates GitHub Actions to Node 24-capable action versions, and keeps v0.8.x public-demo/security behavior unchanged.
+v0.8.2 is a release-warning cleanup patch. It removes known lint warnings, updates GitHub Actions to Node 24-capable action versions, and keeps v0.8.x public-demo/security behavior unchanged.
 
 ## Changed files
 
@@ -224,7 +224,7 @@ function appendValidationReport() {
   const file = "docs/validation-report.md";
   const section = `## ${RELEASE_LABEL}
 
-v0.8.1 removes release-blocking noise after the v0.8.1 Public Demo Release Candidate validation pass.
+v0.8.2 removes release-blocking noise after the v0.8.2 Public Demo Release Candidate validation pass.
 
 Expected validation:
 
@@ -263,7 +263,7 @@ function writeReleaseWarningCheck() {
 import path from "node:path";
 
 const root = process.cwd();
-const VERSION = "0.8.1";
+const VERSION = "0.8.2";
 
 function filePath(relativePath) {
   return path.join(root, relativePath);
@@ -291,8 +291,8 @@ if (pkg.scripts?.["release:warning:check"] !== "node tests/release-warning-clean
 
 if (exists("package-lock.json")) {
   const lock = JSON.parse(read("package-lock.json"));
-  if (lock.version !== VERSION) fail("package-lock.json root version must be 0.8.1");
-  if (lock.packages?.[""]?.version !== VERSION) fail("package-lock.json package version must be 0.8.1");
+  if (lock.version !== VERSION) fail("package-lock.json root version must be 0.8.2");
+  if (lock.packages?.[""]?.version !== VERSION) fail("package-lock.json package version must be 0.8.2");
 }
 
 const exportTs = exists("src/lib/export.ts") ? read("src/lib/export.ts") : "";
@@ -317,10 +317,10 @@ if (workflow && !workflow.includes("actions/upload-artifact@v7")) fail("workflow
 if (workflow && !/node-version:\\s*24/.test(workflow)) fail("workflow should run Node.js 24");
 
 const fullQaGate = exists("scripts/full-qa-gate.mjs") ? read("scripts/full-qa-gate.mjs") : "";
-if (fullQaGate && !fullQaGate.includes(VERSION)) fail("scripts/full-qa-gate.mjs should identify app version 0.8.1");
+if (fullQaGate && !fullQaGate.includes(VERSION)) fail("scripts/full-qa-gate.mjs should identify app version 0.8.2");
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log("Release warning cleanup check passed for v0.8.1.");
+console.log("Release warning cleanup check passed for v0.8.2.");
 `;
   write("tests/release-warning-cleanup-check.mjs", content);
 }
@@ -334,7 +334,7 @@ updateWorkflowActions();
 prependPatchManifest();
 appendValidationReport();
 
-console.log("Applied v0.8.1 Release Warning Cleanup patch.");
+console.log("Applied v0.8.2 Release Warning Cleanup patch.");
 console.log("Next commands:");
 console.log("npm run release:warning:check");
 console.log("npm run public-demo:check");
