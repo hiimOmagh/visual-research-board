@@ -376,11 +376,11 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v0.8.2.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v0.8.3.json", createProjectLibraryExport(library), "application/json");
   };
 
   const exportBackup = () => {
-    downloadTextFile("visual-research-board-backup-v0.8.2.json", createStorageBackupExport(library), "application/json");
+    downloadTextFile("visual-research-board-backup-v0.8.3.json", createStorageBackupExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -419,7 +419,7 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.8.2</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v0.8.3</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
