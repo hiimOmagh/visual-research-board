@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Activation Pack Export Integration preserving Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while connecting activation pack Markdown/JSON preview output to existing text download utilities for metadata/brief-text export only, without export system rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, access circumvention, or source media rehosting.",
+  "description": "Reference Workflow Stable Release preserving Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while stabilizing the full discovery-to-board-to-activation-to-export workflow without new feature expansion, scraping, image generation, copyrighted text extraction, paywall bypass, provider expansion, export rewrite, or source media rehosting.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -81,7 +81,8 @@
     "reference-activation:check": "node tests/reference-activation-pack-check.mjs",
     "activation-pack:ui:check": "node tests/activation-pack-ui-integration-check.mjs",
     "activation-pack:export-preview:check": "node tests/activation-pack-export-preview-check.mjs",
-    "activation-pack:export:check": "node tests/activation-pack-export-integration-check.mjs"
+    "activation-pack:export:check": "node tests/activation-pack-export-integration-check.mjs",
+    "reference-workflow:stable:check": "node tests/reference-workflow-stable-release-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

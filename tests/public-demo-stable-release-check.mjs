@@ -35,7 +35,7 @@ function isNegatedClaimContext(text, index, matchLength) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "1.9.0", "package.json version must be 1.9.0");
+assert(VERSION === "2.0.0", "package.json version must be 2.0.0");
 assert(pkg.description?.includes("Public Demo Stable Release"), "package description must identify Public Demo Stable Release");
 assert(pkg.description?.includes("Public Demo Final Acceptance"), "package description must preserve Public Demo Final Acceptance wording");
 assert(pkg.description?.includes("Hosted Demo Evidence Review"), "package description must preserve Hosted Demo Evidence Review wording");
@@ -96,11 +96,11 @@ assert(fullQaManifest.includes(VERSION), "Full QA gate manifest check must refer
 assert(fullQaManifest.includes("public-demo-stable-release"), "Full QA gate manifest must check public demo stable release");
 
 const readme = read("README.md");
-assert(readme.includes("v1.9.0"), "README must mention v1.9.0");
+assert(readme.includes("v2.0.0"), "README must mention v2.0.0");
 assert(readme.includes("Public Demo Stable Release"), "README must mention Public Demo Stable Release");
 
 const stableDoc = read("docs/public-demo-stable-release.md");
-assert(stableDoc.includes("v1.9.0"), "stable release doc must mention v1.9.0");
+assert(stableDoc.includes("v2.0.0"), "stable release doc must mention v2.0.0");
 assert(stableDoc.includes("No feature changes"), "stable release doc must state no feature changes");
 assert(stableDoc.includes("No provider changes"), "stable release doc must state no provider changes");
 assert(stableDoc.includes("No retrieval logic changes"), "stable release doc must state no retrieval logic changes");
@@ -110,7 +110,7 @@ assert(stableDoc.includes("Public demo stable"), "stable release doc must identi
 const checklist = read("docs/stable-release-checklist.md");
 assert(checklist.includes("npm run public-demo:stable:check"), "stable checklist must include public-demo stable check command");
 assert(checklist.includes("full-qa-gate-report"), "stable checklist must mention full QA artifact");
-assert(checklist.includes("v1.9.0"), "stable checklist must mention v1.9.0");
+assert(checklist.includes("v2.0.0"), "stable checklist must mention v2.0.0");
 
 const claimScanFiles = [
   "README.md",
