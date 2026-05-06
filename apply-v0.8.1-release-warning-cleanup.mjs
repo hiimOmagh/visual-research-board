@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const VERSION = "0.8.1";
-const PREVIOUS_VERSION = "0.8.0";
+const PREVIOUS_VERSION = "0.8.1";
 const RELEASE_LABEL = "v0.8.1 — Release Warning Cleanup";
 
 function filePath(relativePath) {
@@ -224,7 +224,7 @@ function appendValidationReport() {
   const file = "docs/validation-report.md";
   const section = `## ${RELEASE_LABEL}
 
-v0.8.1 removes release-blocking noise after the v0.8.0 Public Demo Release Candidate validation pass.
+v0.8.1 removes release-blocking noise after the v0.8.1 Public Demo Release Candidate validation pass.
 
 Expected validation:
 
@@ -297,7 +297,7 @@ if (exists("package-lock.json")) {
 
 const exportTs = exists("src/lib/export.ts") ? read("src/lib/export.ts") : "";
 for (const staleImport of ["createEvidencePackCsvExport", "createEvidencePackHtmlExport", "createEvidencePackJsonExport", "buildAttributionPackPayload"]) {
-  const importPattern = new RegExp(\`import\\\\s+\\\\{[^}]*\\${staleImport}[^}]*\\\\}\\\\s+from\`);
+  const importPattern = new RegExp("import\\s+\\{[^}]*" + staleImport + "[^}]*\\}\\s+from");
   if (importPattern.test(exportTs)) fail(\`src/lib/export.ts still imports unused \${staleImport}\`);
 }
 

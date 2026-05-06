@@ -2,7 +2,7 @@
 
 ## Scope
 
-Warning-only cleanup after v0.8.0 Public Demo Release Candidate.
+Warning-only cleanup after v0.8.1 Public Demo Release Candidate.
 
 ## Apply
 

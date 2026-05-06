@@ -1,10 +1,10 @@
-# v0.8.0 Public Demo Release Candidate — Runbook
+# v0.8.1 Public Demo Release Candidate — Runbook
 
 ## Preconditions
 
-Apply `visual-research-board-v0.8.0-security-key-handling-patch.zip` first if the repo is not already on v0.8.0.
+Apply `visual-research-board-v0.8.1-security-key-handling-patch.zip` first if the repo is not already on v0.8.1.
 
-The v0.8.0 patch expects the v0.8.0 Full QA Gate and Security/Key Handling baseline:
+The v0.8.1 patch expects the v0.8.1 Full QA Gate and Security/Key Handling baseline:
 
 - `scripts/full-qa-gate.mjs`
 - `tests/full-qa-gate-check.mjs`
@@ -17,7 +17,7 @@ The v0.8.0 patch expects the v0.8.0 Full QA Gate and Security/Key Handling basel
 Copy the contents of this patch folder into the repository root, then run:
 
 ```bash
-node apply-v0.8.0-public-demo-rc.mjs
+node apply-v0.8.1-public-demo-rc.mjs
 ```
 
 ## Validate
@@ -39,5 +39,5 @@ npm run build
 ```bash
 git status --short
 git add package.json package-lock.json README.md PATCH_MANIFEST.md scripts/full-qa-gate.mjs scripts/clean-release-candidate.mjs tests/full-qa-gate-check.mjs tests/public-demo-release-candidate-check.mjs docs/public-demo.md docs/release-candidate-checklist.md docs/full-qa-gate.md docs/release-checklist.md docs/validation-report.md src/lib/public-demo-release-candidate.ts src/components/PublicDemoReleaseCandidatePanel.tsx
-git commit -m "chore: prepare v0.8.0 public demo release candidate"
+git commit -m "chore: prepare v0.8.1 public demo release candidate"
 ```

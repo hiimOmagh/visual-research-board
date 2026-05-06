@@ -1,15 +1,15 @@
-# v0.8.0 Security Description Hotfix
+# v0.8.1 Security Description Hotfix
 
 ## Cause
 
-`npm run security:key:check` failed because the v0.8.0 package description only identified the Public Demo Release Candidate and no longer included the exact phrase required by the inherited v0.7.1 security check: `Security and Key Handling`.
+`npm run security:key:check` failed because the v0.8.1 package description only identified the Public Demo Release Candidate and no longer included the exact phrase required by the inherited v0.7.1 security check: `Security and Key Handling`.
 
 ## Fix
 
 Run from the repository root:
 
 ```bash
-node apply-v0.8.0-security-description-hotfix.mjs
+node apply-v0.8.1-security-description-hotfix.mjs
 ```
 
 ## Validate

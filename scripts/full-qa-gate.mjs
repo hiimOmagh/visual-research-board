@@ -102,8 +102,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "0.8.0",
-  app_version: "0.8.0",
+  schema_version: "0.8.1",
+  app_version: "0.8.1",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -124,5 +124,5 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v0.8.0.");
+console.log("\nFull QA gate passed for v0.8.1.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");

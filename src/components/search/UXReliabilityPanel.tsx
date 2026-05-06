@@ -28,7 +28,7 @@ export function UXReliabilityPanel({ audit, onLoadDemoProject, onSearchDemoTopic
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">UX reliability</p>
           <h2 className="mt-1 text-xl font-bold text-white">Workflow readiness</h2>
           <p className="mt-2 max-w-3xl text-xs leading-5 text-slate-400">
-            v0.8.0 tracks the full demo path: project → providers → search → reference launchers → saved board → review → claims → coverage → export.
+            v0.8.1 tracks the full demo path: project → providers → search → reference launchers → saved board → review → claims → coverage → export.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

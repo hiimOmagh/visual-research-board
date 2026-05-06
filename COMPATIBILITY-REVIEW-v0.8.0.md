@@ -1,8 +1,8 @@
-# Compatibility Review — v0.8.0 Public Demo Release Candidate
+# Compatibility Review — v0.8.1 Public Demo Release Candidate
 
 ## Baseline
 
-This patch is built on v0.8.0 — Security and Key Handling.
+This patch is built on v0.8.1 — Security and Key Handling.
 
 ## Preserved surfaces
 
@@ -31,4 +31,4 @@ This patch is built on v0.8.0 — Security and Key Handling.
 
 ## Risk controls
 
-The public-demo checker scans public-facing docs and UI helper files for unsafe capability claims and secret-looking values. It also checks that v0.8.0 security scripts and security gate references remain present.
+The public-demo checker scans public-facing docs and UI helper files for unsafe capability claims and secret-looking values. It also checks that v0.8.1 security scripts and security gate references remain present.
