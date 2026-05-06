@@ -1,6 +1,6 @@
-# Public Demo Evidence Lock — v1.4.0
+# Public Demo Evidence Lock — v1.5.0
 
-v1.4.0 locks public-demo evidence after the Public Demo Release Candidate and Release Warning Cleanup passed.
+v1.5.0 locks public-demo evidence after the Public Demo Release Candidate and Release Warning Cleanup passed.
 
 ## Scope
 
@@ -37,4 +37,4 @@ The CI run should produce the `full-qa-gate-report` artifact from `artifacts/ful
 
 ## Pass condition
 
-v1.4.0 is locked only when local validation and CI both pass with a produced full QA evidence artifact.
+v1.5.0 is locked only when local validation and CI both pass with a produced full QA evidence artifact.

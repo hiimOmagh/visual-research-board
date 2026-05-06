@@ -1,12 +1,12 @@
-# Visual Research Board v1.4.0
+# Visual Research Board v1.5.0
 
-**v1.4.0 — Security and Key Handling**
+**v1.5.0 — Security and Key Handling**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v1.4.0 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
+v1.5.0 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
 
 The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
@@ -75,7 +75,7 @@ Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, 
 
 ## Release rule
 
-v1.4.0 is a validation-hardening release. A successful release needs:
+v1.5.0 is a validation-hardening release. A successful release needs:
 
 ```bash
 npm run qa
@@ -88,14 +88,14 @@ CI uploads the full QA evidence artifact so failed or passed runs can be inspect
 
 ## Retained evidence gates
 
-The current app version is v1.4.0. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
+The current app version is v1.5.0. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-## v1.4.0 security validation
+## v1.5.0 security validation
 
 ```bash
 npm run security:key:check
@@ -107,7 +107,7 @@ Provider keys are server-only and diagnostics report only redacted presence. Do 
 
 ## Public Demo Release Candidate
 
-The current target is **v1.4.0 — Public Demo Release Candidate**.
+The current target is **v1.5.0 — Public Demo Release Candidate**.
 
 This release hardens the app for public inspection. It does not add live scraping, production OAuth, paid-provider assumptions, or fake-live provider behavior.
 
@@ -124,7 +124,7 @@ npm run qa
 
 ## Public Demo Evidence Lock
 
-The current target is **v1.4.0 — Public Demo Evidence Lock**.
+The current target is **v1.5.0 — Public Demo Evidence Lock**.
 
 This patch locks release evidence for the public demo. It does not add features, providers, scraping behavior, OAuth, or source-verification guarantees.
 
@@ -144,7 +144,7 @@ npm run build
 
 ## Hosted Demo Evidence Review
 
-The current target is **v1.4.0 — Hosted Demo Evidence Review**.
+The current target is **v1.5.0 — Hosted Demo Evidence Review**.
 
 This release adds a deterministic hosted-demo evidence-review gate and documentation. It does not add feature, provider, retrieval, or export behavior changes.
 
@@ -160,7 +160,7 @@ npm run qa
 
 ## Public Demo Final Acceptance
 
-The current target is **v1.4.0 — Public Demo Final Acceptance**.
+The current target is **v1.5.0 — Public Demo Final Acceptance**.
 
 This release finalizes public-demo acceptance before the stable public-demo release. It does not add feature, provider, retrieval, or export behavior changes.
 
@@ -177,7 +177,7 @@ npm run qa
 
 ## Public Demo Stable Release
 
-The current release is **v1.4.0 — Public Demo Stable Release**.
+The current release is **v1.5.0 — Public Demo Stable Release**.
 
 This release locks the public demo stable baseline. It does not add feature, provider, retrieval, export, social, book, or generation behavior changes.
 
@@ -195,7 +195,7 @@ npm run qa
 
 ## Reference Intelligence Layer MVP
 
-The current release is **v1.4.0 — Reference Intelligence Layer MVP**.
+The current release is **v1.5.0 — Reference Intelligence Layer MVP**.
 
 This release starts the product-expansion track after the public demo stable release. It adds reference-use metadata, role labels, access/risk context, and interpretation helpers.
 
@@ -211,7 +211,7 @@ npm run qa
 
 ## Broad Reference Result Model
 
-The current release is **v1.4.0 — Broad Reference Result Model**.
+The current release is **v1.5.0 — Broad Reference Result Model**.
 
 This release makes broad reference source classes first-class. Search results can now be modeled as web images, web pages, social media, books, archives, museums, stock/illustrative results, video, or unknown sources.
 
@@ -227,7 +227,7 @@ npm run qa
 
 ## Broad Web + Image Discovery Expansion
 
-The current release is **v1.4.0 — Broad Web + Image Discovery Expansion**.
+The current release is **v1.5.0 — Broad Web + Image Discovery Expansion**.
 
 This release adds broad web/image discovery mode planning and maps discovery candidates into `BroadReferenceResult`.
 
@@ -243,7 +243,7 @@ npm run qa
 
 ## Social Reference Discovery Layer
 
-The current release is **v1.4.0 — Social Reference Discovery Layer**.
+The current release is **v1.5.0 — Social Reference Discovery Layer**.
 
 This release adds public social-reference discovery planning and classification into `BroadReferenceResult` with `source_class: social_media`.
 
@@ -254,5 +254,21 @@ Run:
 ```bash
 npm run social-reference:check
 npm run broad-discovery:check
+npm run qa
+```
+
+## Book / Bibliographic Discovery Layer
+
+The current release is **v1.5.0 — Book / Bibliographic Discovery Layer**.
+
+This release adds metadata-first book, ISBN, catalog, preview, archive, and bibliography classification into `BroadReferenceResult` with `source_class: book`.
+
+It does not add copyrighted text extraction, full-text scraping, paywall bypass, access circumvention, generation behavior, or export behavior changes.
+
+Run:
+
+```bash
+npm run book-reference:check
+npm run social-reference:check
 npm run qa
 ```

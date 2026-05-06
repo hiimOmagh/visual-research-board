@@ -7,7 +7,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 const assert = (condition, message) => { if (!condition) failures.push(message); };
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "1.4.0", "package.json version must be 1.4.0");
+assert(pkg.version === "1.5.0", "package.json version must be 1.5.0");
 assert(Boolean(pkg.scripts?.["normalization:dedupe:check"]), "package.json must define normalization:dedupe:check");
 assert((pkg.scripts?.qa?.includes("normalization-dedupe-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include normalization-dedupe-check");
 
@@ -62,8 +62,8 @@ for (const token of ["Provider normalization gate", "Normalization + deduplicati
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("NormalizationDedupePanel"), "SearchPanel must render NormalizationDedupePanel");
-assert(searchPanel.includes("v1.4.0"), "SearchPanel header must show v1.4.0");
-assert(searchPanel.includes("visual-research-board-library-v1.4.0.json"), "library export filename must use v1.4.0");
+assert(searchPanel.includes("v1.5.0"), "SearchPanel header must show v1.5.0");
+assert(searchPanel.includes("visual-research-board-library-v1.5.0.json"), "library export filename must use v1.5.0");
 
 const resultCard = read("src/components/search/ResultCard.tsx");
 assert(resultCard.includes("merged ×"), "ResultCard must surface merged duplicate count");
