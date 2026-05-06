@@ -6,3 +6,13 @@ dist
 .env*.local
 .DS_Store
 *.log
+coverage
+playwright-report
+test-results
+tsconfig.tsbuildinfo
+__pycache__
+apply-v*.mjs
+apply-v*.py
+*.zip
+*.tar
+*.tgz
