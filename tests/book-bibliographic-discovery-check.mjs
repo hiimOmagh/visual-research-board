@@ -28,7 +28,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.0.0", "package.json version must be 2.0.0");
+assert(VERSION === "2.0.1", "package.json version must be 2.0.1");
 assert(pkg.description?.includes("Book / Bibliographic Discovery Layer"), "package description must identify Book / Bibliographic Discovery Layer");
 assert(pkg.description?.includes("Social Reference Discovery Layer"), "package description must preserve Social Reference Discovery Layer wording");
 assert(pkg.description?.includes("Broad Web + Image Discovery Expansion"), "package description must preserve Broad Web + Image Discovery Expansion wording");
@@ -45,8 +45,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.0.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.0.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.0.1"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.0.1"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "src/types/book-reference.ts",
