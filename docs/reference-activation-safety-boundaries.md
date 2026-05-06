@@ -1,5 +1,5 @@
 
-# Reference Activation Safety Boundaries — v1.6.0
+# Reference Activation Safety Boundaries — v1.7.0
 
 ## allowed
 

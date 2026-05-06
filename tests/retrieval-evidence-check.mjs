@@ -13,7 +13,7 @@ const clientSearch = read("src/lib/client-search.ts");
 const panel = read("src/components/search/RetrievalEvidencePanel.tsx");
 const docs = read("docs/real-retrieval-validation.md");
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "1.6.0", "package version must be v1.6.0");
+assert(pkg.version === "1.7.0", "package version must be v1.7.0");
 assert(types.includes("RetrievalEvidenceVerdict"), "types must include RetrievalEvidenceVerdict");
 assert(types.includes("retrieval_evidence: RetrievalEvidence"), "SearchDiagnostics must require retrieval evidence");
 assert(evidence.includes("TARGET_CANDIDATES"), "retrieval evidence must define target candidate gates");

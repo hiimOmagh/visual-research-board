@@ -27,7 +27,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "1.6.0", "package.json version must be 1.6.0");
+assert(VERSION === "1.7.0", "package.json version must be 1.7.0");
 assert(pkg.description?.includes("Public Demo Final Acceptance"), "package description must identify Public Demo Final Acceptance");
 assert(pkg.description?.includes("Hosted Demo Evidence Review"), "package description must preserve Hosted Demo Evidence Review wording");
 assert(pkg.description?.includes("Public Demo Evidence Lock"), "package description must preserve Public Demo Evidence Lock wording");
@@ -86,11 +86,11 @@ assert(manifestCheck.includes(VERSION), "Full QA gate manifest check must refere
 assert(manifestCheck.includes("public-demo-final-acceptance"), "Full QA gate manifest must check public demo final acceptance");
 
 const readme = read("README.md");
-assert(readme.includes("v1.6.0"), "README must mention v1.6.0");
+assert(readme.includes("v1.7.0"), "README must mention v1.7.0");
 assert(readme.includes("Public Demo Final Acceptance"), "README must mention Public Demo Final Acceptance");
 
 const finalDoc = read("docs/public-demo-final-acceptance.md");
-assert(finalDoc.includes("v1.6.0"), "final acceptance doc must mention v1.6.0");
+assert(finalDoc.includes("v1.7.0"), "final acceptance doc must mention v1.7.0");
 assert(finalDoc.includes("No feature changes"), "final acceptance doc must state no feature changes");
 assert(finalDoc.includes("No provider changes"), "final acceptance doc must state no provider changes");
 assert(finalDoc.includes("No retrieval logic changes"), "final acceptance doc must state no retrieval logic changes");

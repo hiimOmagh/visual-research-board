@@ -1,4 +1,4 @@
-# v1.6.0 — Security and Key Handling
+# v1.7.0 — Security and Key Handling
 
 This release hardens provider credentials for the free-source visual research workflow.
 

@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
-  "description": "Reference Activation Pack MVP preserving Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while turning gathered references into structured activation-ready briefs with visual direction, research context, source roles, and risk/access notes without scraping, image generation, copyrighted text extraction, paywall bypass, or broad export behavior changes.",
+  "description": "Activation Pack UI Integration preserving Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while exposing activation-ready reference packs in the visible board workflow without scraping, image generation, copyrighted text extraction, paywall bypass, access circumvention, or export behavior changes.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -78,7 +78,8 @@
     "broad-discovery:check": "node tests/broad-web-image-discovery-check.mjs",
     "social-reference:check": "node tests/social-reference-discovery-check.mjs",
     "book-reference:check": "node tests/book-bibliographic-discovery-check.mjs",
-    "reference-activation:check": "node tests/reference-activation-pack-check.mjs"
+    "reference-activation:check": "node tests/reference-activation-pack-check.mjs",
+    "activation-pack:ui:check": "node tests/activation-pack-ui-integration-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
