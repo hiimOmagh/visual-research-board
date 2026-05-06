@@ -36,6 +36,7 @@ function sourceTitle(result: ResearchResult): string {
 }
 
 function creatorLabel(_result: ResearchResult): string {
+  void _result;
   return "Creator not captured";
 }
 
