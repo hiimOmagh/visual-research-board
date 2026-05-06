@@ -1,5 +1,5 @@
 
-# Activation Pack UI Workflow — v1.7.0
+# Activation Pack UI Workflow — v1.8.0
 
 ## allowed
 

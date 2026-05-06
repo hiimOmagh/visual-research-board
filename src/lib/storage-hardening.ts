@@ -1,7 +1,7 @@
 import type { ProjectLibrary, ResearchProject } from "@/types/research";
 import { normalizeLibrary } from "@/lib/project";
 
-export const STORAGE_HARDENING_SCHEMA_VERSION = "1.7.0" as const;
+export const STORAGE_HARDENING_SCHEMA_VERSION = "1.8.0" as const;
 export const STORAGE_BACKUP_KIND = "visual_research_board_library_backup" as const;
 export const CURRENT_LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
 

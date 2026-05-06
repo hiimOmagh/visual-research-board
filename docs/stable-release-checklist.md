@@ -1,4 +1,4 @@
-# Stable Release Checklist — v1.7.0
+# Stable Release Checklist — v1.8.0
 
 ## Required commands
 
@@ -22,7 +22,7 @@ npm run public-demo:stable:check
 
 - `artifacts/full-qa-gate-report.json` exists.
 - `full-qa-gate-report` is uploaded in CI.
-- The full QA artifact shows `app_version: 1.7.0`.
+- The full QA artifact shows `app_version: 1.8.0`.
 - The full QA artifact shows `status: passed`.
 - The full QA artifact shows `failed_gate_count: 0`.
 
@@ -31,8 +31,8 @@ npm run public-demo:stable:check
 - No root `apply-v*.mjs` scripts.
 - No generated archives committed.
 - No private credentials or provider keys.
-- README, release checklist, and validation report identify v1.7.0.
+- README, release checklist, and validation report identify v1.8.0.
 
 ## Product boundary
 
-v1.7.0 does not introduce broad web/social/book discovery or generation support. Those are post-stable expansion milestones.
+v1.8.0 does not introduce broad web/social/book discovery or generation support. Those are post-stable expansion milestones.

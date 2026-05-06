@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
-  "description": "Activation Pack UI Integration preserving Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while exposing activation-ready reference packs in the visible board workflow without scraping, image generation, copyrighted text extraction, paywall bypass, access circumvention, or export behavior changes.",
+  "description": "Activation Pack Export Preview preserving Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while rendering activation packs as structured Markdown and JSON preview text without broad export system rewrite, new download behavior, scraping, image generation, copyrighted text extraction, paywall bypass, or access circumvention.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -79,7 +79,8 @@
     "social-reference:check": "node tests/social-reference-discovery-check.mjs",
     "book-reference:check": "node tests/book-bibliographic-discovery-check.mjs",
     "reference-activation:check": "node tests/reference-activation-pack-check.mjs",
-    "activation-pack:ui:check": "node tests/activation-pack-ui-integration-check.mjs"
+    "activation-pack:ui:check": "node tests/activation-pack-ui-integration-check.mjs",
+    "activation-pack:export-preview:check": "node tests/activation-pack-export-preview-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
