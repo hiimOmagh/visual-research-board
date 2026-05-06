@@ -2,11 +2,11 @@
   "schema_version": "0.8.3",
   "app_version": "0.8.3",
   "gate": "full_qa_gate",
-  "started_at": "2026-05-06T12:24:02.690Z",
-  "finished_at": "2026-05-06T12:24:02.765Z",
+  "started_at": "2026-05-06T12:29:29.581Z",
+  "finished_at": "2026-05-06T12:29:29.826Z",
   "selected_category": null,
   "total_gate_count": 36,
-  "passed_gate_count": 0,
+  "passed_gate_count": 2,
   "failed_gate_count": 1,
   "status": "failed",
   "categories": [
@@ -24,9 +24,25 @@
       "category": "release",
       "name": "public-demo-evidence-lock",
       "command": "node tests/public-demo-evidence-lock-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 73
+    },
+    {
+      "category": "release",
+      "name": "hosted-demo-evidence-review",
+      "command": "node tests/hosted-demo-evidence-review-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 80
+    },
+    {
+      "category": "baseline",
+      "name": "core-static-qa",
+      "command": "node tests/qa-check.mjs",
       "status": "failed",
       "exit_code": 1,
-      "duration_ms": 75
+      "duration_ms": 91
     }
   ]
 }

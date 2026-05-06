@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.8.2", "package.json version must be 0.8.2");
+assert(pkg.version === "0.8.3", "package.json version must be 0.8.3");
 assert(Boolean(pkg.scripts?.["attribution:generator:check"]), "package.json must define npm run attribution:generator:check");
 assert((pkg.scripts?.qa?.includes("attribution-generator-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include attribution-generator-check");
 

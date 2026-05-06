@@ -53,7 +53,7 @@ const requiredFiles = [
 requiredFiles.forEach((file) => assert(existsSync(join(root, file)), `Missing required file: ${file}`));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.8.2", "package.json version must be 0.8.2");
+assert(pkg.version === "0.8.3", "package.json version must be 0.8.3");
 assert(Boolean(pkg.scripts?.qa), "package.json must define npm run qa");
 assert(Boolean(pkg.scripts?.["normalization:test"]), "package.json must define npm run normalization:test");
 assert(Boolean(pkg.scripts?.["e2e:fixtures"]), "package.json must define npm run e2e:fixtures");
@@ -90,7 +90,7 @@ assert(searchPanel.includes("createProjectLibraryExport"), "SearchPanel must exp
 assert(searchPanel.includes("importLibraryFile"), "SearchPanel must import project libraries");
 assert(searchPanel.includes("mergeLibraries"), "SearchPanel must use conflict-safe library merge import");
 assert(searchPanel.includes("provider_toggles"), "SearchPanel must send provider_toggles to API");
-assert(searchPanel.includes("v0.8.2"), "SearchPanel header must show v0.8.2");
+assert(searchPanel.includes("v0.8.3"), "SearchPanel header must show v0.8.3");
 assert(searchPanel.includes("buildReviewEvidenceFeedback(saved)"), "SearchPanel must build review evidence feedback from saved items");
 assert(searchPanel.includes("ReviewEvidenceFeedbackPanel"), "SearchPanel must render review evidence feedback diagnostics");
 assert(searchPanel.includes("importSummary"), "SearchPanel must surface import summary state");

@@ -2,7 +2,7 @@
 
 ## Scope
 
-v0.8.3 adds a hosted-demo evidence-review gate and documentation while preserving the v0.8.2 Public Demo Evidence Lock.
+v0.8.3 adds a hosted-demo evidence-review gate and documentation while preserving the v0.8.3 Public Demo Evidence Lock.
 
 ## Changed files
 

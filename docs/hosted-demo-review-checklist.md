@@ -19,8 +19,8 @@ npm run build
 
 - Hosted URL loads.
 - Landing page copy matches README and public-demo docs.
-- Screenshots are captured for the public demo entry state.
-- Screenshots are captured for evidence/export surfaces when available.
+- screenshots are captured for the public demo entry state.
+- screenshots are captured for evidence/export surfaces when available.
 - The full-qa-gate-report artifact exists.
 - The full-qa-gate-report artifact shows `status: passed`.
 - The full-qa-gate-report artifact shows `failed_gate_count: 0`.
