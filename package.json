@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
-  "description": "Broad Web + Image Discovery Expansion preserving Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding broad web/image discovery mode planning and result normalization without adding providers, scraping, social search, book search, generation, or export behavior changes.",
+  "description": "Social Reference Discovery Layer preserving Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding public social-reference discovery planning and classification without private scraping, login bypass, hidden API abuse, rehosting, dedicated providers, generation, or export behavior changes.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -75,7 +75,8 @@
     "public-demo:stable:check": "node tests/public-demo-stable-release-check.mjs",
     "reference:intelligence:check": "node tests/reference-intelligence-check.mjs",
     "broad-reference:model:check": "node tests/broad-reference-result-model-check.mjs",
-    "broad-discovery:check": "node tests/broad-web-image-discovery-check.mjs"
+    "broad-discovery:check": "node tests/broad-web-image-discovery-check.mjs",
+    "social-reference:check": "node tests/social-reference-discovery-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

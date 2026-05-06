@@ -16,7 +16,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing security/key file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "1.3.0", "package.json version must be 1.3.0");
+assert(pkg.version === "1.4.0", "package.json version must be 1.4.0");
 assert(pkg.description.includes("Security and Key Handling"), "package description must identify Security and Key Handling");
 assert(pkg.scripts?.["security:key:check"] === "node tests/security-key-handling-check.mjs", "package.json must expose npm run security:key:check");
 assert(pkg.scripts?.["qa:security"] === "node scripts/full-qa-gate.mjs --category=security", "package.json must expose npm run qa:security");
@@ -86,10 +86,10 @@ assert(!/NEXT_PUBLIC_.*(API_KEY|ACCESS_KEY|TOKEN|SECRET)/.test(env), ".env.examp
 const fullGate = read("scripts/full-qa-gate.mjs");
 assert(fullGate.includes('category: "security"'), "full QA gate must include security category");
 assert(fullGate.includes("tests/security-key-handling-check.mjs"), "full QA gate must include security key handling check");
-assert(fullGate.includes('schema_version: "1.3.0"'), "full QA report schema must identify v1.3.0");
+assert(fullGate.includes('schema_version: "1.4.0"'), "full QA report schema must identify v1.4.0");
 
 const docs = read("docs/security-and-key-handling.md");
-for (const token of ["v1.3.0", "server-only", "redacted", "NEXT_PUBLIC", "npm run security:key:check", "Reference Search Hub"]) {
+for (const token of ["v1.4.0", "server-only", "redacted", "NEXT_PUBLIC", "npm run security:key:check", "Reference Search Hub"]) {
   assert(docs.includes(token), `security docs must include ${token}`);
 }
 
@@ -99,4 +99,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Security and Key Handling checks passed for v1.3.0.");
+console.log("Security and Key Handling checks passed for v1.4.0.");
