@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "1.8.0", "package.json version must be 1.8.0");
+assert(pkg.version === "1.9.0", "package.json version must be 1.9.0");
 assert(Boolean(pkg.scripts?.["free:image:check"]), "package.json must define npm run free:image:check");
 assert((pkg.scripts?.qa?.includes("free-image-retrieval-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include free-image-retrieval-check");
 
@@ -62,8 +62,8 @@ assert(providerToggle.includes("Optional API"), "ProviderTogglePanel must label 
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("ReferenceSearchHub"), "SearchPanel must render ReferenceSearchHub");
-assert(searchPanel.includes("v1.8.0"), "SearchPanel header must show v1.8.0");
-assert(searchPanel.includes("visual-research-board-library-v1.8.0.json"), "library export filename must use v1.8.0");
+assert(searchPanel.includes("v1.9.0"), "SearchPanel header must show v1.9.0");
+assert(searchPanel.includes("visual-research-board-library-v1.9.0.json"), "library export filename must use v1.9.0");
 
 const exportLib = read("src/lib/export.ts");
 assert(exportLib.includes("by_rights_status"), "JSON export audit must include rights status counts");

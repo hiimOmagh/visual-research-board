@@ -1,8 +1,43 @@
-# v1.8.0 — Activation Pack Export Preview Patch Manifest
+# v1.9.0 — Activation Pack Export Integration Patch Manifest
 
 ## Scope
 
-v1.8.0 adds preview-only Markdown/JSON rendering for activation packs.
+v1.9.0 connects activation pack Markdown/JSON preview output to existing text download utilities.
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/activation-pack-export-integration-check.mjs`
+- `src/types/activation-pack-export-integration.ts`
+- `src/lib/activation-pack-export-integration.ts`
+- `src/components/search/ActivationPackExportIntegrationPanel.tsx`
+- `src/components/search/ActivationPackWorkflowPanel.tsx`
+- `docs/activation-pack-export-integration.md`
+- `docs/activation-pack-export-integration-boundaries.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+
+## Non-goals
+
+- No export system rewrite
+- No broad export expansion
+- No scraping
+- No image generation
+- No copyrighted text extraction
+- No paywall bypass
+- No access circumvention
+- No source media rehosting
+
+# v1.9.0 — Activation Pack Export Preview Patch Manifest
+
+## Scope
+
+v1.9.0 adds preview-only Markdown/JSON rendering for activation packs.
 
 ## Changed files
 
@@ -32,11 +67,11 @@ v1.8.0 adds preview-only Markdown/JSON rendering for activation packs.
 - No paywall bypass
 - No access circumvention
 
-# v1.8.0 — Activation Pack UI Integration Patch Manifest
+# v1.9.0 — Activation Pack UI Integration Patch Manifest
 
 ## Scope
 
-v1.8.0 wires activation packs into a visible board workflow panel using already-gathered references.
+v1.9.0 wires activation packs into a visible board workflow panel using already-gathered references.
 
 ## Changed files
 
@@ -64,11 +99,11 @@ v1.8.0 wires activation packs into a visible board workflow panel using already-
 - No access circumvention
 - No export behavior changes
 
-# v1.8.0 — Reference Activation Pack MVP Patch Manifest
+# v1.9.0 — Reference Activation Pack MVP Patch Manifest
 
 ## Scope
 
-v1.8.0 adds activation-ready reference packs built from already-gathered board/reference data.
+v1.9.0 adds activation-ready reference packs built from already-gathered board/reference data.
 
 ## Changed files
 
@@ -96,11 +131,11 @@ v1.8.0 adds activation-ready reference packs built from already-gathered board/r
 - No access circumvention
 - No broad export behavior changes
 
-# v1.8.0 — Book / Bibliographic Discovery Layer Patch Manifest
+# v1.9.0 — Book / Bibliographic Discovery Layer Patch Manifest
 
 ## Scope
 
-v1.8.0 adds metadata-first book and bibliographic discovery planning and classification.
+v1.9.0 adds metadata-first book and bibliographic discovery planning and classification.
 
 ## Changed files
 
@@ -128,11 +163,11 @@ v1.8.0 adds metadata-first book and bibliographic discovery planning and classif
 - No generation engine
 - No export behavior changes
 
-# v1.8.0 — Social Reference Discovery Layer Patch Manifest
+# v1.9.0 — Social Reference Discovery Layer Patch Manifest
 
 ## Scope
 
-v1.8.0 adds public social-reference discovery planning and classification.
+v1.9.0 adds public social-reference discovery planning and classification.
 
 ## Changed files
 
@@ -162,11 +197,11 @@ v1.8.0 adds public social-reference discovery planning and classification.
 - No generation engine
 - No export behavior changes
 
-# v1.8.0 — Broad Web + Image Discovery Expansion Patch Manifest
+# v1.9.0 — Broad Web + Image Discovery Expansion Patch Manifest
 
 ## Scope
 
-v1.8.0 adds broad web/image discovery planning and candidate normalization.
+v1.9.0 adds broad web/image discovery planning and candidate normalization.
 
 ## Changed files
 
@@ -195,11 +230,11 @@ v1.8.0 adds broad web/image discovery planning and candidate normalization.
 - No generation engine
 - No export behavior changes
 
-# v1.8.0 — Broad Reference Result Model Patch Manifest
+# v1.9.0 — Broad Reference Result Model Patch Manifest
 
 ## Scope
 
-v1.8.0 adds the Broad Reference Result Model.
+v1.9.0 adds the Broad Reference Result Model.
 
 ## Changed files
 
@@ -228,11 +263,11 @@ v1.8.0 adds the Broad Reference Result Model.
 - No generation engine
 - No export behavior changes yet
 
-# v1.8.0 — Reference Intelligence Layer MVP Patch Manifest
+# v1.9.0 — Reference Intelligence Layer MVP Patch Manifest
 
 ## Scope
 
-v1.8.0 adds the Reference Intelligence Layer MVP.
+v1.9.0 adds the Reference Intelligence Layer MVP.
 
 ## Changed files
 
@@ -260,11 +295,11 @@ v1.8.0 adds the Reference Intelligence Layer MVP.
 - No generation engine
 - No export behavior changes yet
 
-# v1.8.0 — Public Demo Stable Release Patch Manifest
+# v1.9.0 — Public Demo Stable Release Patch Manifest
 
 ## Scope
 
-v1.8.0 locks the public demo stable release.
+v1.9.0 locks the public demo stable release.
 
 ## Changed files
 
@@ -288,11 +323,11 @@ v1.8.0 locks the public demo stable release.
 - No export behavior changes
 - No social/book/generation expansion
 
-# v1.8.0 — Public Demo Final Acceptance Patch Manifest
+# v1.9.0 — Public Demo Final Acceptance Patch Manifest
 
 ## Scope
 
-v1.8.0 finalizes public-demo acceptance before stable release.
+v1.9.0 finalizes public-demo acceptance before stable release.
 
 ## Changed files
 
@@ -315,11 +350,11 @@ v1.8.0 finalizes public-demo acceptance before stable release.
 - No retrieval logic changes
 - No export behavior changes
 
-# v1.8.0 — Hosted Demo Evidence Review Patch Manifest
+# v1.9.0 — Hosted Demo Evidence Review Patch Manifest
 
 ## Scope
 
-v1.8.0 adds a hosted-demo evidence-review gate and documentation while preserving the v1.8.0 Public Demo Evidence Lock.
+v1.9.0 adds a hosted-demo evidence-review gate and documentation while preserving the v1.9.0 Public Demo Evidence Lock.
 
 ## Changed files
 
@@ -342,7 +377,7 @@ v1.8.0 adds a hosted-demo evidence-review gate and documentation while preservin
 - No retrieval logic changes
 - No export behavior changes
 
-# v1.8.0 — Public Demo Evidence Lock Patch Manifest
+# v1.9.0 — Public Demo Evidence Lock Patch Manifest
 
 ## Changed files
 
@@ -360,7 +395,7 @@ v1.8.0 adds a hosted-demo evidence-review gate and documentation while preservin
 
 ## Scope
 
-v1.8.0 locks public-demo release evidence without changing product behavior.
+v1.9.0 locks public-demo release evidence without changing product behavior.
 
 ## Non-goals
 
@@ -384,7 +419,7 @@ npm run lint
 npm run build
 ```
 
-# v1.8.0 — Public Demo Release Candidate Patch Manifest
+# v1.9.0 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -406,7 +441,7 @@ npm run build
 
 ## Scope
 
-v1.8.0 prepares the app as a Public Demo Release Candidate while preserving the v1.8.0 Security and Key Handling layer.
+v1.9.0 prepares the app as a Public Demo Release Candidate while preserving the v1.9.0 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -430,7 +465,7 @@ npm run lint
 npm run build
 ```
 
-# v1.8.0 — Security and Key Handling Patch Manifest
+# v1.9.0 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -470,13 +505,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v1.8.0 — UX Reliability + Empty State Polish
-- v1.8.0 — Local Storage + Import/Export Hardening
-- v1.8.0 — Security and Key Handling
+- v1.9.0 — UX Reliability + Empty State Polish
+- v1.9.0 — Local Storage + Import/Export Hardening
+- v1.9.0 — Security and Key Handling
 
-## v1.8.0 — Release Warning Cleanup
+## v1.9.0 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v1.8.0 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v1.9.0 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 

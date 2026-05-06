@@ -2,6 +2,7 @@
 import type { ActivationPackUiInput } from "@/types/activation-pack-ui";
 import { createActivationPackUiModel } from "@/lib/activation-pack-ui";
 import { ReferenceActivationPackPanel } from "@/components/search/ReferenceActivationPackPanel";
+import { ActivationPackExportIntegrationPanel } from "@/components/search/ActivationPackExportIntegrationPanel";
 
 type ActivationPackWorkflowPanelProps = ActivationPackUiInput;
 
@@ -50,6 +51,8 @@ export function ActivationPackWorkflowPanel(props: ActivationPackWorkflowPanelPr
         </ul>
 
         {model.pack ? <ReferenceActivationPackPanel pack={model.pack} /> : null}
+
+        {model.pack ? <ActivationPackExportIntegrationPanel pack={model.pack} /> : null}
 
         <p className="text-xs text-slate-400">
           This UI integration does not generate images, scrape sources, extract copyrighted text, bypass paywalls,

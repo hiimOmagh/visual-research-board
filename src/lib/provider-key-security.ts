@@ -1,6 +1,6 @@
 import type { ProviderKeySecurityEntry, ProviderKeySecurityReport, SearchProviderName } from "@/types/research";
 
-export const APP_VERSION = "1.8.0";
+export const APP_VERSION = "1.9.0";
 
 export const SERVER_PROVIDER_SECRET_ENVS = {
   smithsonian: "SMITHSONIAN_API_KEY",
@@ -115,7 +115,7 @@ export function buildProviderKeySecurityReport(params: {
   ].filter(Boolean) as string[];
 
   return {
-    schema_version: "1.8.0",
+    schema_version: "1.9.0",
     app_version: APP_VERSION,
     generated_at: generatedAt,
     secret_source: "server_env_only",
