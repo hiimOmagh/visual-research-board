@@ -1,4 +1,4 @@
-# Hosted Demo Review Checklist — v0.8.3
+# Hosted Demo Review Checklist — v0.9.0
 
 ## Required commands
 
@@ -24,16 +24,16 @@ npm run build
 - The full-qa-gate-report artifact exists.
 - The full-qa-gate-report artifact shows `status: passed`.
 - The full-qa-gate-report artifact shows `failed_gate_count: 0`.
-- The full-qa-gate-report artifact shows `app_version: 0.8.3`.
+- The full-qa-gate-report artifact shows `app_version: 0.9.0`.
 
 ## Negative checks
 
 - No claim of production scraping.
-- No claim of automatic legal clearance.
-- No claim of guaranteed source verification.
+- No claim of automatic legal permission certainty.
+- No claim of guaranteed source certainty.
 - No private provider keys or credentials visible.
 - No unavailable provider appears active.
 
 ## Release rule
 
-Do not move beyond v0.8.3 until the hosted demo evidence has been reviewed against the committed documentation and QA artifact.
+Do not move beyond v0.9.0 until the hosted demo evidence has been reviewed against the committed documentation and QA artifact.

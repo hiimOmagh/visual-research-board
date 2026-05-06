@@ -1,7 +1,7 @@
 export const PUBLIC_DEMO_RELEASE_CANDIDATE = {
-  appVersion: "0.8.3",
+  appVersion: "0.9.0",
   releaseName: "Public Demo Release Candidate",
-  releaseLabel: "v0.8.3 — Public Demo Release Candidate",
+  releaseLabel: "v0.9.0 — Public Demo Release Candidate",
   mode: "demo-safe",
   liveScraping: false,
   productionOAuth: false,

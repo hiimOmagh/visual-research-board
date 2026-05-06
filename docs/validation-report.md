@@ -1,9 +1,9 @@
-# Validation Report — Visual Research Board v0.8.3
+# Validation Report — Visual Research Board v0.9.0
 
 ## Package
 
 ```text
-visual-research-board-v0.8.3-full-qa-gate-patch.zip
+visual-research-board-v0.9.0-full-qa-gate-patch.zip
 ```
 
 ## Release focus
@@ -58,7 +58,7 @@ VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL=http://localhost:3000 npm run retrieval:q
 
 ## Status standard
 
-A v0.8.3 validation pass requires:
+A v0.9.0 validation pass requires:
 
 ```text
 npm run qa: passed
@@ -66,15 +66,15 @@ artifacts/full-qa-gate-report.json: generated
 failed_gate_count: 0
 ```
 
-v0.8.3 does not expand scraping, provider access, or search-engine automation. It hardens the project’s ability to prove that the current research workflow remains intact.
+v0.9.0 does not expand scraping, provider access, or search-engine automation. It hardens the project’s ability to prove that the current research workflow remains intact.
 
-## v0.8.3 Security and Key Handling
+## v0.9.0 Security and Key Handling
 
 Security and Key Handling adds provider-key diagnostics to the Full QA Gate. It validates server-only env usage, redacted key presence, and public-env leakage detection while preserving the existing `artifacts/full-qa-gate-report.json` evidence artifact.
 
-## v0.8.3 Public Demo Release Candidate
+## v0.9.0 Public Demo Release Candidate
 
-v0.8.3 hardens the project for public-demo inspection. It adds a public-demo release-candidate check, a cleanup command, demo-safe documentation, and explicit non-goals around scraping, production OAuth, legal clearance, and source-verification guarantees.
+v0.9.0 hardens the project for public-demo inspection. It adds a public-demo release-candidate check, a cleanup command, demo-safe documentation, and explicit non-goals around scraping, production OAuth, legal clearance, and source-verification guarantees.
 
 Required validation:
 
@@ -89,9 +89,9 @@ npm run lint
 npm run build
 ```
 
-## v0.8.3 — Release Warning Cleanup
+## v0.9.0 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.3 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.9.0 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 
@@ -106,9 +106,9 @@ npm run lint
 npm run build
 ```
 
-## v0.8.3 Public Demo Evidence Lock
+## v0.9.0 Public Demo Evidence Lock
 
-v0.8.3 adds a public-demo evidence lock gate. It verifies release evidence docs, preserved public-demo/security/warning checks, and Full QA Gate inclusion.
+v0.9.0 adds a public-demo evidence lock gate. It verifies release evidence docs, preserved public-demo/security/warning checks, and Full QA Gate inclusion.
 
 Required validation:
 
@@ -124,9 +124,9 @@ npm run lint
 npm run build
 ```
 
-## v0.8.3 Hosted Demo Evidence Review
+## v0.9.0 Hosted Demo Evidence Review
 
-v0.8.3 adds the hosted-demo evidence-review gate. The release does not change application behavior.
+v0.9.0 adds the hosted-demo evidence-review gate. The release does not change application behavior.
 
 Required validation:
 
@@ -141,4 +141,25 @@ npm run qa
 npm run typecheck
 npm run lint
 npm run build
+```
+
+## v0.9.0 Public Demo Final Acceptance
+
+v0.9.0 adds the final public-demo acceptance gate. The release does not change application behavior.
+
+Required validation:
+
+```bash
+npm run public-demo:final:check
+npm run hosted-demo:evidence:check
+npm run public-demo:evidence:check
+npm run release:warning:check
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+npm run public-demo:final:check
 ```

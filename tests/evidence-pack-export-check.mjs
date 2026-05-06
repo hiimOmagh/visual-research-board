@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "0.8.3", "package.json version must be 0.8.3");
+assert(pkg.version === "0.9.0", "package.json version must be 0.9.0");
 assert(Boolean(pkg.scripts?.["evidence:pack:check"]), "package.json must define npm run evidence:pack:check");
 assert((pkg.scripts?.qa?.includes("evidence-pack-export-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include evidence-pack-export-check");
 
