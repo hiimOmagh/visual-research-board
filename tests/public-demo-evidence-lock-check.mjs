@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const VERSION = "1.2.0";
+const VERSION = "1.3.0";
 
 function filePath(relativePath) {
   return path.join(root, relativePath);
@@ -67,10 +67,10 @@ for (const file of requiredFiles) {
 const fullQaGate = read("scripts/full-qa-gate.mjs");
 assert(fullQaGate.includes("public-demo-evidence-lock"), "Full QA gate must include public-demo evidence lock");
 assert(fullQaGate.includes("tests/public-demo-evidence-lock-check.mjs"), "Full QA gate must run public demo evidence lock check");
-assert(fullQaGate.includes(VERSION), "Full QA gate must reference v1.2.0");
+assert(fullQaGate.includes(VERSION), "Full QA gate must reference v1.3.0");
 
 const fullQaGateCheck = read("tests/full-qa-gate-check.mjs");
-assert(fullQaGateCheck.includes(VERSION), "Full QA gate manifest check must reference v1.2.0");
+assert(fullQaGateCheck.includes(VERSION), "Full QA gate manifest check must reference v1.3.0");
 assert(fullQaGateCheck.includes("public-demo-evidence-lock"), "Full QA gate manifest check must expect public-demo evidence lock");
 
 const publicDemoEvidenceDoc = read("docs/public-demo-evidence-lock.md");
@@ -112,4 +112,4 @@ if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Public Demo Evidence Lock checks passed for v1.2.0.");
+console.log("Public Demo Evidence Lock checks passed for v1.3.0.");
