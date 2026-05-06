@@ -1,8 +1,36 @@
-# v0.9.0 — Public Demo Final Acceptance Patch Manifest
+# v1.0.0 — Public Demo Stable Release Patch Manifest
 
 ## Scope
 
-v0.9.0 finalizes public-demo acceptance before stable release.
+v1.0.0 locks the public demo stable release.
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/public-demo-stable-release-check.mjs`
+- `docs/public-demo-stable-release.md`
+- `docs/stable-release-checklist.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+
+## Non-goals
+
+- No feature changes
+- No provider changes
+- No retrieval logic changes
+- No export behavior changes
+- No social/book/generation expansion
+
+# v1.0.0 — Public Demo Final Acceptance Patch Manifest
+
+## Scope
+
+v1.0.0 finalizes public-demo acceptance before stable release.
 
 ## Changed files
 
@@ -25,11 +53,11 @@ v0.9.0 finalizes public-demo acceptance before stable release.
 - No retrieval logic changes
 - No export behavior changes
 
-# v0.9.0 — Hosted Demo Evidence Review Patch Manifest
+# v1.0.0 — Hosted Demo Evidence Review Patch Manifest
 
 ## Scope
 
-v0.9.0 adds a hosted-demo evidence-review gate and documentation while preserving the v0.9.0 Public Demo Evidence Lock.
+v1.0.0 adds a hosted-demo evidence-review gate and documentation while preserving the v1.0.0 Public Demo Evidence Lock.
 
 ## Changed files
 
@@ -52,7 +80,7 @@ v0.9.0 adds a hosted-demo evidence-review gate and documentation while preservin
 - No retrieval logic changes
 - No export behavior changes
 
-# v0.9.0 — Public Demo Evidence Lock Patch Manifest
+# v1.0.0 — Public Demo Evidence Lock Patch Manifest
 
 ## Changed files
 
@@ -70,7 +98,7 @@ v0.9.0 adds a hosted-demo evidence-review gate and documentation while preservin
 
 ## Scope
 
-v0.9.0 locks public-demo release evidence without changing product behavior.
+v1.0.0 locks public-demo release evidence without changing product behavior.
 
 ## Non-goals
 
@@ -94,7 +122,7 @@ npm run lint
 npm run build
 ```
 
-# v0.9.0 — Public Demo Release Candidate Patch Manifest
+# v1.0.0 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -116,7 +144,7 @@ npm run build
 
 ## Scope
 
-v0.9.0 prepares the app as a Public Demo Release Candidate while preserving the v0.9.0 Security and Key Handling layer.
+v1.0.0 prepares the app as a Public Demo Release Candidate while preserving the v1.0.0 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -140,7 +168,7 @@ npm run lint
 npm run build
 ```
 
-# v0.9.0 — Security and Key Handling Patch Manifest
+# v1.0.0 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -180,13 +208,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v0.9.0 — UX Reliability + Empty State Polish
-- v0.9.0 — Local Storage + Import/Export Hardening
-- v0.9.0 — Security and Key Handling
+- v1.0.0 — UX Reliability + Empty State Polish
+- v1.0.0 — Local Storage + Import/Export Hardening
+- v1.0.0 — Security and Key Handling
 
-## v0.9.0 — Release Warning Cleanup
+## v1.0.0 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.9.0 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v1.0.0 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 

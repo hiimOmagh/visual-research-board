@@ -1,4 +1,4 @@
-# Release Evidence Lock — v0.9.0
+# Release Evidence Lock — v1.0.0
 
 ## Required local validation
 

@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Public Demo Final Acceptance preserving Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation.",
+  "description": "Public Demo Stable Release preserving Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -71,7 +71,8 @@
     "release:warning:check": "node tests/release-warning-cleanup-check.mjs",
     "public-demo:evidence:check": "node tests/public-demo-evidence-lock-check.mjs",
     "hosted-demo:evidence:check": "node tests/hosted-demo-evidence-review-check.mjs",
-    "public-demo:final:check": "node tests/public-demo-final-acceptance-check.mjs"
+    "public-demo:final:check": "node tests/public-demo-final-acceptance-check.mjs",
+    "public-demo:stable:check": "node tests/public-demo-stable-release-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

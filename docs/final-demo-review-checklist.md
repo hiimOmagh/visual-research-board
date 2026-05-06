@@ -1,4 +1,4 @@
-# Final Demo Review Checklist — v0.9.0
+# Final Demo Review Checklist — v1.0.0
 
 ## Required commands
 
@@ -32,7 +32,7 @@ npm run public-demo:final:check
 ## Release artifact review
 
 - The full-qa-gate-report artifact exists.
-- The full-qa-gate-report artifact shows `app_version: 0.9.0`.
+- The full-qa-gate-report artifact shows `app_version: 1.0.0`.
 - The full-qa-gate-report artifact shows `status: passed`.
 - The full-qa-gate-report artifact shows `failed_gate_count: 0`.
 
