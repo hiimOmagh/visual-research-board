@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Reference Intelligence Layer MVP preserving Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding reference-use metadata, role labels, interpretation helpers, and non-blocking risk/access intelligence.",
+  "description": "Broad Reference Result Model preserving Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while making source classes first-class without adding providers or retrieval behavior.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -73,7 +73,8 @@
     "hosted-demo:evidence:check": "node tests/hosted-demo-evidence-review-check.mjs",
     "public-demo:final:check": "node tests/public-demo-final-acceptance-check.mjs",
     "public-demo:stable:check": "node tests/public-demo-stable-release-check.mjs",
-    "reference:intelligence:check": "node tests/reference-intelligence-check.mjs"
+    "reference:intelligence:check": "node tests/reference-intelligence-check.mjs",
+    "broad-reference:model:check": "node tests/broad-reference-result-model-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

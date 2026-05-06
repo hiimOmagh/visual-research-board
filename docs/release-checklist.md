@@ -1,4 +1,4 @@
-# Release Checklist — v1.1.0 stable
+# Release Checklist — v1.2.0 stable
 
 Run before publishing or deploying.
 
@@ -32,7 +32,7 @@ The report must show:
 ```text
 status: passed
 failed_gate_count: 0
-app_version: 1.1.0
+app_version: 1.2.0
 ```
 
 ## Manual browser checks
@@ -63,13 +63,13 @@ app_version: 1.1.0
 - Static demo clearly reports that real providers require a Next.js runtime.
 - CI uploads `artifacts/full-qa-gate-report.json` as `full-qa-gate-report`.
 
-## v1.1.0 security/key handling
+## v1.2.0 security/key handling
 
 - Run `npm run security:key:check`.
 - Confirm provider keys use server-only env names, not `NEXT_PUBLIC_*`.
 - Confirm provider runtime diagnostics show key presence only as redacted status.
 
-## v1.1.0 public-demo release candidate
+## v1.2.0 public-demo release candidate
 
 Run:
 
@@ -88,9 +88,9 @@ Confirm:
 - Unavailable providers are clearly disabled, skipped, or labeled.
 - Exports do not contain secrets or provider credentials.
 
-## v1.1.0 — Release Warning Cleanup
+## v1.2.0 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v1.1.0 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v1.2.0 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 
@@ -105,7 +105,7 @@ npm run lint
 npm run build
 ```
 
-## v1.1.0 public-demo evidence lock
+## v1.2.0 public-demo evidence lock
 
 Run:
 
@@ -123,7 +123,7 @@ npm run build
 
 Confirm the CI run passes and produces the `full-qa-gate-report` artifact.
 
-## v1.1.0 hosted demo evidence review
+## v1.2.0 hosted demo evidence review
 
 Run:
 
@@ -142,7 +142,7 @@ npm run build
 
 Confirm the hosted demo evidence checklist before tagging.
 
-## v1.1.0 public demo final acceptance
+## v1.2.0 public demo final acceptance
 
 Run:
 
@@ -163,7 +163,7 @@ npm run public-demo:final:check
 
 Confirm the hosted demo, docs, and full QA artifact before tagging.
 
-## v1.1.0 public demo stable release
+## v1.2.0 public demo stable release
 
 Run:
 
@@ -185,7 +185,7 @@ npm run public-demo:stable:check
 
 Confirm the stable release checklist before tagging.
 
-## v1.1.0 reference intelligence layer
+## v1.2.0 reference intelligence layer
 
 Run:
 
@@ -204,4 +204,26 @@ npm run typecheck
 npm run lint
 npm run build
 npm run reference:intelligence:check
+```
+
+## v1.2.0 broad reference result model
+
+Run:
+
+```bash
+npm run broad-reference:model:check
+npm run reference:intelligence:check
+npm run public-demo:stable:check
+npm run public-demo:final:check
+npm run hosted-demo:evidence:check
+npm run public-demo:evidence:check
+npm run release:warning:check
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+npm run broad-reference:model:check
 ```

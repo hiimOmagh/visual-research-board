@@ -1,4 +1,4 @@
-# Hosted Demo Review Checklist — v1.1.0
+# Hosted Demo Review Checklist — v1.2.0
 
 ## Required commands
 
@@ -24,7 +24,7 @@ npm run build
 - The full-qa-gate-report artifact exists.
 - The full-qa-gate-report artifact shows `status: passed`.
 - The full-qa-gate-report artifact shows `failed_gate_count: 0`.
-- The full-qa-gate-report artifact shows `app_version: 1.1.0`.
+- The full-qa-gate-report artifact shows `app_version: 1.2.0`.
 
 ## Negative checks
 
@@ -36,4 +36,4 @@ npm run build
 
 ## Release rule
 
-Do not move beyond v1.1.0 until the hosted demo evidence has been reviewed against the committed documentation and QA artifact.
+Do not move beyond v1.2.0 until the hosted demo evidence has been reviewed against the committed documentation and QA artifact.

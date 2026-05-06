@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "1.1.0", "package.json version must be 1.1.0");
+assert(pkg.version === "1.2.0", "package.json version must be 1.2.0");
 assert(Boolean(pkg.scripts?.["stock:providers:check"]), "package.json must define npm run stock:providers:check");
 assert((pkg.scripts?.qa?.includes("stock-illustrative-provider-pack-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include stock-illustrative-provider-pack-check");
 
@@ -15,7 +15,7 @@ const requiredFiles = [
   "src/lib/providers/stock-illustrative.ts",
   "docs/stock-illustrative-provider-pack.md"
 ];
-for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v1.1.0 file: ${file}`);
+for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing v1.2.0 file: ${file}`);
 
 const providerTokens = ["pixabay", "pexels", "unsplash"];
 const envTokens = ["PIXABAY_API_KEY", "PEXELS_API_KEY", "UNSPLASH_ACCESS_KEY"];
@@ -49,7 +49,7 @@ for (const token of ["searchPixabay", "searchPexels", "searchUnsplash", ...envTo
 assert(!route.includes("const coverageBias = buildCoverageBiasAudit(rankedResults);\n  const coverageBias"), "search route must not duplicate coverageBias declaration");
 
 const runtime = read("src/lib/provider-runtime.ts");
-assert(runtime.includes('APP_VERSION = "1.1.0"'), "provider runtime report must expose app version 1.1.0");
+assert(runtime.includes('APP_VERSION = "1.2.0"'), "provider runtime report must expose app version 1.2.0");
 for (const token of [...providerTokens, ...envTokens, "stock_illustrative"]) {
   assert(runtime.includes(token), `provider runtime must include ${token}`);
 }
@@ -83,12 +83,12 @@ for (const key of envTokens) assert(env.includes(key), `.env.example must docume
 assert(env.includes("Optional stock/illustrative providers"), ".env.example must label stock providers as optional illustrative sources");
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
-assert(searchPanel.includes("v1.1.0"), "SearchPanel header must show v1.1.0");
-assert(searchPanel.includes("visual-research-board-library-v1.1.0.json"), "library export filename must use v1.1.0");
-assert(searchPanel.includes("visual-research-board-backup-v1.1.0.json"), "backup export filename must use v1.1.0");
+assert(searchPanel.includes("v1.2.0"), "SearchPanel header must show v1.2.0");
+assert(searchPanel.includes("visual-research-board-library-v1.2.0.json"), "library export filename must use v1.2.0");
+assert(searchPanel.includes("visual-research-board-backup-v1.2.0.json"), "backup export filename must use v1.2.0");
 
 const docs = read("docs/stock-illustrative-provider-pack.md");
-for (const token of ["v1.1.0", "Pixabay", "Pexels", "Unsplash", "stock_illustrative", "npm run stock:providers:check"]) {
+for (const token of ["v1.2.0", "Pixabay", "Pexels", "Unsplash", "stock_illustrative", "npm run stock:providers:check"]) {
   assert(docs.includes(token), `docs must include ${token}`);
 }
 
@@ -97,5 +97,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("Stock/Illustrative Provider Pack checks passed for v1.1.0.");
+console.log("Stock/Illustrative Provider Pack checks passed for v1.2.0.");
 process.exit(0);
