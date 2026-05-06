@@ -1,4 +1,31 @@
-# v0.8.2 — Public Demo Evidence Lock Patch Manifest
+# v0.8.3 — Hosted Demo Evidence Review Patch Manifest
+
+## Scope
+
+v0.8.3 adds a hosted-demo evidence-review gate and documentation while preserving the v0.8.2 Public Demo Evidence Lock.
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/hosted-demo-evidence-review-check.mjs`
+- `docs/hosted-demo-evidence-review.md`
+- `docs/hosted-demo-review-checklist.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+
+## Non-goals
+
+- No feature changes
+- No provider changes
+- No retrieval logic changes
+- No export behavior changes
+
+# v0.8.3 — Public Demo Evidence Lock Patch Manifest
 
 ## Changed files
 
@@ -16,7 +43,7 @@
 
 ## Scope
 
-v0.8.2 locks public-demo release evidence without changing product behavior.
+v0.8.3 locks public-demo release evidence without changing product behavior.
 
 ## Non-goals
 
@@ -40,7 +67,7 @@ npm run lint
 npm run build
 ```
 
-# v0.8.2 — Public Demo Release Candidate Patch Manifest
+# v0.8.3 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -62,7 +89,7 @@ npm run build
 
 ## Scope
 
-v0.8.2 prepares the app as a Public Demo Release Candidate while preserving the v0.8.2 Security and Key Handling layer.
+v0.8.3 prepares the app as a Public Demo Release Candidate while preserving the v0.8.3 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -86,7 +113,7 @@ npm run lint
 npm run build
 ```
 
-# v0.8.2 — Security and Key Handling Patch Manifest
+# v0.8.3 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -126,13 +153,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v0.8.2 — UX Reliability + Empty State Polish
-- v0.8.2 — Local Storage + Import/Export Hardening
-- v0.8.2 — Security and Key Handling
+- v0.8.3 — UX Reliability + Empty State Polish
+- v0.8.3 — Local Storage + Import/Export Hardening
+- v0.8.3 — Security and Key Handling
 
-## v0.8.2 — Release Warning Cleanup
+## v0.8.3 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.2 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.3 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 

@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "private": true,
-  "description": "Release Warning Cleanup preserving Public Demo Release Candidate and Security and Key Handling for server-only provider keys, redacted diagnostics, demo-safe limitations, and non-misleading provider/runtime presentation. Public Demo Evidence Lock.",
+  "description": "Hosted Demo Evidence Review preserving Public Demo Release Candidate, Public Demo Evidence Lock, Release Warning Cleanup, and Security and Key Handling validation.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -69,7 +69,8 @@
     "qa:public-demo": "node scripts/full-qa-gate.mjs --category=public-demo",
     "clean:rc": "node scripts/clean-release-candidate.mjs",
     "release:warning:check": "node tests/release-warning-cleanup-check.mjs",
-    "public-demo:evidence:check": "node tests/public-demo-evidence-lock-check.mjs"
+    "public-demo:evidence:check": "node tests/public-demo-evidence-lock-check.mjs",
+    "hosted-demo:evidence:check": "node tests/hosted-demo-evidence-review-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

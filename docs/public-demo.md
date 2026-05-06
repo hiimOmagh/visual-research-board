@@ -1,6 +1,6 @@
-# Public Demo — v0.8.2
+# Public Demo — v0.8.3
 
-Visual Research Board v0.8.2 is a Public Demo Release Candidate.
+Visual Research Board v0.8.3 is a Public Demo Release Candidate.
 
 The demo is designed to be inspectable without private credentials. It must not imply live scraping, legal clearance, source-verification guarantees, or unbounded provider access.
 
@@ -40,4 +40,4 @@ npm run qa
 
 ## Release posture
 
-v0.8.2 is a release candidate. It is suitable for public inspection only if the public-demo, security, and full QA gates pass.
+v0.8.3 is a release candidate. It is suitable for public inspection only if the public-demo, security, and full QA gates pass.

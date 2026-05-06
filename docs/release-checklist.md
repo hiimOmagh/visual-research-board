@@ -1,4 +1,4 @@
-# Release Checklist — v0.8.2 stable
+# Release Checklist — v0.8.3 stable
 
 Run before publishing or deploying.
 
@@ -32,7 +32,7 @@ The report must show:
 ```text
 status: passed
 failed_gate_count: 0
-app_version: 0.8.2
+app_version: 0.8.3
 ```
 
 ## Manual browser checks
@@ -63,13 +63,13 @@ app_version: 0.8.2
 - Static demo clearly reports that real providers require a Next.js runtime.
 - CI uploads `artifacts/full-qa-gate-report.json` as `full-qa-gate-report`.
 
-## v0.8.2 security/key handling
+## v0.8.3 security/key handling
 
 - Run `npm run security:key:check`.
 - Confirm provider keys use server-only env names, not `NEXT_PUBLIC_*`.
 - Confirm provider runtime diagnostics show key presence only as redacted status.
 
-## v0.8.2 public-demo release candidate
+## v0.8.3 public-demo release candidate
 
 Run:
 
@@ -88,9 +88,9 @@ Confirm:
 - Unavailable providers are clearly disabled, skipped, or labeled.
 - Exports do not contain secrets or provider credentials.
 
-## v0.8.2 — Release Warning Cleanup
+## v0.8.3 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.2 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v0.8.3 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 
@@ -105,7 +105,7 @@ npm run lint
 npm run build
 ```
 
-## v0.8.2 public-demo evidence lock
+## v0.8.3 public-demo evidence lock
 
 Run:
 
@@ -122,3 +122,22 @@ npm run build
 ```
 
 Confirm the CI run passes and produces the `full-qa-gate-report` artifact.
+
+## v0.8.3 hosted demo evidence review
+
+Run:
+
+```bash
+npm run hosted-demo:evidence:check
+npm run public-demo:evidence:check
+npm run release:warning:check
+npm run public-demo:check
+npm run qa:public-demo
+npm run security:key:check
+npm run qa
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Confirm the hosted demo evidence checklist before tagging.
