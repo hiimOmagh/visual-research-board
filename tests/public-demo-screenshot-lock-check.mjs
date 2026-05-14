@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
 
 function fp(relativePath) {
@@ -28,7 +29,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.5", "package.json version must be 2.1.5");
+assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
 assert(pkg.description?.includes("Public Demo Evidence + Screenshot Lock"), "package description must identify Public Demo Evidence + Screenshot Lock");
 assert(pkg.description?.includes("Dependency Audit Triage"), "package description must preserve Dependency Audit Triage wording");
 assert(pkg.description?.includes("Stable Release Hygiene + Audit Warning Review"), "package description must preserve Stable Release Hygiene + Audit Warning Review wording");
@@ -50,8 +51,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.1.5"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.1.5"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.1.7"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.1.7"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "tests/public-demo-screenshot-lock-check.mjs",
@@ -132,7 +133,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.5"), `${file} must reference v2.1.5`);
+  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
 }
 
 const forbiddenPositiveClaims = [
@@ -162,9 +163,9 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    console.warn(`WARN public demo screenshot lock: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN public demo screenshot lock: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    console.warn(`WARN public demo screenshot lock: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN public demo screenshot lock: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 

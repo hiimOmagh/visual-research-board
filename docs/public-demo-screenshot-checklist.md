@@ -1,9 +1,9 @@
 
-# Public Demo Screenshot Checklist — v2.1.5
+# Public Demo Screenshot Checklist — v2.1.7
 
 ## screenshot evidence
 
-The public demo should have a screenshot evidence set before tagging v2.1.5.
+The public demo should have a screenshot evidence set before tagging v2.1.7.
 
 ## required screenshots
 
@@ -21,13 +21,13 @@ Capture these views:
 
 Recommended names:
 
-- `v2.1.5-01-landing-default.png`
-- `v2.1.5-02-discovery-board.png`
-- `v2.1.5-03-activation-pack-workflow.png`
-- `v2.1.5-04-export-integration-panel.png`
-- `v2.1.5-05-empty-state.png`
-- `v2.1.5-06-desktop-width.png`
-- `v2.1.5-07-mobile-width.png`
+- `v2.1.7-01-landing-default.png`
+- `v2.1.7-02-discovery-board.png`
+- `v2.1.7-03-activation-pack-workflow.png`
+- `v2.1.7-04-export-integration-panel.png`
+- `v2.1.7-05-empty-state.png`
+- `v2.1.7-06-desktop-width.png`
+- `v2.1.7-07-mobile-width.png`
 
 ## review outcome
 

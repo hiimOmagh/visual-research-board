@@ -2,6 +2,8 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS ??= "1";
+
 const root = process.cwd();
 const startedAt = new Date().toISOString();
 const artifactsDir = path.join(root, "artifacts");
@@ -145,6 +147,7 @@ try {
   const plannedScripts = [
     "release:verify:runner:check",
     "single-command:verification:check",
+    "ci-parity:workflow:check",
     "first-run:ux:check",
     "first-run:panel:check",
     "first-run:visual:check",
@@ -167,6 +170,7 @@ try {
     "qa:public-demo",
     "security:key:check",
     "qa",
+    "verification:freshness:check",
     "typecheck",
     "lint",
     "build",

@@ -43,7 +43,7 @@ const evidenceFiles = [
 const review = {
   schema_version: "first-run.evidence-review.v1",
   app_version: pkg?.version ?? "unknown",
-  release: "v2.1.5",
+  release: "v2.1.7",
   generated_at: new Date().toISOString(),
   status: "review-recorded",
   artifact_inputs: evidenceFiles,

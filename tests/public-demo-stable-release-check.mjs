@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
 
 function fp(relativePath) {
@@ -35,7 +36,7 @@ function isNegatedClaimContext(text, index, matchLength) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.5", "package.json version must be 2.1.5");
+assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
 assert(pkg.description?.includes("Public Demo Stable Release"), "package description must identify Public Demo Stable Release");
 assert(pkg.description?.includes("Public Demo Final Acceptance"), "package description must preserve Public Demo Final Acceptance wording");
 assert(pkg.description?.includes("Hosted Demo Evidence Review"), "package description must preserve Hosted Demo Evidence Review wording");
@@ -96,11 +97,11 @@ assert(fullQaManifest.includes(VERSION), "Full QA gate manifest check must refer
 assert(fullQaManifest.includes("public-demo-stable-release"), "Full QA gate manifest must check public demo stable release");
 
 const readme = read("README.md");
-assert(readme.includes("v2.1.5"), "README must mention v2.1.5");
+assert(readme.includes("v2.1.7"), "README must mention v2.1.7");
 assert(readme.includes("Public Demo Stable Release"), "README must mention Public Demo Stable Release");
 
 const stableDoc = read("docs/public-demo-stable-release.md");
-assert(stableDoc.includes("v2.1.5"), "stable release doc must mention v2.1.5");
+assert(stableDoc.includes("v2.1.7"), "stable release doc must mention v2.1.7");
 assert(stableDoc.includes("No feature changes"), "stable release doc must state no feature changes");
 assert(stableDoc.includes("No provider changes"), "stable release doc must state no provider changes");
 assert(stableDoc.includes("No retrieval logic changes"), "stable release doc must state no retrieval logic changes");
@@ -110,7 +111,7 @@ assert(stableDoc.includes("Public demo stable"), "stable release doc must identi
 const checklist = read("docs/stable-release-checklist.md");
 assert(checklist.includes("npm run public-demo:stable:check"), "stable checklist must include public-demo stable check command");
 assert(checklist.includes("full-qa-gate-report"), "stable checklist must mention full QA artifact");
-assert(checklist.includes("v2.1.5"), "stable checklist must mention v2.1.5");
+assert(checklist.includes("v2.1.7"), "stable checklist must mention v2.1.7");
 
 const claimScanFiles = [
   "README.md",
@@ -154,9 +155,9 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    console.warn(`WARN stable release: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN stable release: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    console.warn(`WARN stable release: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN stable release: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 } else {
   console.warn("WARN stable release: artifacts/full-qa-gate-report.json is absent. Run npm run qa to produce it.");

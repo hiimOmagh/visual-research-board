@@ -1,11 +1,11 @@
 
-# Dependency Audit Triage Checklist — v2.1.5
+# Dependency Audit Triage Checklist — v2.1.7
 
 ## Run
 
 ```bash
 npm audit
-npm audit --json > artifacts/npm-audit-v2.1.5.json
+npm audit --json > artifacts/npm-audit-v2.1.7.json
 ```
 
 Do not commit local audit JSON unless the release process explicitly wants that evidence artifact.
@@ -67,7 +67,7 @@ Prefer:
 
 ## Current audit finding
 
-From `npm audit` on v2.1.5:
+From `npm audit` on v2.1.7:
 
 - package name: `postcss`
 - severity: moderate
@@ -83,13 +83,13 @@ From `npm audit` on v2.1.5:
 - breaking change risk: high / unacceptable for this stable patch
 - production runtime exposure: requires review; likely tied to CSS stringification path
 - development tooling exposure: yes, through framework/build dependency path
-- decision: do not force-fix in v2.1.5
+- decision: do not force-fix in v2.1.7
 - proposed non-breaking update path: wait for compatible Next/PostCSS resolution or handle in a dedicated dependency-maintenance milestone
 
 
 ## Current audit finding after non-force remediation
 
-Initial `npm audit` on v2.1.5 reported:
+Initial `npm audit` on v2.1.7 reported:
 
 - package name: `next`
 - severity: high
@@ -114,7 +114,7 @@ Remaining audit signal after `npm audit fix`:
 - npm proposed remaining fix: `npm audit fix --force`
 - force-fix result: would install `next@9.3.3`
 - breaking change risk: high / unacceptable
-- decision: do not force-fix in v2.1.5
+- decision: do not force-fix in v2.1.7
 - proposed non-breaking update path: wait for compatible Next/PostCSS resolution or handle in a dedicated dependency-maintenance milestone
 
 Exact test marker: run `npm audit` before classifying dependency risk.

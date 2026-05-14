@@ -1,4 +1,4 @@
-# v2.1.5 — UX Reliability + Empty State Polish
+# v2.1.7 — UX Reliability + Empty State Polish
 
 This release makes the visual research board easier to enter, inspect, and demo without adding a new research concept.
 

@@ -1,6 +1,6 @@
-# Release Command Compression — v2.1.5
+# Release Command Compression — v2.1.7
 
-v2.1.5 compresses release validation into a small command surface.
+v2.1.7 compresses release validation into a small command surface.
 
 ## release command compression
 
@@ -55,7 +55,7 @@ When `verify:all` fails:
 
 Do not return to the old long manual checklist unless debugging a specific failing command.
 
-## v2.1.5 exact anti-recursion phrases
+## v2.1.7 exact anti-recursion phrases
 
 The release verifier has strict anti-recursion rules:
 

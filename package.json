@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.5",
+  "version": "2.1.7",
   "private": true,
-  "description": "Single-Command Verification UX + Release Command Compression preserving First-Run Demo Script + Public Walkthrough Copy, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while formalizing verify:artifacts, verify:all, verify:ci-parity, and compressed verification documentation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
+  "description": "CI Parity Workflow Badge + Verification Docs Lock preserving Single-Command Verification UX + Release Command Compression, First-Run Demo Script + Public Walkthrough Copy, Unified Release Verification Runner, Security and Key Handling validation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting., Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Verification Report Freshness Lock + Warning Suppression",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -100,7 +100,9 @@
     "first-run:demo-script:check": "node tests/first-run-demo-script-check.mjs",
     "verify:artifacts": "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script",
     "verify:all": "npm run verify:artifacts && npm run verify:release",
-    "single-command:verification:check": "node tests/single-command-verification-check.mjs"
+    "single-command:verification:check": "node tests/single-command-verification-check.mjs",
+    "ci-parity:workflow:check": "node tests/ci-parity-workflow-badge-check.mjs",
+    "verification:freshness:check": "node tests/verification-report-freshness-lock-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

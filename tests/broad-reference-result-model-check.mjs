@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
 
 function fp(relativePath) {
@@ -23,7 +24,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.5", "package.json version must be 2.1.5");
+assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
 assert(pkg.description?.includes("Broad Reference Result Model"), "package description must identify Broad Reference Result Model");
 assert(pkg.description?.includes("Reference Intelligence Layer MVP"), "package description must preserve Reference Intelligence Layer MVP wording");
 assert(pkg.description?.includes("Public Demo Stable Release"), "package description must preserve Public Demo Stable Release wording");
@@ -113,9 +114,9 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    console.warn(`WARN broad reference model: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN broad reference model: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    console.warn(`WARN broad reference model: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) console.warn(`WARN broad reference model: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 

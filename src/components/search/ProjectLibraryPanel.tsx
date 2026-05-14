@@ -129,7 +129,7 @@ export function ProjectLibraryPanel({
       </div>
 
       <p className="mt-3 text-xs leading-5 text-slate-500">
-        v2.1.5 stores a local multi-project library with persistent result snapshots, conflict-safe import/export bundles, backup envelopes, validation reports, corrupted-file warnings, and guided demo/onboarding support in browser localStorage. Existing projects are never overwritten by an import.
+        v2.1.7 stores a local multi-project library with persistent result snapshots, conflict-safe import/export bundles, backup envelopes, validation reports, corrupted-file warnings, and guided demo/onboarding support in browser localStorage. Existing projects are never overwritten by an import.
       </p>
       {storageImportReport && (
         <div className="mt-3 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-3 text-xs text-amber-100">

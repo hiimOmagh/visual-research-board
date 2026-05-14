@@ -1,6 +1,6 @@
-# Broad Reference Result Model — v2.1.5
+# Broad Reference Result Model — v2.1.7
 
-v2.1.5 makes broad reference source classes first-class without adding new providers or changing retrieval behavior.
+v2.1.7 makes broad reference source classes first-class without adding new providers or changing retrieval behavior.
 
 ## Purpose
 
