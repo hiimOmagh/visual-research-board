@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.0", "package.json version must be 2.1.0");
+assert(VERSION === "2.1.1", "package.json version must be 2.1.1");
 assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must identify Unified Release Verification Runner");
 assert(pkg.description?.includes("Release Package Audit"), "package description must preserve Release Package Audit wording");
 assert(pkg.description?.includes("Public Demo Evidence + Screenshot Lock"), "package description must preserve Public Demo Evidence + Screenshot Lock wording");
@@ -120,7 +120,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.0"), `${file} must reference v2.1.0`);
+  assert(read(file).includes("v2.1.1"), `${file} must reference v2.1.1`);
 }
 
 const reportPath = "artifacts/release-verify-report.json";

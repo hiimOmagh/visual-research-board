@@ -145,6 +145,7 @@ try {
   const plannedScripts = [
     "release:verify:runner:check",
     "first-run:ux:check",
+    "first-run:panel:check",
     "release:package:audit:check",
     "public-demo:screenshot:check",
     "dependency:audit:triage:check",

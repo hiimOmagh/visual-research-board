@@ -1,4 +1,4 @@
-# Final Demo Review Checklist — v2.1.0
+# Final Demo Review Checklist — v2.1.1
 
 ## Required commands
 
@@ -32,10 +32,10 @@ npm run public-demo:final:check
 ## Release artifact review
 
 - The full-qa-gate-report artifact exists.
-- The full-qa-gate-report artifact shows `app_version: 2.1.0`.
+- The full-qa-gate-report artifact shows `app_version: 2.1.1`.
 - The full-qa-gate-report artifact shows `status: passed`.
 - The full-qa-gate-report artifact shows `failed_gate_count: 0`.
 
 ## Release rule
 
-Do not move to v2.1.0 until this final demo review is complete and CI is green.
+Do not move to v2.1.1 until this final demo review is complete and CI is green.

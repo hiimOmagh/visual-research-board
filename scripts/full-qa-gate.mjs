@@ -61,6 +61,7 @@ const gates = [
   { category: "release", name: "release-package-audit", command: ["node", "tests/release-package-audit-check.mjs"] },
   { category: "release", name: "release-verify-runner", command: ["node", "tests/release-verify-runner-check.mjs"] },
   { category: "workflow", name: "first-run-ux-workflow", command: ["node", "tests/first-run-ux-workflow-check.mjs"] },
+  { category: "workflow", name: "first-run-panel-mount", command: ["node", "tests/first-run-panel-mount-check.mjs"] },
 
   { category: "exports", name: "evidence-pack-export", command: ["node", "tests/evidence-pack-export-check.mjs"] },
   { category: "exports", name: "attribution-generator", command: ["node", "tests/attribution-generator-check.mjs"] },
@@ -122,8 +123,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "2.1.0",
-  app_version: "2.1.0",
+  schema_version: "2.1.1",
+  app_version: "2.1.1",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -144,5 +145,5 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v2.1.0.");
+console.log("\nFull QA gate passed for v2.1.1.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");

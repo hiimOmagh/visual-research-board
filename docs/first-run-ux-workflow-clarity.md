@@ -1,7 +1,7 @@
 
-# First-Run UX + Workflow Clarity — v2.1.0
+# First-Run UX + Workflow Clarity — v2.1.1
 
-v2.1.0 improves first-run workflow clarity for a new user.
+v2.1.1 improves first-run workflow clarity for a new user.
 
 ## Goal
 

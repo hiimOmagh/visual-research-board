@@ -1,7 +1,7 @@
 
-# Book / Bibliographic Discovery Layer — v2.1.0
+# Book / Bibliographic Discovery Layer — v2.1.1
 
-v2.1.0 adds metadata-first book and bibliographic discovery planning and classification.
+v2.1.1 adds metadata-first book and bibliographic discovery planning and classification.
 
 ## Purpose
 

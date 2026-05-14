@@ -12,7 +12,7 @@ function assert(condition, message) { if (!condition) fail(message); }
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.0", "package.json version must be 2.1.0");
+assert(VERSION === "2.1.1", "package.json version must be 2.1.1");
 for (const token of [
   "Release Package Audit",
   "Public Demo Evidence + Screenshot Lock",
@@ -31,8 +31,8 @@ if (exists("package-lock.json")) {
   assert(lock.version === VERSION, "package-lock.json version must match package.json");
   assert(lock.packages?.[""]?.version === VERSION, "package-lock root package version must match package.json");
   const lockText = read("package-lock.json");
-  assert(!lockText.includes('"is-finalizationregistry": "^2.1.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-  assert(!lockText.includes('"which-boxed-primitive": "^2.1.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+  assert(!lockText.includes('"is-finalizationregistry": "^2.1.1"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+  assert(!lockText.includes('"which-boxed-primitive": "^2.1.1"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 }
 
 for (const file of [
@@ -78,7 +78,7 @@ for (const token of ["package.json","package-lock.json","README.md","PATCH_MANIF
 }
 
 for (const file of ["README.md","PATCH_MANIFEST.md","docs/release-checklist.md","docs/validation-report.md"]) {
-  assert(read(file).includes("v2.1.0"), `${file} must reference v2.1.0`);
+  assert(read(file).includes("v2.1.1"), `${file} must reference v2.1.1`);
 }
 
 const report = JSON.parse(read("artifacts/full-qa-gate-report.json"));

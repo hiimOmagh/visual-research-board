@@ -1,5 +1,5 @@
 
-# Social Reference Safety Boundaries — v2.1.0
+# Social Reference Safety Boundaries — v2.1.1
 
 ## allowed
 

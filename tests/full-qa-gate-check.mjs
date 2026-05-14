@@ -19,7 +19,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing full QA gate file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.1.0", "package.json version must be 2.1.0");
+assert(pkg.version === "2.1.1", "package.json version must be 2.1.1");
 assert(pkg.description.includes("Public Demo Release Candidate"), "package description must identify Public Demo Release Candidate");
 assert(pkg.scripts?.qa === "node scripts/full-qa-gate.mjs", "npm run qa must delegate to scripts/full-qa-gate.mjs");
 assert(pkg.scripts?.["qa:list"] === "node scripts/full-qa-gate.mjs --list", "package.json must expose npm run qa:list");
@@ -80,7 +80,7 @@ for (const check of expectedChecks) assert(fullGate.includes(check), `full QA ga
 assert(fullGate.includes("artifacts/full-qa-gate-report.json"), "full QA gate must write a report artifact");
 assert(fullGate.includes("--category="), "full QA gate must support category execution");
 assert(fullGate.includes("--list"), "full QA gate must support list mode");
-assert(fullGate.includes('schema_version: "2.1.0"'), "full QA gate report schema must identify v2.1.0");
+assert(fullGate.includes('schema_version: "2.1.1"'), "full QA gate report schema must identify v2.1.1");
 
 const ci = read(".github/workflows/ci.yml");
 assert(ci.includes("npm run test:ci:no-browser"), "CI must run the consolidated no-browser CI gate");
@@ -89,7 +89,7 @@ assert(ci.includes("actions/upload-artifact"), "CI must upload full QA evidence 
 assert(ci.includes("full-qa-gate-report"), "CI artifact name must identify the full QA gate report");
 
 const docs = read("docs/full-qa-gate.md");
-for (const token of ["v2.1.0", "npm run qa", "npm run qa:list", "qa:baseline", "qa:retrieval", "qa:providers", "qa:security", "qa:public-demo", "qa:workflow", "qa:exports", "qa:release", "artifacts/full-qa-gate-report.json"]) {
+for (const token of ["v2.1.1", "npm run qa", "npm run qa:list", "qa:baseline", "qa:retrieval", "qa:providers", "qa:security", "qa:public-demo", "qa:workflow", "qa:exports", "qa:release", "artifacts/full-qa-gate-report.json"]) {
   assert(docs.includes(token), `full QA docs must include ${token}`);
 }
 
@@ -98,22 +98,22 @@ function exists(relativePath) {
 }
 
 const release = read("docs/release-checklist.md");
-assert(release.includes("v2.1.0"), "release checklist must identify v2.1.0");
+assert(release.includes("v2.1.1"), "release checklist must identify v2.1.1");
 assert(release.includes("npm run test:ci:no-browser"), "release checklist must include no-browser CI gate");
 assert(release.includes("artifacts/full-qa-gate-report.json"), "release checklist must mention full QA artifact");
 
 const validation = read("docs/validation-report.md");
-assert(validation.includes("Visual Research Board v2.1.0"), "validation report must identify v2.1.0");
+assert(validation.includes("Visual Research Board v2.1.1"), "validation report must identify v2.1.1");
 assert(validation.includes("Public Demo Release Candidate"), "validation report must describe the public demo release candidate");
 assert(validation.includes("artifacts/full-qa-gate-report.json"), "validation report must mention the QA artifact");
 
 const readme = read("README.md");
-assert(readme.includes("Visual Research Board v2.1.0"), "README must identify v2.1.0");
+assert(readme.includes("Visual Research Board v2.1.1"), "README must identify v2.1.1");
 assert(readme.includes("Public Demo Release Candidate"), "README must identify the release capability");
 assert(readme.includes("npm run qa:list"), "README must document qa:list");
 
 const manifest = read("PATCH_MANIFEST.md");
-assert(manifest.includes("v2.1.0"), "PATCH_MANIFEST must identify v2.1.0");
+assert(manifest.includes("v2.1.1"), "PATCH_MANIFEST must identify v2.1.1");
 assert(manifest.includes("Public Demo Release Candidate"), "PATCH_MANIFEST must identify the release capability");
 assert(manifest.includes("scripts/full-qa-gate.mjs"), "PATCH_MANIFEST must list the full QA script");
 
@@ -332,7 +332,16 @@ assert(exists("docs/first-run-ux-checklist.md"), "first-run UX checklist must ex
 assert(exists("src/lib/first-run-workflow.ts"), "first-run workflow lib must exist");
 assert(exists("src/components/search/FirstRunWorkflowPanel.tsx"), "first-run workflow panel must exist");
 
-console.log("Full QA Gate checks passed for v2.1.0.");
+const firstRunPanelMountGateSource = read("scripts/full-qa-gate.mjs");
+assert(firstRunPanelMountGateSource.includes("first-run-panel-mount"), "Full QA gate must include first-run panel mount");
+assert(firstRunPanelMountGateSource.includes("tests/first-run-panel-mount-check.mjs"), "Full QA gate must run first-run panel mount check");
+const packageForFirstRunPanelMount = JSON.parse(read("package.json"));
+assert(packageForFirstRunPanelMount.scripts?.["first-run:panel:check"] === "node tests/first-run-panel-mount-check.mjs", "package.json must expose first-run:panel:check");
+assert(exists("tests/first-run-panel-mount-check.mjs"), "first-run panel mount check file must exist");
+assert(exists("docs/controlled-first-run-panel-mount.md"), "controlled first-run panel mount doc must exist");
+assert(exists("docs/ui-consistency-first-run-checklist.md"), "UI consistency first-run checklist must exist");
+
+console.log("Full QA Gate checks passed for v2.1.1.");
 
 const fullQaGate = read("scripts/full-qa-gate.mjs");
 assert(fullQaGate.includes("public-demo-evidence-lock"), "Full QA gate must include public-demo evidence lock");

@@ -7,7 +7,7 @@ export type FirstRunWorkflowStep = {
   guardrail: string;
 };
 
-export const FIRST_RUN_WORKFLOW_VERSION = "v2.1.0";
+export const FIRST_RUN_WORKFLOW_VERSION = "v2.1.1";
 
 export const firstRunWorkflowSteps: FirstRunWorkflowStep[] = [
   {

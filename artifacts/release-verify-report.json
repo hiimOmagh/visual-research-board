@@ -1,17 +1,18 @@
 {
   "schema_version": "1.0.0",
-  "app_version": "2.1.0",
-  "release_label": "v2.1.0",
+  "app_version": "2.1.1",
+  "release_label": "v2.1.1",
   "status": "passed",
-  "started_at": "2026-05-14T15:43:04.071Z",
-  "finished_at": "2026-05-14T15:43:36.389Z",
+  "started_at": "2026-05-14T15:57:35.382Z",
+  "finished_at": "2026-05-14T15:58:05.205Z",
   "failed_command": null,
-  "command_count": 24,
-  "passed_command_count": 24,
+  "command_count": 25,
+  "passed_command_count": 25,
   "failed_command_count": 0,
   "planned_scripts": [
     "release:verify:runner:check",
     "first-run:ux:check",
+    "first-run:panel:check",
     "release:package:audit:check",
     "public-demo:screenshot:check",
     "dependency:audit:triage:check",
@@ -52,7 +53,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 365,
+      "duration_ms": 374,
       "error": null
     },
     {
@@ -71,7 +72,26 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 352,
+      "duration_ms": 370,
+      "error": null
+    },
+    {
+      "label": "npm run first-run:panel:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "first-run:panel:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "first-run:panel:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 344,
       "error": null
     },
     {
@@ -109,7 +129,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 370,
+      "duration_ms": 367,
       "error": null
     },
     {
@@ -128,7 +148,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 367,
+      "duration_ms": 370,
       "error": null
     },
     {
@@ -147,7 +167,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 482,
+      "duration_ms": 488,
       "error": null
     },
     {
@@ -166,7 +186,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 356,
+      "duration_ms": 372,
       "error": null
     },
     {
@@ -185,7 +205,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 366,
+      "duration_ms": 410,
       "error": null
     },
     {
@@ -204,7 +224,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 364,
+      "duration_ms": 344,
       "error": null
     },
     {
@@ -223,7 +243,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 360,
+      "duration_ms": 359,
       "error": null
     },
     {
@@ -242,7 +262,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 350,
+      "duration_ms": 364,
       "error": null
     },
     {
@@ -261,7 +281,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 372,
+      "duration_ms": 360,
       "error": null
     },
     {
@@ -280,7 +300,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 443,
+      "duration_ms": 362,
       "error": null
     },
     {
@@ -299,7 +319,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 347,
+      "duration_ms": 361,
       "error": null
     },
     {
@@ -318,7 +338,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 353,
+      "duration_ms": 358,
       "error": null
     },
     {
@@ -337,7 +357,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 398,
+      "duration_ms": 371,
       "error": null
     },
     {
@@ -356,7 +376,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 545,
+      "duration_ms": 456,
       "error": null
     },
     {
@@ -375,7 +395,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 359,
+      "duration_ms": 355,
       "error": null
     },
     {
@@ -394,7 +414,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 4995,
+      "duration_ms": 5081,
       "error": null
     },
     {
@@ -413,7 +433,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 1832,
+      "duration_ms": 1803,
       "error": null
     },
     {
@@ -432,7 +452,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 4935,
+      "duration_ms": 4429,
       "error": null
     },
     {
@@ -451,7 +471,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 12439,
+      "duration_ms": 10654,
       "error": null
     },
     {
@@ -470,7 +490,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 784,
+      "duration_ms": 361,
       "error": null
     },
     {
@@ -489,7 +509,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 412,
+      "duration_ms": 337,
       "error": null
     }
   ],

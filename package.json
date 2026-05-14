@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
-  "description": "First-Run UX + Workflow Clarity preserving Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding first-run workflow guidance, next-step labels, empty-state clarity, and demo-safe onboarding copy without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
+  "description": "Controlled First-Run Panel Mount + UI Consistency preserving First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while mounting the first-run workflow panel in SearchPanel with deterministic import/mount checks, UI consistency guidance, and responsive visibility review without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -90,7 +90,8 @@
     "verify:release": "node scripts/release-verify.mjs",
     "verify:ci-parity": "npm ci && npm run verify:release",
     "release:verify:runner:check": "node tests/release-verify-runner-check.mjs",
-    "first-run:ux:check": "node tests/first-run-ux-workflow-check.mjs"
+    "first-run:ux:check": "node tests/first-run-ux-workflow-check.mjs",
+    "first-run:panel:check": "node tests/first-run-panel-mount-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

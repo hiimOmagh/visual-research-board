@@ -1,4 +1,4 @@
-# Source Class Taxonomy — v2.1.0
+# Source Class Taxonomy — v2.1.1
 
 ## Source classes
 

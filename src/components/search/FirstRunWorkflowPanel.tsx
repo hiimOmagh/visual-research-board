@@ -13,6 +13,7 @@ export function FirstRunWorkflowPanel() {
     <section
       aria-label="First-run workflow guidance"
       className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 shadow-sm"
+      data-testid="first-run-workflow-panel"
       data-release={FIRST_RUN_WORKFLOW_VERSION}
     >
       <div className="space-y-2">

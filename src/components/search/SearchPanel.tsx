@@ -72,7 +72,8 @@ import {
   updateProjectClaim,
   upsertProject
 } from "@/lib/project";
-// v2.1.0 first-run workflow copy is provided by FirstRunWorkflowPanel.
+import { FirstRunWorkflowPanel } from "./FirstRunWorkflowPanel";
+// v2.1.1 first-run workflow copy is provided by FirstRunWorkflowPanel.
 
 export function SearchPanel() {
   const [topic, setTopic] = useState("Hannibal crossing the Alps");
@@ -377,11 +378,11 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v2.1.0.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v2.1.1.json", createProjectLibraryExport(library), "application/json");
   };
 
   const exportBackup = () => {
-    downloadTextFile("visual-research-board-backup-v2.1.0.json", createStorageBackupExport(library), "application/json");
+    downloadTextFile("visual-research-board-backup-v2.1.1.json", createStorageBackupExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {
@@ -420,7 +421,7 @@ export function SearchPanel() {
       <header className="mb-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-soft">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v2.1.0</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-lime-300">v2.1.1</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">
               Visual Research Board
             </h1>
@@ -434,6 +435,8 @@ export function SearchPanel() {
         </div>
       </header>
 
+      {/* v2.1.1 controlled first-run panel mount */}
+      <FirstRunWorkflowPanel />
       <ProjectLibraryPanel
         library={library}
         activeProject={project}
