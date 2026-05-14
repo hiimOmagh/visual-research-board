@@ -1,0 +1,76 @@
+{
+  "schema_version": "first-run.evidence-review.v1",
+  "app_version": "2.1.3",
+  "release": "v2.1.3",
+  "generated_at": "2026-05-14T16:33:35.870Z",
+  "status": "review-recorded",
+  "artifact_inputs": [
+    {
+      "path": "artifacts/full-qa-gate-report.json",
+      "exists": true,
+      "size_bytes": 12715
+    },
+    {
+      "path": "artifacts/release-verify-report.json",
+      "exists": true,
+      "size_bytes": 13893
+    },
+    {
+      "path": "artifacts/first-run-visual-evidence.json",
+      "exists": true,
+      "size_bytes": 2119
+    }
+  ],
+  "screenshot_inputs": [
+    {
+      "path": "artifacts/first-run-screenshots/desktop-first-run.png",
+      "exists": false,
+      "size_bytes": 0
+    },
+    {
+      "path": "artifacts/first-run-screenshots/tablet-first-run.png",
+      "exists": false,
+      "size_bytes": 0
+    },
+    {
+      "path": "artifacts/first-run-screenshots/mobile-first-run.png",
+      "exists": false,
+      "size_bytes": 0
+    }
+  ],
+  "source_reports": {
+    "full_qa": {
+      "app_version": "2.1.2",
+      "status": "passed",
+      "failed_gate_count": 0
+    },
+    "release_verify": {
+      "app_version": "2.1.2",
+      "status": "passed"
+    },
+    "first_run_visual_evidence": {
+      "app_version": "2.1.3",
+      "status": "planned",
+      "screenshot_count": 3,
+      "manual_review_required": true
+    }
+  },
+  "demo_capture_notes": [
+    "Start from a clean first-run state where the board has no saved references.",
+    "Capture the first-run panel before running a search.",
+    "Capture desktop, tablet, and mobile views.",
+    "Verify primary search action remains visible.",
+    "Verify source/provider controls remain reachable.",
+    "Verify activation pack and export preview language is visible or reachable.",
+    "Do not claim rights clearance, private account access, paywall bypass, or source media rehosting."
+  ],
+  "review_questions": [
+    "Does the first-run panel explain search -> save -> review -> activation pack -> export?",
+    "Is the first primary action obvious without reading documentation?",
+    "Does the page avoid horizontal overflow on mobile?",
+    "Are limitations and boundaries visible without overwhelming the user?",
+    "Do generated artifacts match the current package version?"
+  ],
+  "manual_review_required": true,
+  "next_action": "Attach screenshots when available, regenerate first-run visual evidence, then regenerate this review artifact."
+}

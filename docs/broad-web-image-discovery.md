@@ -1,6 +1,6 @@
-# Broad Web + Image Discovery Expansion — v2.1.1
+# Broad Web + Image Discovery Expansion — v2.1.3
 
-v2.1.1 adds the controlled broad web/image discovery planning layer.
+v2.1.3 adds the controlled broad web/image discovery planning layer.
 
 ## Purpose
 

@@ -1,7 +1,7 @@
 
-# Public Demo Evidence + Screenshot Lock — v2.1.1
+# Public Demo Evidence + Screenshot Lock — v2.1.3
 
-v2.1.1 locks public demo visual evidence for the stable v2 workflow.
+v2.1.3 locks public demo visual evidence for the stable v2 workflow.
 
 ## Objective
 

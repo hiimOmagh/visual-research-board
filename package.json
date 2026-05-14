@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "private": true,
-  "description": "Controlled First-Run Panel Mount + UI Consistency preserving First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while mounting the first-run workflow panel in SearchPanel with deterministic import/mount checks, UI consistency guidance, and responsive visibility review without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
+  "description": "First-Run Evidence Artifact Review + Demo Capture Notes preserving First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding first-run evidence artifact review, demo capture notes, and review-manifest generation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -91,7 +91,11 @@
     "verify:ci-parity": "npm ci && npm run verify:release",
     "release:verify:runner:check": "node tests/release-verify-runner-check.mjs",
     "first-run:ux:check": "node tests/first-run-ux-workflow-check.mjs",
-    "first-run:panel:check": "node tests/first-run-panel-mount-check.mjs"
+    "first-run:panel:check": "node tests/first-run-panel-mount-check.mjs",
+    "first-run:visual:check": "node tests/first-run-visual-qa-check.mjs",
+    "first-run:visual:evidence": "node scripts/first-run-visual-evidence.mjs",
+    "first-run:evidence-review": "node scripts/first-run-evidence-review.mjs",
+    "first-run:evidence-review:check": "node tests/first-run-evidence-review-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

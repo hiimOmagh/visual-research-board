@@ -1,6 +1,6 @@
-# v2.1.1 — Museum/Open-Access Provider Pack
+# v2.1.3 — Museum/Open-Access Provider Pack
 
-v2.1.1 expands the free-source visual retrieval layer with museum, cultural heritage, natural-history, public-record, and digital-library providers.
+v2.1.3 expands the free-source visual retrieval layer with museum, cultural heritage, natural-history, public-record, and digital-library providers.
 
 ## Provider classes
 

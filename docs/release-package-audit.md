@@ -1,7 +1,7 @@
 
-# Release Package Audit — v2.1.1
+# Release Package Audit — v2.1.3
 
-v2.1.1 audits release package readiness for the stable v2 workflow.
+v2.1.3 audits release package readiness for the stable v2 workflow.
 
 ## Objective
 
@@ -24,12 +24,12 @@ Verify that package metadata, release docs, QA artifact, and tag guidance are in
 
 Expected release identity:
 
-- app version: `2.1.1`
-- release label: `v2.1.1 — Release Package Audit`
-- package version: `2.1.1`
-- package-lock root version: `2.1.1`
-- full QA artifact app version: `2.1.1` after `npm run qa`
-- tag: `v2.1.1` after CI is green
+- app version: `2.1.3`
+- release label: `v2.1.3 — Release Package Audit`
+- package version: `2.1.3`
+- package-lock root version: `2.1.3`
+- full QA artifact app version: `2.1.3` after `npm run qa`
+- tag: `v2.1.3` after CI is green
 
 ## Artifact boundaries
 
