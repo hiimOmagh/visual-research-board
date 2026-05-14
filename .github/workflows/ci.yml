@@ -19,6 +19,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Unified release verification
+        run: npm run verify:release
       # npm run test:ci:no-browser executes npm run qa, npm run typecheck, and npm run lint.
       - name: Run consolidated no-browser CI gate
         run: npm run test:ci:no-browser

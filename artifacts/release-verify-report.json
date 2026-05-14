@@ -1,0 +1,481 @@
+{
+  "schema_version": "1.0.0",
+  "app_version": "2.0.5",
+  "release_label": "v2.0.5",
+  "status": "passed",
+  "started_at": "2026-05-14T15:18:18.781Z",
+  "finished_at": "2026-05-14T15:18:50.128Z",
+  "failed_command": null,
+  "command_count": 23,
+  "passed_command_count": 23,
+  "failed_command_count": 0,
+  "planned_scripts": [
+    "release:verify:runner:check",
+    "release:package:audit:check",
+    "public-demo:screenshot:check",
+    "dependency:audit:triage:check",
+    "stable:hygiene:check",
+    "reference-workflow:stable:check",
+    "activation-pack:export:check",
+    "activation-pack:export-preview:check",
+    "activation-pack:ui:check",
+    "public-demo:stable:check",
+    "public-demo:final:check",
+    "hosted-demo:evidence:check",
+    "public-demo:evidence:check",
+    "release:warning:check",
+    "public-demo:check",
+    "qa:public-demo",
+    "security:key:check",
+    "qa",
+    "typecheck",
+    "lint",
+    "build",
+    "release:package:audit:check",
+    "release:verify:runner:check"
+  ],
+  "commands": [
+    {
+      "label": "npm run release:verify:runner:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "release:verify:runner:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "release:verify:runner:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 388,
+      "error": null
+    },
+    {
+      "label": "npm run release:package:audit:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "release:package:audit:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "release:package:audit:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 349,
+      "error": null
+    },
+    {
+      "label": "npm run public-demo:screenshot:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "public-demo:screenshot:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "public-demo:screenshot:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 358,
+      "error": null
+    },
+    {
+      "label": "npm run dependency:audit:triage:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "dependency:audit:triage:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "dependency:audit:triage:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 362,
+      "error": null
+    },
+    {
+      "label": "npm run stable:hygiene:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "stable:hygiene:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "stable:hygiene:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 460,
+      "error": null
+    },
+    {
+      "label": "npm run reference-workflow:stable:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "reference-workflow:stable:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "reference-workflow:stable:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 348,
+      "error": null
+    },
+    {
+      "label": "npm run activation-pack:export:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "activation-pack:export:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "activation-pack:export:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 359,
+      "error": null
+    },
+    {
+      "label": "npm run activation-pack:export-preview:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "activation-pack:export-preview:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "activation-pack:export-preview:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 347,
+      "error": null
+    },
+    {
+      "label": "npm run activation-pack:ui:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "activation-pack:ui:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "activation-pack:ui:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 337,
+      "error": null
+    },
+    {
+      "label": "npm run public-demo:stable:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "public-demo:stable:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "public-demo:stable:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 353,
+      "error": null
+    },
+    {
+      "label": "npm run public-demo:final:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "public-demo:final:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "public-demo:final:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 333,
+      "error": null
+    },
+    {
+      "label": "npm run hosted-demo:evidence:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "hosted-demo:evidence:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "hosted-demo:evidence:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 348,
+      "error": null
+    },
+    {
+      "label": "npm run public-demo:evidence:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "public-demo:evidence:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "public-demo:evidence:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 347,
+      "error": null
+    },
+    {
+      "label": "npm run release:warning:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "release:warning:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "release:warning:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 350,
+      "error": null
+    },
+    {
+      "label": "npm run public-demo:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "public-demo:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "public-demo:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 426,
+      "error": null
+    },
+    {
+      "label": "npm run qa:public-demo",
+      "command": "npm",
+      "args": [
+        "run",
+        "qa:public-demo"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "qa:public-demo"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 419,
+      "error": null
+    },
+    {
+      "label": "npm run security:key:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "security:key:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "security:key:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 347,
+      "error": null
+    },
+    {
+      "label": "npm run qa",
+      "command": "npm",
+      "args": [
+        "run",
+        "qa"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "qa"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 5018,
+      "error": null
+    },
+    {
+      "label": "npm run typecheck",
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "typecheck"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 2095,
+      "error": null
+    },
+    {
+      "label": "npm run lint",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 6071,
+      "error": null
+    },
+    {
+      "label": "npm run build",
+      "command": "npm",
+      "args": [
+        "run",
+        "build"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "build"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 11149,
+      "error": null
+    },
+    {
+      "label": "npm run release:package:audit:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "release:package:audit:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "release:package:audit:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 436,
+      "error": null
+    },
+    {
+      "label": "npm run release:verify:runner:check",
+      "command": "npm",
+      "args": [
+        "run",
+        "release:verify:runner:check"
+      ],
+      "resolved_command": "C:\\Program Files\\nodejs\\node.exe",
+      "resolved_args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "release:verify:runner:check"
+      ],
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "duration_ms": 345,
+      "error": null
+    }
+  ],
+  "notes": [
+    "Do not run npm audit fix --force in this release verification runner.",
+    "Run npm ci before verify:release when node_modules is missing.",
+    "Use verify:ci-parity for a clean install plus release verification path."
+  ]
+}

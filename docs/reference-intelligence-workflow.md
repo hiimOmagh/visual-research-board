@@ -1,4 +1,4 @@
-# Reference Intelligence Workflow — v2.0.3
+# Reference Intelligence Workflow — v2.0.5
 
 ## Workflow
 

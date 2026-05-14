@@ -28,7 +28,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.0.3", "package.json version must be 2.0.3");
+assert(VERSION === "2.0.5", "package.json version must be 2.0.5");
 assert(pkg.description?.includes("Activation Pack Export Preview"), "package description must identify Activation Pack Export Preview");
 assert(pkg.description?.includes("Activation Pack UI Integration"), "package description must preserve Activation Pack UI Integration wording");
 assert(pkg.description?.includes("Reference Activation Pack MVP"), "package description must preserve Reference Activation Pack MVP wording");
@@ -48,8 +48,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.0.3"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.0.3"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.0.5"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.0.5"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "src/types/activation-pack-export-preview.ts",

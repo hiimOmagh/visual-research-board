@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.0.3",
+  "version": "2.0.5",
   "private": true,
-  "description": "Public Demo Evidence + Screenshot Lock preserving Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while locking public demo screenshot evidence, hosted-demo visual proof, release/demo documentation, and screenshot checklist coverage without new features, dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
+  "description": "Unified Release Verification Runner preserving Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding one-command release verification, fail-fast command execution, structured release verification reports, and local/CI parity without new features, dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -85,7 +85,11 @@
     "reference-workflow:stable:check": "node tests/reference-workflow-stable-release-check.mjs",
     "stable:hygiene:check": "node tests/stable-release-hygiene-check.mjs",
     "dependency:audit:triage:check": "node tests/dependency-audit-triage-check.mjs",
-    "public-demo:screenshot:check": "node tests/public-demo-screenshot-lock-check.mjs"
+    "public-demo:screenshot:check": "node tests/public-demo-screenshot-lock-check.mjs",
+    "release:package:audit:check": "node tests/release-package-audit-check.mjs",
+    "verify:release": "node scripts/release-verify.mjs",
+    "verify:ci-parity": "npm ci && npm run verify:release",
+    "release:verify:runner:check": "node tests/release-verify-runner-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
