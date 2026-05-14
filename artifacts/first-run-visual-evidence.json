@@ -1,8 +1,8 @@
 {
   "schema_version": "first-run.visual-evidence.v1",
-  "app_version": "2.1.4",
-  "release": "v2.1.4",
-  "generated_at": "2026-05-14T17:06:13.081Z",
+  "app_version": "2.1.5",
+  "release": "v2.1.5",
+  "generated_at": "2026-05-14T17:34:57.396Z",
   "status": "planned",
   "screenshot_directory": "artifacts\\first-run-screenshots",
   "screenshots": [

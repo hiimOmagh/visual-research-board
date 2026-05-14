@@ -1,7 +1,7 @@
 
-# Activation Pack Export Preview — v2.1.4
+# Activation Pack Export Preview — v2.1.5
 
-v2.1.4 adds preview-only structured text rendering for activation packs.
+v2.1.5 adds preview-only structured text rendering for activation packs.
 
 ## Purpose
 

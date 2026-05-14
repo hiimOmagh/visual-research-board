@@ -60,7 +60,7 @@ const screenshots = expectedScreenshots.map((item) => {
 const report = {
   schema_version: "first-run.visual-evidence.v1",
   app_version: version,
-  release: "v2.1.4",
+  release: "v2.1.5",
   generated_at: new Date().toISOString(),
   status: screenshots.every((item) => item.exists) ? "screenshots-present" : "planned",
   screenshot_directory: path.relative(root, screenshotDir),

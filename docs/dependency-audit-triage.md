@@ -1,7 +1,7 @@
 
-# Dependency Audit Triage — v2.1.4
+# Dependency Audit Triage — v2.1.5
 
-v2.1.4 is a dependency-audit triage patch.
+v2.1.5 is a dependency-audit triage patch.
 
 ## Objective
 
@@ -67,7 +67,7 @@ For each warning, record:
 This patch documents the triage workflow. It does not claim the warnings are fixed unless a future dependency-maintenance milestone updates dependencies safely.
 
 
-## v2.1.4 observed audit result
+## v2.1.5 observed audit result
 
 `npm audit` reports 2 moderate warnings from one dependency path:
 
@@ -81,7 +81,7 @@ This patch documents the triage workflow. It does not claim the warnings are fix
 - follow-up: dependency-maintenance milestone only, after compatibility review
 
 
-## v2.1.4 observed audit result
+## v2.1.5 observed audit result
 
 Initial `npm audit` reported one high Next.js advisory and one moderate PostCSS advisory:
 

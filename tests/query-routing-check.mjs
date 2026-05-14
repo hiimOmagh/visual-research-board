@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (path) => readFileSync(join(root, path), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.1.4", "package.json version must be 2.1.4");
+assert(pkg.version === "2.1.5", "package.json version must be 2.1.5");
 assert(Boolean(pkg.scripts?.["query:routing:check"]), "package.json must define npm run query:routing:check");
 assert((pkg.scripts?.qa?.includes("query-routing-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include query-routing-check");
 
@@ -92,7 +92,7 @@ for (const token of ["v0.3.1 routing gate", "Query expansion + source-class rout
 }
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
-for (const token of ["v2.1.4", "SourceClassRoutingPanel", "source_class_routing", "Expanded query variants", "visual-research-board-library-v2.1.4.json"]) {
+for (const token of ["v2.1.5", "SourceClassRoutingPanel", "source_class_routing", "Expanded query variants", "visual-research-board-library-v2.1.5.json"]) {
   assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 }
 

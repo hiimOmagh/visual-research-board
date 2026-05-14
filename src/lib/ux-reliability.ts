@@ -41,9 +41,9 @@ export interface ProviderSetupSummary {
 }
 
 export interface UxReliabilityAudit {
-  schema_version: "2.1.4";
+  schema_version: "2.1.5";
   generated_at: string;
-  app_version: "2.1.4";
+  app_version: "2.1.5";
   workflow_ready: boolean;
   readiness_score: number;
   status: UxReadinessStatus;
@@ -220,9 +220,9 @@ export function buildUxReliabilityAudit({
   const nextActions = steps.filter((step) => step.status !== "ready").slice(0, 4).map((step) => `${step.label}: ${step.next_action}`);
 
   return {
-    schema_version: "2.1.4",
+    schema_version: "2.1.5",
     generated_at: new Date().toISOString(),
-    app_version: "2.1.4",
+    app_version: "2.1.5",
     workflow_ready: readinessScore >= 70 && blockedSteps === 0,
     readiness_score: readinessScore,
     status: blockedSteps > 0 ? "blocked" : readinessScore >= 70 ? "ready" : "needs_action",

@@ -144,6 +144,7 @@ try {
 
   const plannedScripts = [
     "release:verify:runner:check",
+    "single-command:verification:check",
     "first-run:ux:check",
     "first-run:panel:check",
     "first-run:visual:check",

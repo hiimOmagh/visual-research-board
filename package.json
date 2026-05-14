@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "private": true,
-  "description": "First-Run Demo Script + Public Walkthrough Copy preserving First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while adding public-safe first-run demo narration, walkthrough copy, and demo-script artifact generation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
+  "description": "Single-Command Verification UX + Release Command Compression preserving First-Run Demo Script + Public Walkthrough Copy, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Unified Release Verification Runner, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, and Security and Key Handling validation while formalizing verify:artifacts, verify:all, verify:ci-parity, and compressed verification documentation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -99,7 +99,8 @@
     "first-run:demo-script": "node scripts/first-run-demo-script.mjs",
     "first-run:demo-script:check": "node tests/first-run-demo-script-check.mjs",
     "verify:artifacts": "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script",
-    "verify:all": "npm run verify:artifacts && npm run verify:release"
+    "verify:all": "npm run verify:artifacts && npm run verify:release",
+    "single-command:verification:check": "node tests/single-command-verification-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
