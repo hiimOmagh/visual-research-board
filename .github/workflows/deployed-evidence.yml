@@ -28,8 +28,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
-    - name: Unified release verification
-      run: npm run verify:release
+      - name: Unified release verification
+        run: npm run verify:release
       - name: Run deployed browser evidence
         run: npm run deployed:browser:test
         env:
