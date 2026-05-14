@@ -1,6 +1,6 @@
-# Reference Workflow Stable Release — v2.0.1
+# Reference Workflow Stable Release — v2.0.2
 
-v2.0.1 is the stable release for the complete reference workflow.
+v2.0.2 is the stable release for the complete reference workflow.
 
 ## Stable workflow
 

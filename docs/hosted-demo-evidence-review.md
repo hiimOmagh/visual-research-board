@@ -1,6 +1,6 @@
-# Hosted Demo Evidence Review — v2.0.1
+# Hosted Demo Evidence Review — v2.0.2
 
-v2.0.1 locks the evidence-review process for the hosted public demo.
+v2.0.2 locks the evidence-review process for the hosted public demo.
 
 ## Scope
 

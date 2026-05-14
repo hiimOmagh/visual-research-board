@@ -1,7 +1,7 @@
 import type { ProviderRuntimeEntry, ProviderRuntimeReport, SearchProviderName } from "@/types/research";
 import { buildProviderKeySecurityReport } from "@/lib/provider-key-security";
 
-export const APP_VERSION = "2.0.1";
+export const APP_VERSION = "2.0.2";
 
 const ENDPOINT_SAMPLES: Record<SearchProviderName, string[]> = {
   mock: ["local/mock"],

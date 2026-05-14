@@ -1,6 +1,6 @@
-# v2.0.1 — Stock/Illustrative Provider Pack
+# v2.0.2 — Stock/Illustrative Provider Pack
 
-v2.0.1 adds optional free-key stock/illustrative image retrieval for visual inspiration, thumbnails, moodboards, and background candidates.
+v2.0.2 adds optional free-key stock/illustrative image retrieval for visual inspiration, thumbnails, moodboards, and background candidates.
 
 ## Providers
 

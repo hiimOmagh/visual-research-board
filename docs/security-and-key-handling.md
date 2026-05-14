@@ -1,4 +1,4 @@
-# v2.0.1 — Security and Key Handling
+# v2.0.2 — Security and Key Handling
 
 This release hardens provider credentials for the free-source visual research workflow.
 

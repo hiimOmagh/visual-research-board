@@ -23,7 +23,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.0.1", "package.json version must be 2.0.1");
+assert(VERSION === "2.0.2", "package.json version must be 2.0.2");
 assert(pkg.description?.includes("Broad Reference Result Model"), "package description must identify Broad Reference Result Model");
 assert(pkg.description?.includes("Reference Intelligence Layer MVP"), "package description must preserve Reference Intelligence Layer MVP wording");
 assert(pkg.description?.includes("Public Demo Stable Release"), "package description must preserve Public Demo Stable Release wording");
