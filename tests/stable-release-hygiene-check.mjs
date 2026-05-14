@@ -77,7 +77,7 @@ function assertGeneratedArtifactsNotCommitted() {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.0.5", "package.json version must be 2.0.5");
+assert(VERSION === "2.1.0", "package.json version must be 2.1.0");
 assert(pkg.description?.includes("Stable Release Hygiene + Audit Warning Review"), "package description must identify Stable Release Hygiene + Audit Warning Review");
 assert(pkg.description?.includes("Reference Workflow Stable Release"), "package description must preserve Reference Workflow Stable Release wording");
 assert(pkg.description?.includes("Activation Pack Export Integration"), "package description must preserve Activation Pack Export Integration wording");
@@ -92,8 +92,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.0.5"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.0.5"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.1.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.1.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "tests/stable-release-hygiene-check.mjs",
@@ -179,7 +179,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.0.5"), `${file} must reference v2.0.5`);
+  assert(read(file).includes("v2.1.0"), `${file} must reference v2.1.0`);
 }
 
 // Only block positive unsafe claims, not negative non-goal statements.

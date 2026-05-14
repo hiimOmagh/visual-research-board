@@ -1,8 +1,8 @@
-# Public Demo Stable Release — v2.0.5
+# Public Demo Stable Release — v2.1.0
 
 Public demo stable release baseline.
 
-v2.0.5 is the stable public-demo release.
+v2.1.0 is the stable public-demo release.
 
 ## Scope
 
@@ -25,7 +25,7 @@ v2.0.5 is the stable public-demo release.
 - Full QA gate has passed.
 - Typecheck, lint, and build have passed.
 - No root apply scripts are committed.
-- The full QA artifact shows `app_version: 2.0.5`, `status: passed`, and `failed_gate_count: 0`.
+- The full QA artifact shows `app_version: 2.1.0`, `status: passed`, and `failed_gate_count: 0`.
 
 ## Release posture
 

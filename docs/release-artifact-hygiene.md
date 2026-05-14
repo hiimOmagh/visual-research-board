@@ -1,5 +1,5 @@
 
-# Release Artifact Hygiene — v2.0.5
+# Release Artifact Hygiene — v2.1.0
 
 ## Rule
 

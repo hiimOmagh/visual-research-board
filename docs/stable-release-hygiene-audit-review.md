@@ -1,7 +1,7 @@
 
-# Stable Release Hygiene + Audit Warning Review — v2.0.5
+# Stable Release Hygiene + Audit Warning Review — v2.1.0
 
-v2.0.5 is a hygiene-only patch after the v2.0.0 stable release.
+v2.1.0 is a hygiene-only patch after the v2.0.0 stable release.
 
 ## Objective
 
@@ -32,7 +32,7 @@ Reason: force-fixing may introduce breaking dependency changes and move the rele
 - `npm run lint` passes
 - `npm run build` passes
 - `artifacts/full-qa-gate-report.json` exists
-- full QA artifact reports `app_version = 2.0.5`
+- full QA artifact reports `app_version = 2.1.0`
 - full QA artifact reports `failed_gate_count = 0`
 
 ## Artifact hygiene
@@ -54,10 +54,10 @@ Do not commit generated/cache files:
 
 After CI is green, the release tag should match:
 
-- tag: `v2.0.5`
-- package version: `2.0.5`
-- full QA artifact: `2.0.5`
-- release docs: `v2.0.5`
+- tag: `v2.1.0`
+- package version: `2.1.0`
+- full QA artifact: `2.1.0`
+- release docs: `v2.1.0`
 
 ## Non-goals
 

@@ -1,5 +1,5 @@
 
-# Activation Pack Export Preview Boundaries — v2.0.5
+# Activation Pack Export Preview Boundaries — v2.1.0
 
 ## allowed
 
