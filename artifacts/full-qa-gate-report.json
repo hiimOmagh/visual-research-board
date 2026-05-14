@@ -1,12 +1,12 @@
 {
-  "schema_version": "2.0.2",
-  "app_version": "2.0.2",
+  "schema_version": "2.0.3",
+  "app_version": "2.0.3",
   "gate": "full_qa_gate",
-  "started_at": "2026-05-14T12:00:09.698Z",
-  "finished_at": "2026-05-14T12:00:14.265Z",
+  "started_at": "2026-05-14T14:08:37.580Z",
+  "finished_at": "2026-05-14T14:08:42.278Z",
   "selected_category": null,
-  "total_gate_count": 50,
-  "passed_gate_count": 50,
+  "total_gate_count": 51,
+  "passed_gate_count": 51,
   "failed_gate_count": 0,
   "status": "passed",
   "categories": [
@@ -26,7 +26,7 @@
       "command": "node tests/public-demo-evidence-lock-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 84
+      "duration_ms": 102
     },
     {
       "category": "release",
@@ -34,7 +34,7 @@
       "command": "node tests/hosted-demo-evidence-review-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 76
+      "duration_ms": 93
     },
     {
       "category": "release",
@@ -42,7 +42,7 @@
       "command": "node tests/public-demo-final-acceptance-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 89
+      "duration_ms": 98
     },
     {
       "category": "release",
@@ -50,7 +50,7 @@
       "command": "node tests/public-demo-stable-release-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 89
+      "duration_ms": 91
     },
     {
       "category": "baseline",
@@ -58,7 +58,7 @@
       "command": "node tests/qa-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 83
+      "duration_ms": 81
     },
     {
       "category": "baseline",
@@ -66,7 +66,7 @@
       "command": "node tests/normalization-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 76
+      "duration_ms": 77
     },
     {
       "category": "baseline",
@@ -74,7 +74,7 @@
       "command": "node tests/e2e-fixture-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 77
+      "duration_ms": 79
     },
     {
       "category": "baseline",
@@ -82,7 +82,7 @@
       "command": "node tests/provider-smoke-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 76
+      "duration_ms": 79
     },
     {
       "category": "baseline",
@@ -90,7 +90,7 @@
       "command": "node tests/library-conflict-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 70
+      "duration_ms": 74
     },
     {
       "category": "baseline",
@@ -98,7 +98,7 @@
       "command": "node tests/lockfile-registry-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 73
+      "duration_ms": 81
     },
     {
       "category": "retrieval",
@@ -106,7 +106,7 @@
       "command": "node tests/broad-retrieval-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 78
+      "duration_ms": 84
     },
     {
       "category": "retrieval",
@@ -114,7 +114,7 @@
       "command": "node tests/retrieval-evidence-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 75
+      "duration_ms": 86
     },
     {
       "category": "retrieval",
@@ -130,7 +130,7 @@
       "command": "node tests/retrieval-autotuning-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 88
+      "duration_ms": 81
     },
     {
       "category": "retrieval",
@@ -138,7 +138,7 @@
       "command": "node tests/real-topic-matrix-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 78
+      "duration_ms": 108
     },
     {
       "category": "retrieval",
@@ -146,7 +146,7 @@
       "command": "node tests/evidence-driven-tuning-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 85
+      "duration_ms": 83
     },
     {
       "category": "retrieval",
@@ -154,7 +154,7 @@
       "command": "node tests/free-image-retrieval-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 73
+      "duration_ms": 77
     },
     {
       "category": "retrieval",
@@ -162,7 +162,7 @@
       "command": "node tests/normalization-dedupe-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 81
+      "duration_ms": 76
     },
     {
       "category": "retrieval",
@@ -170,7 +170,7 @@
       "command": "node tests/query-routing-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 75
+      "duration_ms": 85
     },
     {
       "category": "retrieval",
@@ -178,7 +178,7 @@
       "command": "node tests/ranking-explainability-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 74
+      "duration_ms": 80
     },
     {
       "category": "providers",
@@ -186,7 +186,7 @@
       "command": "node tests/provider-runtime-pack-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 80
+      "duration_ms": 75
     },
     {
       "category": "providers",
@@ -194,7 +194,7 @@
       "command": "node tests/provider-result-inspector-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 74
+      "duration_ms": 76
     },
     {
       "category": "providers",
@@ -210,7 +210,7 @@
       "command": "node tests/stock-illustrative-provider-pack-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 71
+      "duration_ms": 75
     },
     {
       "category": "security",
@@ -218,7 +218,7 @@
       "command": "node tests/security-key-handling-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 78
+      "duration_ms": 79
     },
     {
       "category": "public-demo",
@@ -226,7 +226,7 @@
       "command": "node tests/public-demo-release-candidate-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 80
+      "duration_ms": 90
     },
     {
       "category": "workflow",
@@ -242,7 +242,7 @@
       "command": "node tests/review-evidence-feedback-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 73
+      "duration_ms": 78
     },
     {
       "category": "workflow",
@@ -250,7 +250,7 @@
       "command": "node tests/project-review-memory-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 74
+      "duration_ms": 75
     },
     {
       "category": "workflow",
@@ -258,7 +258,7 @@
       "command": "node tests/board-organization-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 86
+      "duration_ms": 75
     },
     {
       "category": "workflow",
@@ -266,7 +266,7 @@
       "command": "node tests/claim-mapping-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 88
+      "duration_ms": 74
     },
     {
       "category": "workflow",
@@ -274,7 +274,7 @@
       "command": "node tests/coverage-bias-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 83
+      "duration_ms": 77
     },
     {
       "category": "workflow",
@@ -282,7 +282,7 @@
       "command": "node tests/ux-reliability-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 72
+      "duration_ms": 84
     },
     {
       "category": "workflow",
@@ -290,7 +290,7 @@
       "command": "node tests/storage-hardening-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 77
+      "duration_ms": 76
     },
     {
       "category": "workflow",
@@ -306,7 +306,7 @@
       "command": "node tests/broad-reference-result-model-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 82
+      "duration_ms": 87
     },
     {
       "category": "retrieval",
@@ -314,7 +314,7 @@
       "command": "node tests/broad-web-image-discovery-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 80
+      "duration_ms": 84
     },
     {
       "category": "retrieval",
@@ -322,7 +322,7 @@
       "command": "node tests/social-reference-discovery-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 82
+      "duration_ms": 86
     },
     {
       "category": "retrieval",
@@ -330,7 +330,7 @@
       "command": "node tests/book-bibliographic-discovery-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 88
+      "duration_ms": 87
     },
     {
       "category": "workflow",
@@ -338,7 +338,7 @@
       "command": "node tests/reference-activation-pack-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 82
+      "duration_ms": 87
     },
     {
       "category": "workflow",
@@ -346,7 +346,7 @@
       "command": "node tests/activation-pack-ui-integration-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 78
+      "duration_ms": 88
     },
     {
       "category": "exports",
@@ -354,7 +354,7 @@
       "command": "node tests/activation-pack-export-preview-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 82
+      "duration_ms": 86
     },
     {
       "category": "exports",
@@ -362,7 +362,7 @@
       "command": "node tests/activation-pack-export-integration-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 81
+      "duration_ms": 87
     },
     {
       "category": "release",
@@ -370,7 +370,7 @@
       "command": "node tests/reference-workflow-stable-release-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 83
+      "duration_ms": 92
     },
     {
       "category": "release",
@@ -378,12 +378,20 @@
       "command": "node tests/stable-release-hygiene-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 678
+      "duration_ms": 494
     },
     {
       "category": "release",
       "name": "dependency-audit-triage",
       "command": "node tests/dependency-audit-triage-check.mjs",
+      "status": "passed",
+      "exit_code": 0,
+      "duration_ms": 112
+    },
+    {
+      "category": "release",
+      "name": "public-demo-screenshot-lock",
+      "command": "node tests/public-demo-screenshot-lock-check.mjs",
       "status": "passed",
       "exit_code": 0,
       "duration_ms": 89
@@ -394,7 +402,7 @@
       "command": "node tests/evidence-pack-export-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 77
+      "duration_ms": 100
     },
     {
       "category": "exports",
@@ -402,7 +410,7 @@
       "command": "node tests/attribution-generator-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 82
+      "duration_ms": 84
     },
     {
       "category": "release",
@@ -410,7 +418,7 @@
       "command": "node tests/deployed-browser-evidence-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 75
+      "duration_ms": 82
     },
     {
       "category": "release",
@@ -418,7 +426,7 @@
       "command": "node tests/full-qa-gate-check.mjs",
       "status": "passed",
       "exit_code": 0,
-      "duration_ms": 77
+      "duration_ms": 90
     }
   ]
 }

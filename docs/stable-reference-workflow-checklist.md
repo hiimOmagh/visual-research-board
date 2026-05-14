@@ -1,4 +1,4 @@
-# Stable Reference Workflow Checklist — v2.0.2
+# Stable Reference Workflow Checklist — v2.0.3
 
 ## public demo UX final pass
 
@@ -11,10 +11,10 @@
 
 ## release docs
 
-- README references v2.0.2.
-- PATCH_MANIFEST references v2.0.2.
-- validation report references v2.0.2.
-- release checklist references v2.0.2.
+- README references v2.0.3.
+- PATCH_MANIFEST references v2.0.3.
+- validation report references v2.0.3.
+- release checklist references v2.0.3.
 - reference workflow stable release doc exists.
 
 ## screenshots
@@ -34,7 +34,7 @@ Capture hosted/public demo screenshots for:
 Required artifact:
 
 - artifacts/full-qa-gate-report.json
-- app_version = 2.0.2
+- app_version = 2.0.3
 - status = passed
 - failed_gate_count = 0
 
@@ -77,11 +77,11 @@ npm run build
 npm run reference-workflow:stable:check
 ```
 
-## tag v2.0.2
+## tag v2.0.3
 
 After CI is green:
 
 ```bash
-git tag -a v2.0.2 -m "v2.0.2 — Reference Workflow Stable Release"
-git push origin v2.0.2
+git tag -a v2.0.3 -m "v2.0.3 — Reference Workflow Stable Release"
+git push origin v2.0.3
 ```

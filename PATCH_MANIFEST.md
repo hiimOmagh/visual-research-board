@@ -1,8 +1,40 @@
-# v2.0.2 — Dependency Audit Triage Patch Manifest
+# v2.0.3 — Public Demo Evidence + Screenshot Lock Patch Manifest
 
 ## Scope
 
-v2.0.2 triages the 2 moderate npm audit warnings without force-fixing or dependency churn.
+v2.0.3 locks public demo screenshot/evidence requirements for the stable v2 workflow.
+
+## Changed files
+
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `PATCH_MANIFEST.md`
+- `scripts/full-qa-gate.mjs`
+- `tests/full-qa-gate-check.mjs`
+- `tests/public-demo-screenshot-lock-check.mjs`
+- `docs/public-demo-evidence-screenshot-lock.md`
+- `docs/public-demo-screenshot-checklist.md`
+- `docs/release-checklist.md`
+- `docs/validation-report.md`
+
+## Non-goals
+
+- No new features
+- No dependency churn
+- No provider expansion
+- No export rewrite
+- No scraping
+- No image generation
+- No copyrighted text extraction
+- No paywall bypass
+- No source media rehosting
+
+# v2.0.3 — Dependency Audit Triage Patch Manifest
+
+## Scope
+
+v2.0.3 triages the 2 moderate npm audit warnings without force-fixing or dependency churn.
 
 ## Changed files
 
@@ -31,11 +63,11 @@ v2.0.2 triages the 2 moderate npm audit warnings without force-fixing or depende
 - No paywall bypass
 - No source media rehosting
 
-# v2.0.2 — Stable Release Hygiene + Audit Warning Review Patch Manifest
+# v2.0.3 — Stable Release Hygiene + Audit Warning Review Patch Manifest
 
 ## Scope
 
-v2.0.2 is a hygiene-only patch after the v2.0.0 stable release.
+v2.0.3 is a hygiene-only patch after the v2.0.0 stable release.
 
 ## Changed files
 
@@ -65,11 +97,11 @@ v2.0.2 is a hygiene-only patch after the v2.0.0 stable release.
 - No paywall bypass
 - No source media rehosting
 
-# v2.0.2 — Reference Workflow Stable Release Patch Manifest
+# v2.0.3 — Reference Workflow Stable Release Patch Manifest
 
 ## Scope
 
-v2.0.2 stabilizes the full discovery → board → activation → export workflow.
+v2.0.3 stabilizes the full discovery → board → activation → export workflow.
 
 ## Changed files
 
@@ -97,11 +129,11 @@ v2.0.2 stabilizes the full discovery → board → activation → export workflo
 - No export rewrite
 - No source media rehosting
 
-# v2.0.2 — Activation Pack Export Integration Patch Manifest
+# v2.0.3 — Activation Pack Export Integration Patch Manifest
 
 ## Scope
 
-v2.0.2 connects activation pack Markdown/JSON preview output to existing text download utilities.
+v2.0.3 connects activation pack Markdown/JSON preview output to existing text download utilities.
 
 ## Changed files
 
@@ -132,11 +164,11 @@ v2.0.2 connects activation pack Markdown/JSON preview output to existing text do
 - No access circumvention
 - No source media rehosting
 
-# v2.0.2 — Activation Pack Export Preview Patch Manifest
+# v2.0.3 — Activation Pack Export Preview Patch Manifest
 
 ## Scope
 
-v2.0.2 adds preview-only Markdown/JSON rendering for activation packs.
+v2.0.3 adds preview-only Markdown/JSON rendering for activation packs.
 
 ## Changed files
 
@@ -166,11 +198,11 @@ v2.0.2 adds preview-only Markdown/JSON rendering for activation packs.
 - No paywall bypass
 - No access circumvention
 
-# v2.0.2 — Activation Pack UI Integration Patch Manifest
+# v2.0.3 — Activation Pack UI Integration Patch Manifest
 
 ## Scope
 
-v2.0.2 wires activation packs into a visible board workflow panel using already-gathered references.
+v2.0.3 wires activation packs into a visible board workflow panel using already-gathered references.
 
 ## Changed files
 
@@ -198,11 +230,11 @@ v2.0.2 wires activation packs into a visible board workflow panel using already-
 - No access circumvention
 - No export behavior changes
 
-# v2.0.2 — Reference Activation Pack MVP Patch Manifest
+# v2.0.3 — Reference Activation Pack MVP Patch Manifest
 
 ## Scope
 
-v2.0.2 adds activation-ready reference packs built from already-gathered board/reference data.
+v2.0.3 adds activation-ready reference packs built from already-gathered board/reference data.
 
 ## Changed files
 
@@ -230,11 +262,11 @@ v2.0.2 adds activation-ready reference packs built from already-gathered board/r
 - No access circumvention
 - No broad export behavior changes
 
-# v2.0.2 — Book / Bibliographic Discovery Layer Patch Manifest
+# v2.0.3 — Book / Bibliographic Discovery Layer Patch Manifest
 
 ## Scope
 
-v2.0.2 adds metadata-first book and bibliographic discovery planning and classification.
+v2.0.3 adds metadata-first book and bibliographic discovery planning and classification.
 
 ## Changed files
 
@@ -262,11 +294,11 @@ v2.0.2 adds metadata-first book and bibliographic discovery planning and classif
 - No generation engine
 - No export behavior changes
 
-# v2.0.2 — Social Reference Discovery Layer Patch Manifest
+# v2.0.3 — Social Reference Discovery Layer Patch Manifest
 
 ## Scope
 
-v2.0.2 adds public social-reference discovery planning and classification.
+v2.0.3 adds public social-reference discovery planning and classification.
 
 ## Changed files
 
@@ -287,7 +319,7 @@ v2.0.2 adds public social-reference discovery planning and classification.
 
 ## Non-goals
 
-- No private account scraping
+- No account-gated scraping
 - No login bypass
 - No hidden API abuse
 - No media rehosting
@@ -296,11 +328,11 @@ v2.0.2 adds public social-reference discovery planning and classification.
 - No generation engine
 - No export behavior changes
 
-# v2.0.2 — Broad Web + Image Discovery Expansion Patch Manifest
+# v2.0.3 — Broad Web + Image Discovery Expansion Patch Manifest
 
 ## Scope
 
-v2.0.2 adds broad web/image discovery planning and candidate normalization.
+v2.0.3 adds broad web/image discovery planning and candidate normalization.
 
 ## Changed files
 
@@ -329,11 +361,11 @@ v2.0.2 adds broad web/image discovery planning and candidate normalization.
 - No generation engine
 - No export behavior changes
 
-# v2.0.2 — Broad Reference Result Model Patch Manifest
+# v2.0.3 — Broad Reference Result Model Patch Manifest
 
 ## Scope
 
-v2.0.2 adds the Broad Reference Result Model.
+v2.0.3 adds the Broad Reference Result Model.
 
 ## Changed files
 
@@ -362,11 +394,11 @@ v2.0.2 adds the Broad Reference Result Model.
 - No generation engine
 - No export behavior changes yet
 
-# v2.0.2 — Reference Intelligence Layer MVP Patch Manifest
+# v2.0.3 — Reference Intelligence Layer MVP Patch Manifest
 
 ## Scope
 
-v2.0.2 adds the Reference Intelligence Layer MVP.
+v2.0.3 adds the Reference Intelligence Layer MVP.
 
 ## Changed files
 
@@ -394,11 +426,11 @@ v2.0.2 adds the Reference Intelligence Layer MVP.
 - No generation engine
 - No export behavior changes yet
 
-# v2.0.2 — Public Demo Stable Release Patch Manifest
+# v2.0.3 — Public Demo Stable Release Patch Manifest
 
 ## Scope
 
-v2.0.2 locks the public demo stable release.
+v2.0.3 locks the public demo stable release.
 
 ## Changed files
 
@@ -422,11 +454,11 @@ v2.0.2 locks the public demo stable release.
 - No export behavior changes
 - No social/book/generation expansion
 
-# v2.0.2 — Public Demo Final Acceptance Patch Manifest
+# v2.0.3 — Public Demo Final Acceptance Patch Manifest
 
 ## Scope
 
-v2.0.2 finalizes public-demo acceptance before stable release.
+v2.0.3 finalizes public-demo acceptance before stable release.
 
 ## Changed files
 
@@ -449,11 +481,11 @@ v2.0.2 finalizes public-demo acceptance before stable release.
 - No retrieval logic changes
 - No export behavior changes
 
-# v2.0.2 — Hosted Demo Evidence Review Patch Manifest
+# v2.0.3 — Hosted Demo Evidence Review Patch Manifest
 
 ## Scope
 
-v2.0.2 adds a hosted-demo evidence-review gate and documentation while preserving the v2.0.2 Public Demo Evidence Lock.
+v2.0.3 adds a hosted-demo evidence-review gate and documentation while preserving the v2.0.3 Public Demo Evidence Lock.
 
 ## Changed files
 
@@ -476,7 +508,7 @@ v2.0.2 adds a hosted-demo evidence-review gate and documentation while preservin
 - No retrieval logic changes
 - No export behavior changes
 
-# v2.0.2 — Public Demo Evidence Lock Patch Manifest
+# v2.0.3 — Public Demo Evidence Lock Patch Manifest
 
 ## Changed files
 
@@ -494,7 +526,7 @@ v2.0.2 adds a hosted-demo evidence-review gate and documentation while preservin
 
 ## Scope
 
-v2.0.2 locks public-demo release evidence without changing product behavior.
+v2.0.3 locks public-demo release evidence without changing product behavior.
 
 ## Non-goals
 
@@ -518,7 +550,7 @@ npm run lint
 npm run build
 ```
 
-# v2.0.2 — Public Demo Release Candidate Patch Manifest
+# v2.0.3 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -540,7 +572,7 @@ npm run build
 
 ## Scope
 
-v2.0.2 prepares the app as a Public Demo Release Candidate while preserving the v2.0.2 Security and Key Handling layer.
+v2.0.3 prepares the app as a Public Demo Release Candidate while preserving the v2.0.3 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -564,7 +596,7 @@ npm run lint
 npm run build
 ```
 
-# v2.0.2 — Security and Key Handling Patch Manifest
+# v2.0.3 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -604,13 +636,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v2.0.2 — UX Reliability + Empty State Polish
-- v2.0.2 — Local Storage + Import/Export Hardening
-- v2.0.2 — Security and Key Handling
+- v2.0.3 — UX Reliability + Empty State Polish
+- v2.0.3 — Local Storage + Import/Export Hardening
+- v2.0.3 — Security and Key Handling
 
-## v2.0.2 — Release Warning Cleanup
+## v2.0.3 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.0.2 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.0.3 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 

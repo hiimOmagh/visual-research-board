@@ -17,7 +17,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing retrieval calibration file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.0.2", "package.json version must be 2.0.2");
+assert(pkg.version === "2.0.3", "package.json version must be 2.0.3");
 assert(Boolean(pkg.scripts?.["retrieval:quality:test"]), "package.json must define npm run retrieval:quality:test");
 assert(Boolean(pkg.scripts?.["retrieval:calibration:check"]), "package.json must define npm run retrieval:calibration:check");
 assert((pkg.scripts?.qa?.includes("retrieval-calibration-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include retrieval-calibration-check");
@@ -49,7 +49,7 @@ assert(panel.includes("Calibration failure signals"), "quality calibration panel
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("LiveQualityCalibrationPanel"), "SearchPanel must render LiveQualityCalibrationPanel");
-assert(searchPanel.includes("v2.0.2"), "SearchPanel header must show v2.0.2");
+assert(searchPanel.includes("v2.0.3"), "SearchPanel header must show v2.0.3");
 
 const script = read("scripts/retrieval-quality-calibration.mjs");
 assert(script.includes("VISUAL_RESEARCH_BOARD_RUNTIME_BASE_URL"), "retrieval quality script must support runtime base URL env");

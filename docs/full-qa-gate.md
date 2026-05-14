@@ -1,6 +1,6 @@
-# v2.0.2 — Full QA Gate
+# v2.0.3 — Full QA Gate
 
-v2.0.2 consolidates the project validation surface into one categorized runner.
+v2.0.3 consolidates the project validation surface into one categorized runner.
 
 ## Commands
 
@@ -74,9 +74,9 @@ npm run build
 
 ## Why this exists
 
-Before v2.0.2, `npm run qa` was a long shell chain. That made it harder to isolate failures, run one family of checks, or attach release evidence. v2.0.2 makes the validation layer inspectable without changing product behavior.
+Before v2.0.3, `npm run qa` was a long shell chain. That made it harder to isolate failures, run one family of checks, or attach release evidence. v2.0.3 makes the validation layer inspectable without changing product behavior.
 
-## v2.0.2 security category
+## v2.0.3 security category
 
 Additional gate:
 
@@ -87,7 +87,7 @@ npm run security:key:check
 
 The security category verifies server-only provider key handling, redacted diagnostics, and public-env leak checks.
 
-## v2.0.2 public-demo category
+## v2.0.3 public-demo category
 
 Additional gate:
 
@@ -96,4 +96,4 @@ npm run qa:public-demo
 npm run public-demo:check
 ```
 
-The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v2.0.2 server-only provider key handling.
+The public-demo category verifies release-candidate copy, demo-safety docs, unavailable-provider boundaries, and preservation of v2.0.3 server-only provider key handling.

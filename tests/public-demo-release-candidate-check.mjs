@@ -91,14 +91,14 @@ if (!fs.existsSync(packageJsonPath)) {
 } else {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
-  assert(packageJson.version === "2.0.2", `package.json version must be 2.0.2, got ${packageJson.version}`);
+  assert(packageJson.version === "2.0.3", `package.json version must be 2.0.3, got ${packageJson.version}`);
 
   const scripts = packageJson.scripts || {};
   assert(scripts["public-demo:check"] === "node tests/public-demo-release-candidate-check.mjs", "package.json must define public-demo:check");
   assert(scripts["qa:public-demo"] === "node scripts/full-qa-gate.mjs --category=public-demo", "package.json must define qa:public-demo");
   assert(scripts["clean:rc"] === "node scripts/clean-release-candidate.mjs", "package.json must define clean:rc");
-  assert(scripts["security:key:check"] === "node tests/security-key-handling-check.mjs", "v2.0.2 must preserve v2.0.2 security:key:check");
-  assert(scripts["qa:security"] === "node scripts/full-qa-gate.mjs --category=security", "v2.0.2 must preserve v2.0.2 qa:security");
+  assert(scripts["security:key:check"] === "node tests/security-key-handling-check.mjs", "v2.0.3 must preserve v2.0.3 security:key:check");
+  assert(scripts["qa:security"] === "node scripts/full-qa-gate.mjs --category=security", "v2.0.3 must preserve v2.0.3 qa:security");
 }
 
 for (const file of requiredFiles) {
@@ -110,7 +110,7 @@ if (exists("scripts/full-qa-gate.mjs")) {
   assertIncludes(fullQaGate, "public-demo", "scripts/full-qa-gate.mjs");
   assertIncludes(fullQaGate, "public-demo-release-candidate", "scripts/full-qa-gate.mjs");
   assertIncludes(fullQaGate, "tests/public-demo-release-candidate-check.mjs", "scripts/full-qa-gate.mjs");
-  assertIncludes(fullQaGate, "2.0.2", "scripts/full-qa-gate.mjs");
+  assertIncludes(fullQaGate, "2.0.3", "scripts/full-qa-gate.mjs");
   assertIncludes(fullQaGate, "provider-key-handling", "scripts/full-qa-gate.mjs");
   assertIncludes(fullQaGate, "tests/security-key-handling-check.mjs", "scripts/full-qa-gate.mjs");
 } else {
@@ -122,7 +122,7 @@ if (exists("tests/full-qa-gate-check.mjs")) {
   assertIncludes(fullQaGateCheck, "public-demo", "tests/full-qa-gate-check.mjs");
   assertIncludes(fullQaGateCheck, "tests/public-demo-release-candidate-check.mjs", "tests/full-qa-gate-check.mjs");
   assertIncludes(fullQaGateCheck, "qa:public-demo", "tests/full-qa-gate-check.mjs");
-  assertIncludes(fullQaGateCheck, "2.0.2", "tests/full-qa-gate-check.mjs");
+  assertIncludes(fullQaGateCheck, "2.0.3", "tests/full-qa-gate-check.mjs");
 }
 
 for (const file of filesToScan) {
@@ -156,7 +156,7 @@ for (const file of filesToScan) {
 }
 
 const readme = exists("README.md") ? readText("README.md") : "";
-assertIncludes(readme, "v2.0.2", "README.md");
+assertIncludes(readme, "v2.0.3", "README.md");
 assertIncludes(readme, "Public Demo Release Candidate", "README.md");
 
 if (exists("docs/public-demo.md")) {
@@ -179,4 +179,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Public demo release-candidate check passed for v2.0.2.");
+console.log("Public demo release-candidate check passed for v2.0.3.");
