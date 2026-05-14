@@ -85,3 +85,37 @@ From `npm audit` on v2.0.2:
 - development tooling exposure: yes, through framework/build dependency path
 - decision: do not force-fix in v2.0.2
 - proposed non-breaking update path: wait for compatible Next/PostCSS resolution or handle in a dedicated dependency-maintenance milestone
+
+
+## Current audit finding after non-force remediation
+
+Initial `npm audit` on v2.0.2 reported:
+
+- package name: `next`
+- severity: high
+- advisory: GHSA-26hh-7cqf-hhc6
+- issue: Next.js Middleware / Proxy bypass in App Router applications via segment-prefetch routes
+- direct dependency: `next`
+- remediation applied: `npm audit fix`
+- force used: no
+- result: Next.js updated to a non-force compatible version
+- validation after remediation: typecheck, lint, and build passed
+
+Remaining audit signal after `npm audit fix`:
+
+- package name: `postcss`
+- severity: moderate
+- advisory: GHSA-qx2v-qp2m-jg93
+- issue: PostCSS has XSS via unescaped `</style>` in CSS stringify output
+- dependency path: `next -> postcss`
+- direct dependency: `next`
+- transitive dependency: `postcss`
+- affected range: `postcss <8.5.10`
+- npm proposed remaining fix: `npm audit fix --force`
+- force-fix result: would install `next@9.3.3`
+- breaking change risk: high / unacceptable
+- decision: do not force-fix in v2.0.2
+- proposed non-breaking update path: wait for compatible Next/PostCSS resolution or handle in a dedicated dependency-maintenance milestone
+
+Exact test marker: run `npm audit` before classifying dependency risk.
+

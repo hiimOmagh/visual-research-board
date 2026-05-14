@@ -79,3 +79,26 @@ This patch documents the triage workflow. It does not claim the warnings are fix
 - decision: reject force-fix for this release because it is a breaking downgrade path
 - status: triaged, not fixed
 - follow-up: dependency-maintenance milestone only, after compatibility review
+
+
+## v2.0.2 observed audit result
+
+Initial `npm audit` reported one high Next.js advisory and one moderate PostCSS advisory:
+
+- high advisory: GHSA-26hh-7cqf-hhc6
+- moderate advisory: GHSA-qx2v-qp2m-jg93
+
+`npm audit fix` was run without `--force`.
+
+Result:
+
+- high Next.js advisory was remediated by the non-force update path
+- typecheck passed
+- lint passed
+- build passed
+- remaining issue is PostCSS via Next.js dependency path
+- remaining npm proposal requires `npm audit fix --force`
+- force path would install `next@9.3.3`
+- decision: reject force-fix because it is a breaking downgrade path
+- status: remaining moderate warning triaged, not force-fixed
+- follow-up: dependency-maintenance milestone only, after compatibility review
