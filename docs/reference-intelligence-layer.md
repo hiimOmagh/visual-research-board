@@ -1,6 +1,6 @@
-# Reference Intelligence Layer MVP — v2.1.3
+# Reference Intelligence Layer MVP — v2.1.4
 
-v2.1.3 begins the product-expansion track after the public demo stable release.
+v2.1.4 begins the product-expansion track after the public demo stable release.
 
 ## Purpose
 

@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.3", "package.json version must be 2.1.3");
+assert(VERSION === "2.1.4", "package.json version must be 2.1.4");
 assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must identify Unified Release Verification Runner");
 assert(pkg.description?.includes("Release Package Audit"), "package description must preserve Release Package Audit wording");
 assert(pkg.description?.includes("Public Demo Evidence + Screenshot Lock"), "package description must preserve Public Demo Evidence + Screenshot Lock wording");
@@ -28,7 +28,9 @@ assert(pkg.description?.includes("Reference Workflow Stable Release"), "package 
 assert(pkg.description?.includes("Security and Key Handling"), "package description must preserve Security and Key Handling wording");
 
 assert(pkg.scripts?.["verify:release"] === "node scripts/release-verify.mjs", "package.json must expose verify:release");
-assert(pkg.scripts?.["verify:ci-parity"] === "npm ci && npm run verify:release", "package.json must expose verify:ci-parity");
+assert(pkg.scripts?.["verify:artifacts"] === "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script", "package.json must expose verify:artifacts");
+assert(pkg.scripts?.["verify:all"] === "npm run verify:artifacts && npm run verify:release", "package.json must expose verify:all");
+assert(pkg.scripts?.["verify:ci-parity"] === "npm ci && npm run verify:all", "package.json must expose verify:ci-parity");
 assert(pkg.scripts?.["release:verify:runner:check"] === "node tests/release-verify-runner-check.mjs", "package.json must expose release:verify:runner:check");
 
 for (const script of [
@@ -120,7 +122,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.3"), `${file} must reference v2.1.3`);
+  assert(read(file).includes("v2.1.4"), `${file} must reference v2.1.4`);
 }
 
 const reportPath = "artifacts/release-verify-report.json";

@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.1.3", "package.json version must be 2.1.3");
+assert(pkg.version === "2.1.4", "package.json version must be 2.1.4");
 assert(Boolean(pkg.scripts?.["claim:mapping:check"]), "package.json must define npm run claim:mapping:check");
 assert((pkg.scripts?.qa?.includes("claim-mapping-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include claim-mapping-check");
 
@@ -79,12 +79,12 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v2.1.3",
+  "v2.1.4",
   "ClaimMappingPanel",
   "addProjectClaim",
   "linkProjectSourceToClaim",
   "removeSavedResultAndClaimLinks",
-  "visual-research-board-library-v2.1.3.json",
+  "visual-research-board-library-v2.1.4.json",
   "onLinkSourceToClaim={linkSourceToClaim}"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
 

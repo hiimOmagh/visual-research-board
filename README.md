@@ -1,12 +1,12 @@
-# Visual Research Board v2.1.3
+# Visual Research Board v2.1.4
 
-**v2.1.3 — Security and Key Handling**
+**v2.1.4 — Security and Key Handling**
 
 Visual Research Board is a free-source visual research workspace for discovering, reviewing, ranking, organizing, and exporting image/source evidence. It prioritizes open/public collections, manual reference-search workflows, rights labels, review-calibrated ranking, claim mapping, coverage audits, attribution generation, and evidence-pack exports.
 
 ## Current release
 
-v2.1.3 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
+v2.1.4 does not add another product feature. It hardens the release process with a consolidated **Security and Key Handling**.
 
 The gate replaces a fragile one-line `npm run qa` chain with a categorized runner that executes deterministic checks, records pass/fail evidence, and writes:
 
@@ -75,7 +75,7 @@ Brave and Tavily remain optional and disabled by default. Google, Bing, Yandex, 
 
 ## Release rule
 
-v2.1.3 is a validation-hardening release. A successful release needs:
+v2.1.4 is a validation-hardening release. A successful release needs:
 
 ```bash
 npm run qa
@@ -88,14 +88,14 @@ CI uploads the full QA evidence artifact so failed or passed runs can be inspect
 
 ## Retained evidence gates
 
-The current app version is v2.1.3. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
+The current app version is v2.1.4. Some retained evidence docs and fixture gates still identify v0.3.1 because they validate historical provider/runtime and real-topic evidence behavior that remains active.
 
 ```bash
 npm run deployed:browser:test
 npm run topic:matrix:test
 ```
 
-## v2.1.3 security validation
+## v2.1.4 security validation
 
 ```bash
 npm run security:key:check
@@ -107,7 +107,7 @@ Provider keys are server-only and diagnostics report only redacted presence. Do 
 
 ## Public Demo Release Candidate
 
-The current target is **v2.1.3 — Public Demo Release Candidate**.
+The current target is **v2.1.4 — Public Demo Release Candidate**.
 
 This release hardens the app for public inspection. It does not add live scraping, production OAuth, paid-provider assumptions, or fake-live provider behavior.
 
@@ -124,7 +124,7 @@ npm run qa
 
 ## Public Demo Evidence Lock
 
-The current target is **v2.1.3 — Public Demo Evidence Lock**.
+The current target is **v2.1.4 — Public Demo Evidence Lock**.
 
 This patch locks release evidence for the public demo. It does not add features, providers, scraping behavior, OAuth, or source-verification guarantees.
 
@@ -144,7 +144,7 @@ npm run build
 
 ## Hosted Demo Evidence Review
 
-The current target is **v2.1.3 — Hosted Demo Evidence Review**.
+The current target is **v2.1.4 — Hosted Demo Evidence Review**.
 
 This release adds a deterministic hosted-demo evidence-review gate and documentation. It does not add feature, provider, retrieval, or export behavior changes.
 
@@ -160,7 +160,7 @@ npm run qa
 
 ## Public Demo Final Acceptance
 
-The current target is **v2.1.3 — Public Demo Final Acceptance**.
+The current target is **v2.1.4 — Public Demo Final Acceptance**.
 
 This release finalizes public-demo acceptance before the stable public-demo release. It does not add feature, provider, retrieval, or export behavior changes.
 
@@ -177,7 +177,7 @@ npm run qa
 
 ## Public Demo Stable Release
 
-The current release is **v2.1.3 — Public Demo Stable Release**.
+The current release is **v2.1.4 — Public Demo Stable Release**.
 
 This release locks the public demo stable baseline. It does not add feature, provider, retrieval, export, social, book, or generation behavior changes.
 
@@ -195,7 +195,7 @@ npm run qa
 
 ## Reference Intelligence Layer MVP
 
-The current release is **v2.1.3 — Reference Intelligence Layer MVP**.
+The current release is **v2.1.4 — Reference Intelligence Layer MVP**.
 
 This release starts the product-expansion track after the public demo stable release. It adds reference-use metadata, role labels, access/risk context, and interpretation helpers.
 
@@ -211,7 +211,7 @@ npm run qa
 
 ## Broad Reference Result Model
 
-The current release is **v2.1.3 — Broad Reference Result Model**.
+The current release is **v2.1.4 — Broad Reference Result Model**.
 
 This release makes broad reference source classes first-class. Search results can now be modeled as web images, web pages, social media, books, archives, museums, stock/illustrative results, video, or unknown sources.
 
@@ -227,7 +227,7 @@ npm run qa
 
 ## Broad Web + Image Discovery Expansion
 
-The current release is **v2.1.3 — Broad Web + Image Discovery Expansion**.
+The current release is **v2.1.4 — Broad Web + Image Discovery Expansion**.
 
 This release adds broad web/image discovery mode planning and maps discovery candidates into `BroadReferenceResult`.
 
@@ -243,7 +243,7 @@ npm run qa
 
 ## Social Reference Discovery Layer
 
-The current release is **v2.1.3 — Social Reference Discovery Layer**.
+The current release is **v2.1.4 — Social Reference Discovery Layer**.
 
 This release adds public social-reference discovery planning and classification into `BroadReferenceResult` with `source_class: social_media`.
 
@@ -259,7 +259,7 @@ npm run qa
 
 ## Book / Bibliographic Discovery Layer
 
-The current release is **v2.1.3 — Book / Bibliographic Discovery Layer**.
+The current release is **v2.1.4 — Book / Bibliographic Discovery Layer**.
 
 This release adds metadata-first book, ISBN, catalog, preview, archive, and bibliography classification into `BroadReferenceResult` with `source_class: book`.
 
@@ -275,7 +275,7 @@ npm run qa
 
 ## Reference Activation Pack MVP
 
-The current release is **v2.1.3 — Reference Activation Pack MVP**.
+The current release is **v2.1.4 — Reference Activation Pack MVP**.
 
 This release turns gathered references into activation-ready metadata and brief-text packs with source roles, visual direction, research context, risk/access notes, and next steps.
 
@@ -291,7 +291,7 @@ npm run qa
 
 ## Activation Pack UI Integration
 
-The current release is **v2.1.3 — Activation Pack UI Integration**.
+The current release is **v2.1.4 — Activation Pack UI Integration**.
 
 This release exposes activation packs in a visible board workflow using already-gathered references. It supports full-board and selected-reference activation states.
 
@@ -307,7 +307,7 @@ npm run qa
 
 ## Activation Pack Export Preview
 
-The current release is **v2.1.3 — Activation Pack Export Preview**.
+The current release is **v2.1.4 — Activation Pack Export Preview**.
 
 This release previews activation packs as structured Markdown or JSON text before future export workflow expansion.
 
@@ -323,7 +323,7 @@ npm run qa
 
 ## Activation Pack Export Integration
 
-The current release is **v2.1.3 — Activation Pack Export Integration**.
+The current release is **v2.1.4 — Activation Pack Export Integration**.
 
 This release connects activation pack Markdown/JSON preview output to existing text download utilities for metadata/brief-text export only.
 
@@ -339,7 +339,7 @@ npm run qa
 
 ## Reference Workflow Stable Release
 
-The current release is **v2.1.3 — Reference Workflow Stable Release**.
+The current release is **v2.1.4 — Reference Workflow Stable Release**.
 
 This stable release consolidates the full discovery → board → activation → export workflow.
 
@@ -355,7 +355,7 @@ npm run qa
 
 ## Stable Release Hygiene + Audit Warning Review
 
-The current release is **v2.1.3 — Stable Release Hygiene + Audit Warning Review**.
+The current release is **v2.1.4 — Stable Release Hygiene + Audit Warning Review**.
 
 This patch audits the 2 moderate npm audit warnings without force-fixing, guards generated/cache artifacts, verifies release docs/screenshots/tag guidance, and preserves the v2 stable workflow.
 
@@ -371,7 +371,7 @@ npm run qa
 
 ## Dependency Audit Triage
 
-The current release is **v2.1.3 — Dependency Audit Triage**.
+The current release is **v2.1.4 — Dependency Audit Triage**.
 
 This patch documents and gates triage for the 2 moderate npm audit warnings. It separates direct vs transitive dependency risk, runtime vs dev-only exposure, patched versions, and non-breaking update options.
 
@@ -387,7 +387,7 @@ npm run qa
 
 ## Public Demo Evidence + Screenshot Lock
 
-The current release is **v2.1.3 — Public Demo Evidence + Screenshot Lock**.
+The current release is **v2.1.4 — Public Demo Evidence + Screenshot Lock**.
 
 This patch locks the public demo screenshot evidence checklist for the stable discovery → board → activation → export workflow.
 
@@ -403,7 +403,7 @@ npm run qa
 
 ## Release Package Audit
 
-The current release is **v2.1.3 — Release Package Audit**.
+The current release is **v2.1.4 — Release Package Audit**.
 
 This patch audits package metadata, version consistency, tag guidance, release docs, committed artifact boundaries, and final release checklist integrity.
 
@@ -419,7 +419,7 @@ npm run qa
 
 ## Unified Release Verification Runner
 
-The current release is **v2.1.3 — Unified Release Verification Runner**.
+The current release is **v2.1.4 — Unified Release Verification Runner**.
 
 Use one command for local release verification:
 
@@ -439,7 +439,7 @@ It does not add new features, dependency churn, provider expansion, export rewri
 
 ## First-Run UX + Workflow Clarity
 
-The current release is **v2.1.3 — First-Run UX + Workflow Clarity**.
+The current release is **v2.1.4 — First-Run UX + Workflow Clarity**.
 
 This patch improves first-run workflow guidance:
 
@@ -464,7 +464,7 @@ npm run verify:release
 
 ## Controlled First-Run Panel Mount + UI Consistency
 
-The current release is **v2.1.3 — Controlled First-Run Panel Mount + UI Consistency**.
+The current release is **v2.1.4 — Controlled First-Run Panel Mount + UI Consistency**.
 
 This patch mounts the first-run workflow panel in `SearchPanel` using deterministic import and mount checks.
 
@@ -477,7 +477,7 @@ npm run verify:release
 
 ## First-Run Visual QA + Responsive Screenshot Evidence
 
-The current release is **v2.1.3 — First-Run Visual QA + Responsive Screenshot Evidence**.
+The current release is **v2.1.4 — First-Run Visual QA + Responsive Screenshot Evidence**.
 
 This patch adds visual QA evidence planning for the mounted first-run workflow panel.
 
@@ -497,7 +497,7 @@ artifacts/first-run-visual-evidence.json
 
 ## First-Run Evidence Artifact Review + Demo Capture Notes
 
-The current release is **v2.1.3 — First-Run Evidence Artifact Review + Demo Capture Notes**.
+The current release is **v2.1.4 — First-Run Evidence Artifact Review + Demo Capture Notes**.
 
 This patch adds an evidence review artifact and demo capture notes for the first-run workflow.
 
@@ -513,4 +513,24 @@ Expected evidence artifact:
 
 ```text
 artifacts/first-run-evidence-review.json
+```
+
+## First-Run Demo Script + Public Walkthrough Copy
+
+The current release is **v2.1.4 — First-Run Demo Script + Public Walkthrough Copy**.
+
+This patch adds a public-safe first-run demo script and walkthrough copy.
+
+Run:
+
+```bash
+npm run first-run:demo-script
+npm run first-run:demo-script:check
+npm run verify:release
+```
+
+Expected artifact:
+
+```text
+artifacts/first-run-demo-script.json
 ```

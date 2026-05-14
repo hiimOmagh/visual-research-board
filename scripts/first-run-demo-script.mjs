@@ -1,0 +1,121 @@
+import fs from "node:fs";
+import path from "node:path";
+
+const root = process.cwd();
+const artifactsDir = path.join(root, "artifacts");
+const demoScriptPath = path.join(artifactsDir, "first-run-demo-script.json");
+
+function readJson(relativePath) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) return null;
+  return JSON.parse(fs.readFileSync(absolutePath, "utf8"));
+}
+
+function exists(relativePath) {
+  return fs.existsSync(path.join(root, relativePath));
+}
+
+const pkg = readJson("package.json");
+const visualEvidence = readJson("artifacts/first-run-visual-evidence.json");
+const evidenceReview = readJson("artifacts/first-run-evidence-review.json");
+
+const demoScript = {
+  schema_version: "first-run.demo-script.v1",
+  app_version: pkg?.version ?? "unknown",
+  release: "v2.1.4",
+  generated_at: new Date().toISOString(),
+  title: "Visual Research Board first-run walkthrough",
+  status: "script-ready",
+  audience: [
+    "creators",
+    "researchers",
+    "editors",
+    "documentary teams",
+    "thumbnail designers",
+    "media teams"
+  ],
+  promise: "Turn scattered reference research into a source-aware board, review candidates, prepare an activation pack, and export evidence without implying rights clearance or private-source access.",
+  walkthrough_steps: [
+    {
+      id: "open-clean-board",
+      narration: "Start with a clean board. The first-run panel explains the workflow before the user touches advanced controls.",
+      visible_checks: [
+        "first-run panel visible",
+        "primary search action visible",
+        "provider/source controls reachable"
+      ]
+    },
+    {
+      id: "search-reference-topic",
+      narration: "Enter a visual research topic and run the first search. The board is optimized for reference gathering, not blind scraping.",
+      visible_checks: [
+        "query field visible",
+        "source/provider context visible",
+        "empty-state guidance no longer blocks progress"
+      ]
+    },
+    {
+      id: "save-useful-reference",
+      narration: "Save a useful reference candidate. The goal is to preserve source context and review value before production use.",
+      visible_checks: [
+        "saved reference visible",
+        "metadata/source cues visible",
+        "review state clear"
+      ]
+    },
+    {
+      id: "review-reference",
+      narration: "Review the saved item. Treat every result as a candidate until its source, role, and risk/access notes are checked.",
+      visible_checks: [
+        "review language visible",
+        "risk/access boundaries visible or reachable",
+        "no claim of automatic verification"
+      ]
+    },
+    {
+      id: "activation-pack",
+      narration: "Open the activation pack. It turns reviewed references into usable creative direction, prompts, notes, or production planning material.",
+      visible_checks: [
+        "activation pack visible or reachable",
+        "role/purpose of references clear",
+        "boundaries remain visible"
+      ]
+    },
+    {
+      id: "export-preview",
+      narration: "Open export preview. The export is evidence-aware and source-aware, but it does not grant rights or bypass access limits.",
+      visible_checks: [
+        "export preview visible or reachable",
+        "source-aware framing visible",
+        "limitations clear"
+      ]
+    }
+  ],
+  public_walkthrough_copy: {
+    headline: "Build a source-aware visual reference board in minutes.",
+    subheadline: "Search, save, review, activate, and export references with visible source context and practical production notes.",
+    short_pitch: "Visual Research Board helps creative teams collect reference material, keep source context, flag weak spots, and turn reviewed references into activation-ready notes without pretending that every result is rights-cleared or verified.",
+    call_to_action: "Start with a search topic, save the strongest references, review their role, then generate an activation pack."
+  },
+  boundaries: [
+    "No rights clearance guarantee.",
+    "No private account scraping.",
+    "No paywall bypass.",
+    "No source media rehosting.",
+    "No claim that every result is verified.",
+    "No replacement for human editorial review."
+  ],
+  evidence_inputs: {
+    first_run_visual_evidence_present: exists("artifacts/first-run-visual-evidence.json"),
+    first_run_evidence_review_present: exists("artifacts/first-run-evidence-review.json"),
+    visual_evidence_status: visualEvidence?.status ?? null,
+    evidence_review_status: evidenceReview?.status ?? null
+  },
+  next_action: "Use this as the baseline narration for screenshots, short demo recordings, README walkthroughs, and public demo review notes."
+};
+
+fs.mkdirSync(artifactsDir, { recursive: true });
+fs.writeFileSync(demoScriptPath, `${JSON.stringify(demoScript, null, 2)}\n`);
+
+console.log(`First-run demo script written: ${path.relative(root, demoScriptPath)}`);
+console.log(`Status: ${demoScript.status}`);

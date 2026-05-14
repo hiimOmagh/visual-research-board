@@ -1,4 +1,4 @@
-# Discovery Mode Taxonomy — v2.1.3
+# Discovery Mode Taxonomy — v2.1.4
 
 ## broad
 

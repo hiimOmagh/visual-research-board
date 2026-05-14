@@ -148,6 +148,7 @@ try {
     "first-run:panel:check",
     "first-run:visual:check",
     "first-run:evidence-review:check",
+    "first-run:demo-script:check",
     "release:package:audit:check",
     "public-demo:screenshot:check",
     "dependency:audit:triage:check",
