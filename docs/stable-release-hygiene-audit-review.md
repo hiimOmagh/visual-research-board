@@ -1,7 +1,7 @@
 
-# Stable Release Hygiene + Audit Warning Review — v2.1.7
+# Stable Release Hygiene + Audit Warning Review — v2.1.11
 
-v2.1.7 is a hygiene-only patch after the v2.0.0 stable release.
+v2.1.11 is a hygiene-only patch after the v2.0.0 stable release.
 
 ## Objective
 
@@ -32,7 +32,7 @@ Reason: force-fixing may introduce breaking dependency changes and move the rele
 - `npm run lint` passes
 - `npm run build` passes
 - `artifacts/full-qa-gate-report.json` exists
-- full QA artifact reports `app_version = 2.1.7`
+- full QA artifact reports `app_version = 2.1.11`
 - full QA artifact reports `failed_gate_count = 0`
 
 ## Artifact hygiene
@@ -54,10 +54,10 @@ Do not commit generated/cache files:
 
 After CI is green, the release tag should match:
 
-- tag: `v2.1.7`
-- package version: `2.1.7`
-- full QA artifact: `2.1.7`
-- release docs: `v2.1.7`
+- tag: `v2.1.11`
+- package version: `2.1.11`
+- full QA artifact: `2.1.11`
+- release docs: `v2.1.11`
 
 ## Non-goals
 

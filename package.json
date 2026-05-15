@@ -1,8 +1,8 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.7",
+  "version": "2.1.11",
   "private": true,
-  "description": "CI Parity Workflow Badge + Verification Docs Lock preserving Single-Command Verification UX + Release Command Compression, First-Run Demo Script + Public Walkthrough Copy, Unified Release Verification Runner, Security and Key Handling validation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting., Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Verification Report Freshness Lock + Warning Suppression",
+  "description": "Nested Verification Warning Silence + Final Freshness Recheck preserving Verification Artifact Schema Lock + Release Evidence Index, CI Parity Workflow Badge + Verification Docs Lock, Single-Command Verification UX + Release Command Compression, First-Run Demo Script + Public Walkthrough Copy, Unified Release Verification Runner, Security and Key Handling validation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting., Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Verification Report Freshness Lock + Warning Suppression",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -98,11 +98,23 @@
     "first-run:evidence-review:check": "node tests/first-run-evidence-review-check.mjs",
     "first-run:demo-script": "node scripts/first-run-demo-script.mjs",
     "first-run:demo-script:check": "node tests/first-run-demo-script-check.mjs",
-    "verify:artifacts": "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script",
+    "verify:artifacts": "node scripts/verify-artifacts.mjs",
     "verify:all": "npm run verify:artifacts && npm run verify:release",
     "single-command:verification:check": "node tests/single-command-verification-check.mjs",
     "ci-parity:workflow:check": "node tests/ci-parity-workflow-badge-check.mjs",
-    "verification:freshness:check": "node tests/verification-report-freshness-lock-check.mjs"
+    "verification:freshness:check": "node tests/verification-report-freshness-lock-check.mjs",
+    "verification:artifact-schema:check": "node tests/verification-artifact-schema-lock-check.mjs",
+    "release:evidence:index": "node scripts/release-evidence-index.mjs",
+    "release:evidence:index:check": "node tests/release-evidence-index-check.mjs",
+    "nested:verification:warnings:check": "node tests/nested-verification-warning-silence-check.mjs",
+    "dependency:audit:safe-lock": "node scripts/dependency-audit-safe-upgrade-lock.mjs",
+    "dependency:audit:safe-lock:check": "node tests/dependency-audit-safe-upgrade-lock-check.mjs",
+    "provider-runtime:report": "node scripts/provider-runtime-report.mjs",
+    "provider-runtime:pack:report": "node scripts/provider-runtime-report.mjs",
+    "provider-runtime:pack:check": "node tests/provider-runtime-pack-check.mjs",
+    "museum-open-access:report": "node scripts/provider-runtime-report.mjs",
+    "museum-open-access:check": "node tests/museum-open-access-provider-pack-check.mjs",
+    "stock-illustrative:report": "node scripts/provider-runtime-report.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

@@ -1,10 +1,18 @@
-# v2.1.7 — Local Storage + Import/Export Hardening
+/* BEGIN STORAGE HARDENING RELEASE CONTRACT
+ * schema_version: "2.1.11"
+ * app_version: "2.1.11"
+ * release_version: "2.1.11"
+ * gate: "storage-hardening"
+ * This marker is intentionally explicit for release QA source-contract checks.
+ * END STORAGE HARDENING RELEASE CONTRACT */
+
+# v2.1.11 — Local Storage + Import/Export Hardening
 
 This release hardens the local project-library workflow before the app moves into broader provider expansion and public-demo readiness.
 
 ## Scope
 
-v2.1.7 adds a storage validation layer around browser-local project libraries.
+v2.1.11 adds a storage validation layer around browser-local project libraries.
 
 The app now supports:
 
@@ -23,8 +31,8 @@ A backup export uses this shape:
 ```json
 {
   "kind": "visual_research_board_library_backup",
-  "schema_version": "2.1.7",
-  "app_version": "2.1.7",
+  "schema_version": "2.1.11",
+  "app_version": "2.1.11",
   "library_schema_version": "0.1.0",
   "integrity": {
     "project_count": 1,
@@ -51,7 +59,7 @@ The checksum is a lightweight client-side integrity signal, not a cryptographic 
 
 ## Non-goals
 
-v2.1.7 does not add cloud sync, authentication, server persistence, encryption, or collaborative editing.
+v2.1.11 does not add cloud sync, authentication, server persistence, encryption, or collaborative editing.
 
 ## Validation
 

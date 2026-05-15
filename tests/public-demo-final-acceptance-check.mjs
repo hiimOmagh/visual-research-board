@@ -28,7 +28,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 assert(pkg.description?.includes("Public Demo Final Acceptance"), "package description must identify Public Demo Final Acceptance");
 assert(pkg.description?.includes("Hosted Demo Evidence Review"), "package description must preserve Hosted Demo Evidence Review wording");
 assert(pkg.description?.includes("Public Demo Evidence Lock"), "package description must preserve Public Demo Evidence Lock wording");
@@ -87,11 +87,11 @@ assert(manifestCheck.includes(VERSION), "Full QA gate manifest check must refere
 assert(manifestCheck.includes("public-demo-final-acceptance"), "Full QA gate manifest must check public demo final acceptance");
 
 const readme = read("README.md");
-assert(readme.includes("v2.1.7"), "README must mention v2.1.7");
+assert(readme.includes("v2.1.11"), "README must mention v2.1.11");
 assert(readme.includes("Public Demo Final Acceptance"), "README must mention Public Demo Final Acceptance");
 
 const finalDoc = read("docs/public-demo-final-acceptance.md");
-assert(finalDoc.includes("v2.1.7"), "final acceptance doc must mention v2.1.7");
+assert(finalDoc.includes("v2.1.11"), "final acceptance doc must mention v2.1.11");
 assert(finalDoc.includes("No feature changes"), "final acceptance doc must state no feature changes");
 assert(finalDoc.includes("No provider changes"), "final acceptance doc must state no provider changes");
 assert(finalDoc.includes("No retrieval logic changes"), "final acceptance doc must state no retrieval logic changes");
@@ -134,12 +134,12 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN final acceptance: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN final acceptance: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN final acceptance: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN final acceptance: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 } else {
-  console.warn("WARN final acceptance: artifacts/full-qa-gate-report.json is absent. Run npm run qa to produce it.");
+  if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn("WARN final acceptance: artifacts/full-qa-gate-report.json is absent. Run npm run qa to produce it.");
 }
 
 if (process.exitCode) {

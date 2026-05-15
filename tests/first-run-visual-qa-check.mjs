@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 assert(pkg.description?.includes("First-Run Visual QA + Responsive Screenshot Evidence"), "package description must identify First-Run Visual QA + Responsive Screenshot Evidence");
 assert(pkg.description?.includes("Controlled First-Run Panel Mount + UI Consistency"), "package description must preserve Controlled First-Run Panel Mount + UI Consistency wording");
 assert(pkg.description?.includes("First-Run UX + Workflow Clarity"), "package description must preserve First-Run UX + Workflow Clarity wording");
@@ -126,14 +126,14 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
+  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
 }
 
 const evidencePath = "artifacts/first-run-visual-evidence.json";
 if (exists(evidencePath)) {
   const evidence = JSON.parse(read(evidencePath));
   if (evidence.app_version !== VERSION) {
-    console.warn(`WARN first-run visual QA: evidence artifact is ${evidence.app_version}, expected ${VERSION}. Run npm run first-run:visual:evidence to regenerate it.`);
+    if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run visual QA: evidence artifact is ${evidence.app_version}, expected ${VERSION}. Run npm run first-run:visual:evidence to regenerate it.`);
   }
   assert(evidence.schema_version === "first-run.visual-evidence.v1", "visual evidence artifact must use schema v1");
   assert(Array.isArray(evidence.screenshots), "visual evidence artifact must include screenshots array");
@@ -143,9 +143,9 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run visual QA: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run visual QA: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run visual QA: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run visual QA: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 

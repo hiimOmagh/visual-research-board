@@ -1,6 +1,6 @@
-# Warning Suppression — v2.1.7
+# Warning Suppression — v2.1.11
 
-v2.1.7 narrows warning suppression to stale artifact warnings.
+v2.1.11 narrows warning suppression to stale artifact warnings.
 
 ## warning suppression
 

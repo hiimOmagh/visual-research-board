@@ -13,7 +13,7 @@ function assert(condition, message) { if (!condition) fail(message); }
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 for (const token of [
   "Release Package Audit",
   "Public Demo Evidence + Screenshot Lock",
@@ -32,8 +32,8 @@ if (exists("package-lock.json")) {
   assert(lock.version === VERSION, "package-lock.json version must match package.json");
   assert(lock.packages?.[""]?.version === VERSION, "package-lock root package version must match package.json");
   const lockText = read("package-lock.json");
-  assert(!lockText.includes('"is-finalizationregistry": "^2.1.7"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-  assert(!lockText.includes('"which-boxed-primitive": "^2.1.7"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+  assert(!lockText.includes('"is-finalizationregistry": "^2.1.11"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+  assert(!lockText.includes('"which-boxed-primitive": "^2.1.11"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 }
 
 for (const file of [
@@ -79,12 +79,12 @@ for (const token of ["package.json","package-lock.json","README.md","PATCH_MANIF
 }
 
 for (const file of ["README.md","PATCH_MANIFEST.md","docs/release-checklist.md","docs/validation-report.md"]) {
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
+  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
 }
 
 const report = JSON.parse(read("artifacts/full-qa-gate-report.json"));
-if (!suppressStaleReportWarnings) if (report.app_version !== VERSION) console.warn(`WARN release package audit: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
-else if ((report.status !== "passed" || report.failed_gate_count !== 0) && !suppressStaleReportWarnings) console.warn(`WARN release package audit: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+if (!suppressStaleReportWarnings) if (report.app_version !== VERSION) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN release package audit: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+else if ((report.status !== "passed" || report.failed_gate_count !== 0) && !suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN release package audit: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
 
 for (const file of ["docs/release-package-audit.md","docs/release-package-audit-checklist.md","README.md","PATCH_MANIFEST.md"]) {
   const text = read(file);

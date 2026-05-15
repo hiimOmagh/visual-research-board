@@ -3,7 +3,7 @@ import path from "node:path";
 
 const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
-const VERSION = "2.1.7";
+const VERSION = "2.1.11";
 
 function filePath(relativePath) {
   return path.join(root, relativePath);
@@ -68,10 +68,10 @@ for (const file of requiredFiles) {
 const fullQaGate = read("scripts/full-qa-gate.mjs");
 assert(fullQaGate.includes("public-demo-evidence-lock"), "Full QA gate must include public-demo evidence lock");
 assert(fullQaGate.includes("tests/public-demo-evidence-lock-check.mjs"), "Full QA gate must run public demo evidence lock check");
-assert(fullQaGate.includes(VERSION), "Full QA gate must reference v2.1.7");
+assert(fullQaGate.includes(VERSION), "Full QA gate must reference v2.1.11");
 
 const fullQaGateCheck = read("tests/full-qa-gate-check.mjs");
-assert(fullQaGateCheck.includes(VERSION), "Full QA gate manifest check must reference v2.1.7");
+assert(fullQaGateCheck.includes(VERSION), "Full QA gate manifest check must reference v2.1.11");
 assert(fullQaGateCheck.includes("public-demo-evidence-lock"), "Full QA gate manifest check must expect public-demo evidence lock");
 
 const publicDemoEvidenceDoc = read("docs/public-demo-evidence-lock.md");
@@ -105,7 +105,7 @@ for (const file of ["docs/public-demo-evidence-lock.md", "docs/release-evidence-
 
 if (exists("artifacts/full-qa-gate-report.json")) {
   const report = JSON.parse(read("artifacts/full-qa-gate-report.json"));
-  if (!suppressStaleReportWarnings) if (report.app_version === VERSION) {  if (report.status !== "passed") console.warn(`WARN public-demo evidence lock: full QA artifact status is ${report.status}. Run npm run qa to regenerate it.`);  if (report.failed_gate_count !== 0) console.warn(`WARN public-demo evidence lock: full QA artifact failed_gate_count is ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+  if (!suppressStaleReportWarnings) if (report.app_version === VERSION) {  if (report.status !== "passed") if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN public-demo evidence lock: full QA artifact status is ${report.status}. Run npm run qa to regenerate it.`);  if (report.failed_gate_count !== 0) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN public-demo evidence lock: full QA artifact failed_gate_count is ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 
@@ -113,4 +113,4 @@ if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Public Demo Evidence Lock checks passed for v2.1.7.");
+console.log("Public Demo Evidence Lock checks passed for v2.1.11.");

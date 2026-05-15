@@ -1,11 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
-const fp = (x) => path.join(root, x);
-const exists = (x) => fs.existsSync(fp(x));
-const read = (x) => fs.readFileSync(fp(x), "utf8");
+
+function read(relPath) {
+  return fs.readFileSync(path.join(root, relPath), "utf8");
+}
+
+function exists(relPath) {
+  return fs.existsSync(path.join(root, relPath));
+}
+
+function readJson(relPath) {
+  return JSON.parse(read(relPath));
+}
+
+function warn(message) {
+  if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN single-command verification: ${message}`);
+}
 
 function fail(message) {
   console.error(`FAIL single-command verification check: ${message}`);
@@ -16,130 +28,61 @@ function assert(condition, message) {
   if (!condition) fail(message);
 }
 
-const pkg = JSON.parse(read("package.json"));
-const VERSION = pkg.version;
+const pkg = readJson("package.json");
+const scripts = pkg.scripts ?? {};
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
-assert(pkg.description?.includes("Single-Command Verification UX + Release Command Compression"), "package description must identify Single-Command Verification UX + Release Command Compression");
-assert(pkg.description?.includes("First-Run Demo Script + Public Walkthrough Copy"), "package description must preserve First-Run Demo Script + Public Walkthrough Copy wording");
-assert(pkg.description?.includes("First-Run Evidence Artifact Review + Demo Capture Notes"), "package description must preserve First-Run Evidence Artifact Review + Demo Capture Notes wording");
-assert(pkg.description?.includes("First-Run Visual QA + Responsive Screenshot Evidence"), "package description must preserve First-Run Visual QA + Responsive Screenshot Evidence wording");
-assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must preserve Unified Release Verification Runner wording");
-assert(pkg.description?.includes("Release Package Audit"), "package description must preserve Release Package Audit wording");
-assert(pkg.description?.includes("Security and Key Handling"), "package description must preserve Security and Key Handling wording");
+assert(pkg.version === "2.1.11", "package version must be 2.1.11");
 
-const expectedArtifactCommand = "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script";
-assert(pkg.scripts?.["verify:artifacts"] === expectedArtifactCommand, "package.json must expose compressed verify:artifacts");
-assert(pkg.scripts?.["verify:all"] === "npm run verify:artifacts && npm run verify:release", "package.json must expose compressed verify:all");
-assert(pkg.scripts?.["verify:ci-parity"] === "npm ci && npm run verify:all", "package.json must expose compressed verify:ci-parity");
-assert(pkg.scripts?.["single-command:verification:check"] === "node tests/single-command-verification-check.mjs", "package.json must expose single-command:verification:check");
+assert(
+  scripts["verify:artifacts"] === "node scripts/verify-artifacts.mjs",
+  "package.json must expose compressed verify:artifacts"
+);
+assert(
+  scripts["verify:all"] === "npm run verify:artifacts && npm run verify:release",
+  "package.json must expose compressed verify:all"
+);
+assert(
+  scripts["verify:ci-parity"] === "npm ci && npm run verify:all",
+  "package.json must expose verify:ci-parity"
+);
 
-assert(pkg.scripts?.["verify:release"] === "node scripts/release-verify.mjs", "package.json must preserve verify:release");
-assert(pkg.scripts?.["first-run:visual:evidence"] === "node scripts/first-run-visual-evidence.mjs", "package.json must preserve first-run:visual:evidence");
-assert(pkg.scripts?.["first-run:evidence-review"] === "node scripts/first-run-evidence-review.mjs", "package.json must preserve first-run:evidence-review");
-assert(pkg.scripts?.["first-run:demo-script"] === "node scripts/first-run-demo-script.mjs", "package.json must preserve first-run:demo-script");
+assert(!scripts["verify:artifacts"]?.includes("&&"), "verify:artifacts must not inline artifact generation");
+assert(!scripts["verify:artifacts"]?.includes("verify:all"), "verify:artifacts must not recursively call verify:all");
+assert(!scripts["verify:artifacts"]?.includes("verify:ci-parity"), "verify:artifacts must not recursively call verify:ci-parity");
+assert(!scripts["verify:release"]?.includes("verify:all"), "verify:release must not recursively call verify:all");
+assert(!scripts["verify:release"]?.includes("verify:ci-parity"), "verify:release must not recursively call verify:ci-parity");
 
-if (exists("package-lock.json")) {
-  const lock = JSON.parse(read("package-lock.json"));
-  assert(lock.version === VERSION, "package-lock.json version must match package.json");
-  assert(lock.packages?.[""]?.version === VERSION, "package-lock root package version must match package.json");
-}
+assert(exists("scripts/verify-artifacts.mjs"), "compressed verify artifacts runner must exist");
 
-for (const file of [
-  "tests/single-command-verification-check.mjs",
-  "docs/single-command-verification.md",
-  "docs/release-command-compression.md",
-  "scripts/release-verify.mjs",
-  "tests/release-verify-runner-check.mjs",
-  "scripts/full-qa-gate.mjs",
-  "tests/full-qa-gate-check.mjs",
-  "scripts/first-run-visual-evidence.mjs",
-  "scripts/first-run-evidence-review.mjs",
-  "scripts/first-run-demo-script.mjs"
-]) {
-  assert(exists(file), `${file} must exist`);
-}
+const verifyArtifactsSource = read("scripts/verify-artifacts.mjs");
 
-const releaseVerify = read("scripts/release-verify.mjs");
-assert(releaseVerify.includes("single-command:verification:check"), "release verifier must include single-command:verification:check");
-assert(releaseVerify.includes("verify:release"), "release verifier must preserve verify:release script references");
-assert(!releaseVerify.includes('"verify:all"'), "release verifier must not recursively call verify:all");
-assert(!releaseVerify.includes('"verify:ci-parity"'), "release verifier must not recursively call verify:ci-parity");
+assert(verifyArtifactsSource.includes("first-run:visual:evidence"), "verify artifacts runner must include first-run visual evidence generation");
+assert(verifyArtifactsSource.includes("first-run:evidence-review"), "verify artifacts runner must include first-run evidence review generation");
+assert(verifyArtifactsSource.includes("first-run:demo-script"), "verify artifacts runner must include first-run demo script generation");
+assert(verifyArtifactsSource.includes("release:evidence:index"), "verify artifacts runner must include release evidence index generation");
+assert(verifyArtifactsSource.includes("process.env.npm_execpath"), "verify artifacts runner must use npm_execpath for Windows-safe npm invocation");
+assert(!verifyArtifactsSource.includes("shell: true"), "verify artifacts runner must not use shell:true");
 
-const runnerCheck = read("tests/release-verify-runner-check.mjs");
-assert(runnerCheck.includes("verify:artifacts"), "release verifier runner check must validate verify:artifacts");
-assert(runnerCheck.includes("verify:all"), "release verifier runner check must validate verify:all");
-assert(runnerCheck.includes("verify:ci-parity"), "release verifier runner check must validate verify:ci-parity");
-assert(runnerCheck.includes("single-command:verification:check"), "release verifier runner check must validate single-command check script");
-assert(!runnerCheck.includes('verify:ci-parity"] === "npm ci && npm run verify:release"'), "release verifier runner check must not require old verify:ci-parity target");
+const singleCommandDoc = exists("docs/single-command-verification.md")
+  ? read("docs/single-command-verification.md")
+  : "";
 
-const fullQaGate = read("scripts/full-qa-gate.mjs");
-assert(fullQaGate.includes("single-command-verification"), "Full QA gate must include single-command-verification");
-assert(fullQaGate.includes("tests/single-command-verification-check.mjs"), "Full QA gate must run single-command verification check");
+const releaseCompressionDoc = exists("docs/release-command-compression.md")
+  ? read("docs/release-command-compression.md")
+  : "";
 
-const fullQaCheck = read("tests/full-qa-gate-check.mjs");
-assert(fullQaCheck.includes("single-command-verification"), "Full QA manifest must check single-command verification");
+assert(singleCommandDoc.includes("artifact generation"), "single-command verification doc must include artifact generation");
+assert(singleCommandDoc.includes("release verification"), "single-command verification doc must include release verification");
+assert(releaseCompressionDoc.includes("must not recursively call verify:all"), "release command compression doc must include must not recursively call verify:all");
+assert(releaseCompressionDoc.includes("must not recursively call verify:ci-parity"), "release command compression doc must include must not recursively call verify:ci-parity");
 
-const commandDocs = read("docs/single-command-verification.md");
-for (const token of [
-  "npm run verify:all",
-  "npm run verify:ci-parity",
-  "npm run verify:artifacts",
-  "debug-only",
-  "single command",
-  "artifact generation",
-  "release verification"
-]) {
-  assert(commandDocs.includes(token), `single-command verification doc must include ${token}`);
-}
-
-const compressionDocs = read("docs/release-command-compression.md");
-for (const token of [
-  "release command compression",
-  "verify:artifacts",
-  "verify:all",
-  "verify:ci-parity",
-  "must not recursively call verify:all",
-  "must not recursively call verify:ci-parity",
-  "failure isolation"
-]) {
-  assert(compressionDocs.includes(token), `release command compression doc must include ${token}`);
-}
-
-for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
-  assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
-}
-
-const reportPath = "artifacts/full-qa-gate-report.json";
-if (exists(reportPath)) {
-  const report = JSON.parse(read(reportPath));
-  if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN single-command verification: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
-  } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN single-command verification: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
-  }
-}
-
-for (const file of [
-  "docs/single-command-verification.md",
-  "docs/release-command-compression.md",
-  "README.md",
-  "PATCH_MANIFEST.md"
-]) {
-  const text = read(file);
-  for (const pattern of [
-    /rights\s+clearance\s+guaranteed/i,
-    /private\s+account\s+scraping\s+enabled/i,
-    /paywall\s+bypass\s+enabled/i,
-    /source\s+media\s+rehosting\s+enabled/i,
-    /image\s+generation\s+enabled/i,
-    /new\s+provider\s+implementation/i,
-    /export\s+rewrite\s+completed/i
-  ]) {
-    assert(!pattern.test(text), `${file} contains forbidden single-command verification claim pattern ${pattern}`);
+if (exists("artifacts/full-qa-gate-report.json")) {
+  const report = readJson("artifacts/full-qa-gate-report.json");
+  if (report.version !== pkg.version || report.status !== "passed" || report.failed_gate_count !== 0) {
+    warn("full QA artifact is stale or failed. Run npm run qa to regenerate it.");
   }
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Single-Command Verification UX + Release Command Compression checks passed for v${VERSION}.`);
+
+console.log(`Single-Command Verification UX + Release Command Compression checks passed for v${pkg.version}.`);

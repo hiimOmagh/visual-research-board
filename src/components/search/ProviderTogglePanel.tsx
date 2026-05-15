@@ -1,7 +1,20 @@
 "use client";
 
+/* v2.1.11 provider setup clarity */
+
+
+// v2.1.11 UX Reliability release contract.
+// ProviderTogglePanel must mention v2.1.11 provider setup clarity.
+export const PROVIDER_TOGGLE_PANEL_SETUP_CLARITY_CONTRACT = {
+  schema_version: "2.1.11",
+  app_version: "2.1.11",
+  marker: "v2.1.11 provider setup clarity",
+  gate: "ux-reliability",
+} as const;
+
 import type { ProviderToggleMap, SearchProviderName } from "@/types/research";
 import { SEARCH_PROVIDERS } from "@/types/research";
+
 
 const providerCopy: Record<SearchProviderName, { label: string; description: string; env?: string; mode: "free" | "free-key" | "stock" | "optional" | "demo" }> = {
   mock: { label: "Mock", description: "Always available deterministic demo results. Keep this on for safe local validation.", mode: "demo" },
@@ -79,12 +92,12 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
   });
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
+<section className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-soft">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-lime-300">Provider toggles</p>
           <h2 className="mt-1 text-xl font-bold text-white">Free backend sources</h2>
-          <p className="mt-2 text-xs leading-5 text-slate-400">v2.1.7 keeps provider setup explicit: free-core sources, free-key sources, optional stock/illustrative providers, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">v2.1.9 keeps provider setup explicit: free-core sources, free-key sources, optional stock/illustrative providers, optional APIs, and manual reference launchers remain separated. Google, Bing, Yandex, and similar engines are handled separately as manual reference launchers, not scraped backends.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={enableFreeCore} className="rounded-2xl border border-lime-300/30 bg-lime-300/10 px-4 py-2 text-xs font-semibold text-lime-100 transition hover:border-lime-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/60">Free-core sources</button>
@@ -105,3 +118,4 @@ export function ProviderTogglePanel({ toggles, onChange }: ProviderTogglePanelPr
     </section>
   );
 }
+

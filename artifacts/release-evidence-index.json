@@ -1,0 +1,67 @@
+{
+  "schema": "visual-research-board.release-evidence-index.v1",
+  "app_version": "2.1.11",
+  "generated_at": "2026-05-15T17:08:58.493Z",
+  "status": "indexed",
+  "artifact_count": 5,
+  "missing_count": 0,
+  "invalid_json_count": 0,
+  "files": [
+    {
+      "path": "artifacts/full-qa-gate-report.json",
+      "exists": true,
+      "size_bytes": 14557,
+      "sha256": "23777c7bc4cacb09896bde09a95ef3d3a06268a20d2068ecbfbab779dc84335e",
+      "json_status": "valid",
+      "status": "passed",
+      "app_version": "2.1.11"
+    },
+    {
+      "path": "artifacts/release-verify-report.json",
+      "exists": true,
+      "size_bytes": 19872,
+      "sha256": "beb58c820982bbff2d46c58d0b92ba4c83ce55f7f4d5cabc732910aa3f7f0cc2",
+      "json_status": "valid",
+      "status": "passed",
+      "app_version": "2.1.11"
+    },
+    {
+      "path": "artifacts/first-run-visual-evidence.json",
+      "exists": true,
+      "size_bytes": 2121,
+      "sha256": "5b81cc2fdb40e8d12423372b23cf300336d673211e01bb8ebb700fc31bf87372",
+      "json_status": "valid",
+      "status": "planned",
+      "app_version": "2.1.11"
+    },
+    {
+      "path": "artifacts/first-run-evidence-review.json",
+      "exists": true,
+      "size_bytes": 2442,
+      "sha256": "0400fd6d499a78ec87bd41416c73a65327714e1ccaacc617b965412b1ec9add0",
+      "json_status": "valid",
+      "status": "review-recorded",
+      "app_version": "2.1.11"
+    },
+    {
+      "path": "artifacts/first-run-demo-script.json",
+      "exists": true,
+      "size_bytes": 3927,
+      "sha256": "85f671a74370ab927b3884fc15b817f455ea620ae643f28ad4b8112adf2dba08",
+      "json_status": "valid",
+      "status": "script-ready",
+      "app_version": "2.1.11"
+    }
+  ],
+  "commands": {
+    "generate": "npm run release:evidence:index",
+    "check": "npm run release:evidence:index:check",
+    "local_release": "npm run verify:all",
+    "ci_parity": "npm run verify:ci-parity"
+  },
+  "notes": [
+    "Index is an artifact inventory, not a rights-clearance statement.",
+    "Missing files are allowed before first verification run but should be resolved before release tagging.",
+    "The release verifier regenerates this index during verification."
+  ]
+}

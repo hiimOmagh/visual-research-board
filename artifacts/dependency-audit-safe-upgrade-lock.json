@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "schemaVersion": "visual-research-board.dependency-audit.safe-upgrade-lock.v1",
+  "appVersion": "2.1.11",
+  "lockVersion": "2.1.11",
+  "generatedAt": "2026-05-15T17:08:40.741Z",
+  "status": "documented-noncritical",
+  "statusReason": "npm audit reported only noncritical vulnerabilities; findings are documented and force fixes remain forbidden.",
+  "policy": {
+    "forbidsForceFixes": true,
+    "forbidForceFixes": true,
+    "forceFixesForbidden": true,
+    "forbiddenForceCommand": "npm audit fix --force",
+    "forbiddenCommands": [
+      "npm audit fix --force"
+    ],
+    "requiresCiParityAfterDependencyChanges": true,
+    "requireCiParityAfterDependencyChanges": true,
+    "ciParityRequiredAfterDependencyChanges": true,
+    "requiredCiParityCommand": "npm run verify:ci-parity",
+    "requiresPackageLockReview": true,
+    "requirePackageLockReview": true,
+    "packageLockReviewRequired": true,
+    "requiredReviewFiles": [
+      "package.json",
+      "package-lock.json"
+    ],
+    "blocksHighCriticalVulnerabilities": true,
+    "blockHighCriticalVulnerabilities": true,
+    "highCriticalVulnerabilitiesBlocked": true,
+    "allowedStatuses": [
+      "clean",
+      "documented-noncritical"
+    ],
+    "rationale": "Dependency changes must be reviewed, must not use force fixes, must block high/critical vulnerabilities, and must pass CI parity."
+  },
+  "audit": {
+    "command": "npm audit --json",
+    "parsed": true,
+    "source": "cmd-npm-audit-json",
+    "exitCode": 1,
+    "stderr": "",
+    "stdoutPreview": ""
+  },
+  "highCriticalProbe": {
+    "exitCode": null,
+    "noHighCriticalDetected": false,
+    "stdoutPreview": "",
+    "stderrPreview": ""
+  },
+  "severityTotals": {
+    "info": 0,
+    "low": 0,
+    "moderate": 2,
+    "high": 0,
+    "critical": 0,
+    "total": 2
+  },
+  "vulnerabilities": [
+    {
+      "name": "next",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "postcss"
+      ],
+      "effects": [],
+      "range": "9.3.4-canary.0 - 16.3.0-canary.5",
+      "fixAvailable": {
+        "name": "next",
+        "version": "9.3.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "postcss",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "name": "postcss",
+          "source": 1117015,
+          "title": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+          "severity": "moderate",
+          "range": "<8.5.10",
+          "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93"
+        }
+      ],
+      "effects": [
+        "next"
+      ],
+      "range": "<8.5.10",
+      "fixAvailable": {
+        "name": "next",
+        "version": "9.3.3",
+        "isSemVerMajor": true
+      }
+    }
+  ]
+}

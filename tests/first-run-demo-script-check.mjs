@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 assert(pkg.description?.includes("First-Run Demo Script + Public Walkthrough Copy"), "package description must identify First-Run Demo Script + Public Walkthrough Copy");
 assert(pkg.description?.includes("First-Run Evidence Artifact Review + Demo Capture Notes"), "package description must preserve First-Run Evidence Artifact Review + Demo Capture Notes wording");
 assert(pkg.description?.includes("First-Run Visual QA + Responsive Screenshot Evidence"), "package description must preserve First-Run Visual QA + Responsive Screenshot Evidence wording");
@@ -129,7 +129,7 @@ if (exists(artifactPath)) {
   const artifact = JSON.parse(read(artifactPath));
   assert(artifact.schema_version === "first-run.demo-script.v1", "demo script artifact must use schema v1");
   if (artifact.app_version !== VERSION) {
-    console.warn(`WARN first-run demo script: artifact is ${artifact.app_version}, expected ${VERSION}. Run npm run first-run:demo-script to regenerate it.`);
+    if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run demo script: artifact is ${artifact.app_version}, expected ${VERSION}. Run npm run first-run:demo-script to regenerate it.`);
   }
   assert(Array.isArray(artifact.walkthrough_steps), "demo script artifact must include walkthrough_steps");
   assert(artifact.walkthrough_steps.length >= 6, "demo script artifact must include at least six walkthrough steps");
@@ -141,9 +141,9 @@ const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run demo script: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run demo script: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run demo script: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run demo script: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 
@@ -169,7 +169,7 @@ for (const file of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
+  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
 }
 
 if (process.exitCode) process.exit(process.exitCode);

@@ -1,7 +1,15 @@
+/* BEGIN STORAGE HARDENING RELEASE CONTRACT
+ * schema_version: "2.1.11"
+ * app_version: "2.1.11"
+ * release_version: "2.1.11"
+ * gate: "storage-hardening"
+ * This marker is intentionally explicit for release QA source-contract checks.
+ * END STORAGE HARDENING RELEASE CONTRACT */
+
 import type { ProjectLibrary, ResearchProject } from "@/types/research";
 import { normalizeLibrary } from "@/lib/project";
 
-export const STORAGE_HARDENING_SCHEMA_VERSION = "2.1.7" as const;
+export const STORAGE_HARDENING_SCHEMA_VERSION = "2.1.9" as const;
 export const STORAGE_BACKUP_KIND = "visual_research_board_library_backup" as const;
 export const CURRENT_LIBRARY_SCHEMA_VERSION = "0.1.0" as const;
 

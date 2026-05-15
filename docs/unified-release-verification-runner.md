@@ -1,7 +1,7 @@
 
-# Unified Release Verification Runner — v2.1.7
+# Unified Release Verification Runner — v2.1.11
 
-v2.1.7 adds a one-command release verification runner.
+v2.1.11 adds a one-command release verification runner.
 
 ## Objective
 

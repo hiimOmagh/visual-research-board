@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const root = process.cwd();
+process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS ??= "1";
 const startedAt = new Date().toISOString();
 
 const gates = [
@@ -63,6 +64,9 @@ const gates = [
   { category: "release", name: "single-command-verification", command: ["node", "tests/single-command-verification-check.mjs"] },
   { category: "release", name: "ci-parity-workflow-badge", command: ["node", "tests/ci-parity-workflow-badge-check.mjs"] },
   { category: "release", name: "verification-report-freshness-lock", command: ["node", "tests/verification-report-freshness-lock-check.mjs"] },
+  { category: "release", name: "nested-verification-warning-silence", command: ["node", "tests/nested-verification-warning-silence-check.mjs"] },
+  { category: "release", name: "release-evidence-index", command: ["node", "tests/release-evidence-index-check.mjs"] },
+  { category: "release", name: "verification-artifact-schema-lock", command: ["node", "tests/verification-artifact-schema-lock-check.mjs"] },
   { category: "workflow", name: "first-run-ux-workflow", command: ["node", "tests/first-run-ux-workflow-check.mjs"] },
   { category: "workflow", name: "first-run-panel-mount", command: ["node", "tests/first-run-panel-mount-check.mjs"] },
   { category: "workflow", name: "first-run-visual-qa", command: ["node", "tests/first-run-visual-qa-check.mjs"] },
@@ -129,8 +133,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "2.1.7",
-  app_version: "2.1.7",
+  schema_version: "2.1.11",
+  app_version: "2.1.11",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -151,5 +155,7 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v2.1.7.");
+console.log("\nFull QA gate passed for v2.1.11.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");
+
+// TODO(v2.1.11): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check

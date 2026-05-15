@@ -20,7 +20,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 assert(pkg.description?.includes("Controlled First-Run Panel Mount + UI Consistency"), "package description must identify Controlled First-Run Panel Mount + UI Consistency");
 assert(pkg.description?.includes("First-Run UX + Workflow Clarity"), "package description must preserve First-Run UX + Workflow Clarity wording");
 assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must preserve Unified Release Verification Runner wording");
@@ -53,7 +53,7 @@ for (const file of [
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes('import { FirstRunWorkflowPanel } from "./FirstRunWorkflowPanel";'), "SearchPanel must import FirstRunWorkflowPanel");
 assert(searchPanel.includes("<FirstRunWorkflowPanel />"), "SearchPanel must mount FirstRunWorkflowPanel");
-assert(searchPanel.includes("v2.1.7 controlled first-run panel mount"), "SearchPanel must contain controlled mount marker");
+assert(searchPanel.includes("v2.1.11 controlled first-run panel mount"), "SearchPanel must contain controlled mount marker");
 
 const component = read("src/components/search/FirstRunWorkflowPanel.tsx");
 for (const token of [
@@ -106,16 +106,16 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
+  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
 }
 
 const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run panel mount: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run panel mount: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);
   } else if (report.status !== "passed" || report.failed_gate_count !== 0) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN first-run panel mount: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN first-run panel mount: full QA artifact status is ${report.status} with failed_gate_count ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   }
 }
 

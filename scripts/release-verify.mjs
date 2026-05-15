@@ -148,6 +148,7 @@ try {
     "release:verify:runner:check",
     "single-command:verification:check",
     "ci-parity:workflow:check",
+    "nested:verification:warnings:check",
     "first-run:ux:check",
     "first-run:panel:check",
     "first-run:visual:check",
@@ -156,6 +157,7 @@ try {
     "release:package:audit:check",
     "public-demo:screenshot:check",
     "dependency:audit:triage:check",
+  "dependency:audit:safe-lock:check",
     "stable:hygiene:check",
     "reference-workflow:stable:check",
     "activation-pack:export:check",
@@ -171,6 +173,9 @@ try {
     "security:key:check",
     "qa",
     "verification:freshness:check",
+    "release:evidence:index:check",
+    "release:evidence:index",
+    "verification:artifact-schema:check",
     "typecheck",
     "lint",
     "build",
@@ -188,6 +193,29 @@ try {
       finish("failed", commandResult.label);
       process.exit(commandResult.status || 1);
     }
+  }
+
+  // Write a passed report before the final freshness recheck so the recheck
+  // validates the completed release report instead of a stale previous run.
+  finish("passed", null);
+
+  const previousSuppression = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS;
+  delete process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS;
+  const finalFreshnessResult = npmRun("verification:freshness:check");
+  if (previousSuppression === undefined) {
+    process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS = "1";
+  } else {
+    process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS = previousSuppression;
+  }
+
+  report.commands.push({
+    ...finalFreshnessResult,
+    phase: "final_freshness_recheck"
+  });
+
+  if (!finalFreshnessResult.ok) {
+    finish("failed", finalFreshnessResult.label);
+    process.exit(finalFreshnessResult.status || 1);
   }
 
   finish("passed", null);

@@ -1,4 +1,4 @@
-# Release Checklist — v2.1.7 stable
+# Release Checklist — v2.1.11 stable
 
 Run before publishing or deploying.
 
@@ -32,7 +32,7 @@ The report must show:
 ```text
 status: passed
 failed_gate_count: 0
-app_version: 2.1.7
+app_version: 2.1.11
 ```
 
 ## Manual browser checks
@@ -63,13 +63,13 @@ app_version: 2.1.7
 - Static demo clearly reports that real providers require a Next.js runtime.
 - CI uploads `artifacts/full-qa-gate-report.json` as `full-qa-gate-report`.
 
-## v2.1.7 security/key handling
+## v2.1.11 security/key handling
 
 - Run `npm run security:key:check`.
 - Confirm provider keys use server-only env names, not `NEXT_PUBLIC_*`.
 - Confirm provider runtime diagnostics show key presence only as redacted status.
 
-## v2.1.7 public-demo release candidate
+## v2.1.11 public-demo release candidate
 
 Run:
 
@@ -88,9 +88,9 @@ Confirm:
 - Unavailable providers are clearly disabled, skipped, or labeled.
 - Exports do not contain secrets or provider credentials.
 
-## v2.1.7 — Release Warning Cleanup
+## v2.1.11 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.1.7 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.1.11 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 
@@ -105,7 +105,7 @@ npm run lint
 npm run build
 ```
 
-## v2.1.7 public-demo evidence lock
+## v2.1.11 public-demo evidence lock
 
 Run:
 
@@ -123,7 +123,7 @@ npm run build
 
 Confirm the CI run passes and produces the `full-qa-gate-report` artifact.
 
-## v2.1.7 hosted demo evidence review
+## v2.1.11 hosted demo evidence review
 
 Run:
 
@@ -142,7 +142,7 @@ npm run build
 
 Confirm the hosted demo evidence checklist before tagging.
 
-## v2.1.7 public demo final acceptance
+## v2.1.11 public demo final acceptance
 
 Run:
 
@@ -163,7 +163,7 @@ npm run public-demo:final:check
 
 Confirm the hosted demo, docs, and full QA artifact before tagging.
 
-## v2.1.7 public demo stable release
+## v2.1.11 public demo stable release
 
 Run:
 
@@ -185,7 +185,7 @@ npm run public-demo:stable:check
 
 Confirm the stable release checklist before tagging.
 
-## v2.1.7 reference intelligence layer
+## v2.1.11 reference intelligence layer
 
 Run:
 
@@ -206,7 +206,7 @@ npm run build
 npm run reference:intelligence:check
 ```
 
-## v2.1.7 broad reference result model
+## v2.1.11 broad reference result model
 
 Run:
 
@@ -228,7 +228,7 @@ npm run build
 npm run broad-reference:model:check
 ```
 
-## v2.1.7 broad web image discovery
+## v2.1.11 broad web image discovery
 
 Run:
 
@@ -251,7 +251,7 @@ npm run build
 npm run broad-discovery:check
 ```
 
-## v2.1.7 social reference discovery
+## v2.1.11 social reference discovery
 
 Run:
 
@@ -275,7 +275,7 @@ npm run build
 npm run social-reference:check
 ```
 
-## v2.1.7 book bibliographic discovery
+## v2.1.11 book bibliographic discovery
 
 Run:
 
@@ -300,7 +300,7 @@ npm run build
 npm run book-reference:check
 ```
 
-## v2.1.7 reference activation pack
+## v2.1.11 reference activation pack
 
 Run:
 
@@ -326,7 +326,7 @@ npm run build
 npm run reference-activation:check
 ```
 
-## v2.1.7 activation pack UI integration
+## v2.1.11 activation pack UI integration
 
 Run:
 
@@ -353,7 +353,7 @@ npm run build
 npm run activation-pack:ui:check
 ```
 
-## v2.1.7 activation pack export preview
+## v2.1.11 activation pack export preview
 
 Run:
 
@@ -381,7 +381,7 @@ npm run build
 npm run activation-pack:export-preview:check
 ```
 
-## v2.1.7 activation pack export integration
+## v2.1.11 activation pack export integration
 
 Run:
 
@@ -410,7 +410,7 @@ npm run build
 npm run activation-pack:export:check
 ```
 
-## v2.1.7 reference workflow stable release
+## v2.1.11 reference workflow stable release
 
 Run:
 
@@ -440,7 +440,7 @@ npm run build
 npm run reference-workflow:stable:check
 ```
 
-## v2.1.7 stable release hygiene
+## v2.1.11 stable release hygiene
 
 Run:
 
@@ -473,7 +473,7 @@ npm run stable:hygiene:check
 
 Do not run `npm audit fix --force` in this release.
 
-## v2.1.7 dependency audit triage
+## v2.1.11 dependency audit triage
 
 Run:
 
@@ -507,7 +507,7 @@ npm run dependency:audit:triage:check
 
 Do not run `npm audit fix --force` in this release.
 
-## v2.1.7 public demo evidence screenshot lock
+## v2.1.11 public demo evidence screenshot lock
 
 Run:
 
@@ -542,7 +542,7 @@ npm run public-demo:screenshot:check
 
 Do not add new product features in this release.
 
-## v2.1.7 release package audit
+## v2.1.11 release package audit
 
 Run:
 
@@ -570,7 +570,7 @@ npm run build
 npm run release:package:audit:check
 ```
 
-## v2.1.7 unified release verification runner
+## v2.1.11 unified release verification runner
 
 Run:
 
@@ -585,7 +585,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 first-run UX workflow clarity
+## v2.1.11 first-run UX workflow clarity
 
 Run:
 
@@ -600,7 +600,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 controlled first-run panel mount
+## v2.1.11 controlled first-run panel mount
 
 Run:
 
@@ -616,7 +616,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 first-run visual QA screenshot evidence
+## v2.1.11 first-run visual QA screenshot evidence
 
 Run:
 
@@ -634,7 +634,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 first-run evidence artifact review
+## v2.1.11 first-run evidence artifact review
 
 Run:
 
@@ -654,7 +654,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 first-run demo script
+## v2.1.11 first-run demo script
 
 Run:
 
@@ -676,7 +676,7 @@ npm run build
 npm run verify:release
 ```
 
-## v2.1.7 single-command verification
+## v2.1.11 single-command verification
 
 Normal local validation:
 
@@ -700,7 +700,7 @@ npm run lint
 npm run build
 ```
 
-## v2.1.7 CI parity workflow badge
+## v2.1.11 CI parity workflow badge
 
 ```bash
 npm run ci-parity:workflow:check
@@ -708,7 +708,7 @@ npm run verify:all
 npm run verify:ci-parity
 ```
 
-## v2.1.7 verification freshness lock
+## v2.1.11 verification freshness lock
 
 Normal local validation:
 
@@ -726,4 +726,26 @@ Dedicated check:
 
 ```bash
 npm run verification:freshness:check
+```
+
+## v2.1.11 verification artifact schema lock
+
+Normal local validation:
+
+```bash
+npm run verify:all
+```
+
+Clean install parity:
+
+```bash
+npm run verify:ci-parity
+```
+
+Dedicated checks:
+
+```bash
+npm run verification:artifact-schema:check
+npm run release:evidence:index
+npm run release:evidence:index:check
 ```

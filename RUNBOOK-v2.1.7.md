@@ -76,4 +76,4 @@ git push origin v2.1.7
 
 ## Next
 
-`v2.1.8 — Verification Artifact Schema Lock + Release Evidence Index`
+`v2.1.9 — Verification Artifact Schema Lock + Release Evidence Index`

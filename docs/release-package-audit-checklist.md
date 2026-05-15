@@ -1,5 +1,5 @@
 
-# Release Package Audit Checklist — v2.1.7
+# Release Package Audit Checklist — v2.1.11
 
 ## package files
 
@@ -15,12 +15,12 @@ Check:
 
 ## required versions
 
-- package.json version = `2.1.7`
-- package-lock.json version = `2.1.7`
-- package-lock root package version = `2.1.7`
-- README.md references `v2.1.7`
-- PATCH_MANIFEST.md references `v2.1.7`
-- full QA artifact references `2.1.7` after `npm run qa`
+- package.json version = `2.1.11`
+- package-lock.json version = `2.1.11`
+- package-lock root package version = `2.1.11`
+- README.md references `v2.1.11`
+- PATCH_MANIFEST.md references `v2.1.11`
+- full QA artifact references `2.1.11` after `npm run qa`
 
 ## validation commands
 
@@ -44,8 +44,8 @@ GitHub Actions must pass before tagging.
 ## tag
 
 ```bash
-git tag -a v2.1.7 -m "v2.1.7 — Release Package Audit"
-git push origin v2.1.7
+git tag -a v2.1.11 -m "v2.1.11 — Release Package Audit"
+git push origin v2.1.11
 ```
 
 ## generated/cache cleanup

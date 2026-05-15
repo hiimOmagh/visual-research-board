@@ -1,6 +1,6 @@
-# Single-Command Verification UX — v2.1.7
+# Single-Command Verification UX — v2.1.11
 
-v2.1.7 formalizes the compressed local verification model.
+v2.1.11 formalizes the compressed local verification model.
 
 ## Primary command
 
@@ -69,7 +69,7 @@ npm run verify:all
 
 Use `verify:ci-parity` only when dependency installation itself must be checked.
 
-## v2.1.7 exact verification phrases
+## v2.1.11 exact verification phrases
 
 The compressed verification model explicitly includes artifact generation before release verification.
 

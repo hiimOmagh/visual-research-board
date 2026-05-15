@@ -1,5 +1,8 @@
 "use client";
 
+/* v2.1.11 provider setup clarity */
+
+
 import type { ResearchResult, SourceGroup } from "@/types/research";
 import { ResultCard } from "@/components/search/ResultCard";
 import { EmptyState } from "@/components/search/EmptyState";

@@ -20,7 +20,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.7", "package.json version must be 2.1.7");
+assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
 assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must identify Unified Release Verification Runner");
 assert(pkg.description?.includes("Release Package Audit"), "package description must preserve Release Package Audit wording");
 assert(pkg.description?.includes("Public Demo Evidence + Screenshot Lock"), "package description must preserve Public Demo Evidence + Screenshot Lock wording");
@@ -29,7 +29,13 @@ assert(pkg.description?.includes("Reference Workflow Stable Release"), "package 
 assert(pkg.description?.includes("Security and Key Handling"), "package description must preserve Security and Key Handling wording");
 
 assert(pkg.scripts?.["verify:release"] === "node scripts/release-verify.mjs", "package.json must expose verify:release");
-assert(pkg.scripts?.["verify:artifacts"] === "npm run first-run:visual:evidence && npm run first-run:evidence-review && npm run first-run:demo-script", "package.json must expose verify:artifacts");
+assert(pkg.scripts?.["verify:artifacts"] === "node scripts/verify-artifacts.mjs", "package.json must expose compressed verify:artifacts");
+assert(exists("scripts/verify-artifacts.mjs"), "verify artifacts runner must exist");
+const verifyArtifactsSource = read("scripts/verify-artifacts.mjs");
+assert(verifyArtifactsSource.includes("first-run:visual:evidence"), "verify artifacts runner must generate first-run visual evidence");
+assert(verifyArtifactsSource.includes("first-run:evidence-review"), "verify artifacts runner must generate first-run evidence review");
+assert(verifyArtifactsSource.includes("first-run:demo-script"), "verify artifacts runner must generate first-run demo script");
+assert(verifyArtifactsSource.includes("release:evidence:index"), "verify artifacts runner must generate release evidence index");
 assert(pkg.scripts?.["verify:all"] === "npm run verify:artifacts && npm run verify:release", "package.json must expose verify:all");
 assert(pkg.scripts?.["verify:ci-parity"] === "npm ci && npm run verify:all", "package.json must expose verify:ci-parity");
 assert(pkg.scripts?.["release:verify:runner:check"] === "node tests/release-verify-runner-check.mjs", "package.json must expose release:verify:runner:check");
@@ -123,16 +129,16 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.7"), `${file} must reference v2.1.7`);
+  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
 }
 
 const reportPath = "artifacts/release-verify-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
   if (report.app_version !== VERSION) {
-    if (!suppressStaleReportWarnings) console.warn(`WARN release verify runner: report is ${report.app_version}, expected ${VERSION}. Run npm run verify:release to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN release verify runner: report is ${report.app_version}, expected ${VERSION}. Run npm run verify:release to regenerate it.`);
   } else if (report.status !== "passed") {
-    if (!suppressStaleReportWarnings) console.warn(`WARN release verify runner: report status is ${report.status}. Run npm run verify:release to regenerate it.`);
+    if (!suppressStaleReportWarnings) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN release verify runner: report status is ${report.status}. Run npm run verify:release to regenerate it.`);
   }
 }
 
@@ -159,6 +165,16 @@ for (const file of [
 if (process.exitCode) process.exit(process.exitCode);
 assert(pkg.scripts?.["ci-parity:workflow:check"] === "node tests/ci-parity-workflow-badge-check.mjs", "package.json must expose ci-parity:workflow:check");
 assert(pkg.scripts?.["verification:freshness:check"] === "node tests/verification-report-freshness-lock-check.mjs", "package.json must expose verification:freshness:check");
+assert(pkg.scripts?.["verification:artifact-schema:check"] === "node tests/verification-artifact-schema-lock-check.mjs", "package.json must expose verification:artifact-schema:check");
+assert(pkg.scripts?.["release:evidence:index"] === "node scripts/release-evidence-index.mjs", "package.json must expose release:evidence:index");
+assert(pkg.scripts?.["release:evidence:index:check"] === "node tests/release-evidence-index-check.mjs", "package.json must expose release:evidence:index:check");
+assert(pkg.scripts?.["nested:verification:warnings:check"] === "node tests/nested-verification-warning-silence-check.mjs", "package.json must expose nested:verification:warnings:check");
+const releaseVerifySource = read("scripts/release-verify.mjs");
+assert(releaseVerifySource.includes("verification:artifact-schema:check"), "release verifier must include verification:artifact-schema:check");
+assert(releaseVerifySource.includes("release:evidence:index"), "release verifier must include release:evidence:index");
+assert(releaseVerifySource.includes("release:evidence:index:check"), "release verifier must include release:evidence:index:check");
+assert(releaseVerifySource.includes("nested:verification:warnings:check"), "release verifier must include nested:verification:warnings:check");
+assert(releaseVerifySource.includes("final_freshness_recheck"), "release verifier must record final freshness recheck");
 console.log(`Unified Release Verification Runner checks passed for v${VERSION}.`);
 
 assert(pkg.scripts?.["single-command:verification:check"] === "node tests/single-command-verification-check.mjs", "package.json must expose single-command:verification:check");

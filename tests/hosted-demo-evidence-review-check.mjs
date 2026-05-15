@@ -3,7 +3,7 @@ import path from "node:path";
 
 const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
-const VERSION = "2.1.7";
+const VERSION = "2.1.11";
 
 function fp(relativePath) {
   return path.join(root, relativePath);
@@ -65,13 +65,13 @@ for (const file of requiredFiles) {
 }
 
 const fullQaGate = read("scripts/full-qa-gate.mjs");
-assert(fullQaGate.includes("2.1.7"), "Full QA gate must reference v2.1.7");
+assert(fullQaGate.includes("2.1.11"), "Full QA gate must reference v2.1.11");
 assert(fullQaGate.includes("hosted-demo-evidence-review"), "Full QA gate must include hosted demo evidence review");
 assert(fullQaGate.includes("tests/hosted-demo-evidence-review-check.mjs"), "Full QA gate must run hosted demo evidence review check");
 assert(fullQaGate.includes("public-demo-evidence-lock"), "Full QA gate must preserve public demo evidence lock");
 
 const hostedDemoDoc = read("docs/hosted-demo-evidence-review.md");
-assert(hostedDemoDoc.includes("v2.1.7"), "hosted demo evidence review doc must reference v2.1.7");
+assert(hostedDemoDoc.includes("v2.1.11"), "hosted demo evidence review doc must reference v2.1.11");
 assert(hostedDemoDoc.includes("No feature changes"), "hosted demo evidence review doc must state no feature changes");
 assert(hostedDemoDoc.includes("No provider changes"), "hosted demo evidence review doc must state no provider changes");
 assert(hostedDemoDoc.includes("Hosted demo URL"), "hosted demo evidence review doc must include hosted demo URL section");
@@ -91,14 +91,14 @@ assert(!/guaranteeds+sources+verification/i.test(publicDemoDoc), "public demo do
 const reportPath = "artifacts/full-qa-gate-report.json";
 if (exists(reportPath)) {
   const report = JSON.parse(read(reportPath));
-  if (!suppressStaleReportWarnings) if (report.app_version !== VERSION) console.warn(`WARN evidence check: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);  if (report.status !== "passed") console.warn(`WARN evidence check: full QA artifact status is ${report.status}. Run npm run qa to regenerate it.`);  if (report.failed_gate_count !== 0) console.warn(`WARN evidence check: full QA artifact failed_gate_count is ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
+  if (!suppressStaleReportWarnings) if (report.app_version !== VERSION) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN evidence check: full QA artifact is ${report.app_version}, expected ${VERSION}. Run npm run qa to regenerate it.`);  if (report.status !== "passed") if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN evidence check: full QA artifact status is ${report.status}. Run npm run qa to regenerate it.`);  if (report.failed_gate_count !== 0) if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn(`WARN evidence check: full QA artifact failed_gate_count is ${report.failed_gate_count}. Run npm run qa to regenerate it.`);
   assert(Array.isArray(report.results), "full QA artifact must contain results array");
 } else {
-  console.warn("WARN hosted-demo evidence review: artifacts/full-qa-gate-report.json is absent. Run npm run qa to produce it.");
+  if (process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS !== "1") console.warn("WARN hosted-demo evidence review: artifacts/full-qa-gate-report.json is absent. Run npm run qa to produce it.");
 }
 
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Hosted Demo Evidence Review checks passed for v2.1.7.");
+console.log("Hosted Demo Evidence Review checks passed for v2.1.11.");

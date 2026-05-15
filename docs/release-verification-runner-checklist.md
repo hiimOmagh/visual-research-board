@@ -1,5 +1,5 @@
 
-# Release Verification Runner Checklist — v2.1.7
+# Release Verification Runner Checklist — v2.1.11
 
 ## local validation
 

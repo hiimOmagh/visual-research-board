@@ -74,7 +74,7 @@ browser-driven workflow. Run through this checklist before publishing the stable
 
 ## Project library import / export
 
-- [ ] **Export library** — Saves a JSON file `visual-research-board-library-v0.3.2.json`.
+- [ ] **Export library** — Saves a JSON file `visual-research-board-library-v2.1.11.json`.
       Open it in a text editor, confirm `schema_version` is `0.1.0`
       and the audit block lists all your projects.
 - [ ] **Re-import the same file** — Click "Import library", choose the file

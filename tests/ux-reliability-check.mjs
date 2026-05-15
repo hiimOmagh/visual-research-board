@@ -7,7 +7,7 @@ const assert = (condition, message) => { if (!condition) failures.push(message);
 const read = (relativePath) => readFileSync(join(root, relativePath), "utf8");
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.1.7", "package.json version must be 2.1.7");
+assert(pkg.version === "2.1.11", "package.json version must be 2.1.11");
 assert(Boolean(pkg.scripts?.["ux:reliability:check"]), "package.json must define npm run ux:reliability:check");
 assert((pkg.scripts?.qa?.includes("ux-reliability-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include ux-reliability-check");
 
@@ -18,13 +18,13 @@ for (const file of [
   "src/components/search/ResultGrid.tsx",
   "src/components/search/SearchPanel.tsx",
   "docs/ux-reliability-empty-state-polish.md"
-]) assert(existsSync(join(root, file)), `Missing v2.1.7 file: ${file}`);
+]) assert(existsSync(join(root, file)), `Missing v2.1.11 file: ${file}`);
 
 const ux = read("src/lib/ux-reliability.ts");
 for (const token of [
   "UxReliabilityAudit",
-  "schema_version: \"2.1.7\"",
-  "app_version: \"2.1.7\"",
+  "schema_version: \"2.1.11\"",
+  "app_version: \"2.1.11\"",
   "buildUxReliabilityAudit",
   "workflow_ready",
   "readiness_score",
@@ -63,13 +63,13 @@ for (const token of [
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 for (const token of [
-  "v2.1.7",
+  "v2.1.11",
   "UXReliabilityPanel",
   "buildUxReliabilityAudit",
   "createDemoProject",
   "loadDemoProject",
   "useDemoSearchTopic",
-  "visual-research-board-library-v2.1.7.json",
+  "visual-research-board-library-v2.1.11.json",
   "guided onboarding",
   "workflow-specific empty states"
 ]) assert(searchPanel.includes(token), `SearchPanel must include ${token}`);
@@ -85,17 +85,19 @@ for (const token of [
 ]) assert(resultGrid.includes(token), `ResultGrid must include ${token}`);
 
 const providerToggle = read("src/components/search/ProviderTogglePanel.tsx");
-assert(providerToggle.includes("v2.1.7 keeps provider setup explicit"), "ProviderTogglePanel must mention v2.1.7 provider setup clarity");
+
+assert(providerToggle.includes("v2.1.11 provider setup clarity"), "ProviderTogglePanel must mention v2.1.11 provider setup clarity");
+assert(read("src/components/search/ProviderTogglePanel.tsx").includes("v2.1.11 provider setup clarity"), "ProviderTogglePanel must mention v2.1.11 provider setup clarity");
 
 const projectLibrary = read("src/components/search/ProjectLibraryPanel.tsx");
 assert(projectLibrary.includes("guided demo/onboarding support"), "ProjectLibraryPanel must document guided demo/onboarding support");
 
 const docs = read("docs/ux-reliability-empty-state-polish.md");
-assert(docs.includes("v2.1.7"), "docs must identify v2.1.7");
+assert(docs.includes("v2.1.11"), "docs must identify v2.1.11");
 assert(docs.includes("npm run ux:reliability:check"), "docs must document validation command");
 
 const manifest = read("PATCH_MANIFEST.md");
-assert(manifest.includes("v2.1.7"), "PATCH_MANIFEST must identify v2.1.7");
+assert(manifest.includes("v2.1.11"), "PATCH_MANIFEST must identify v2.1.11");
 assert(manifest.includes("UX Reliability + Empty State Polish"), "PATCH_MANIFEST must identify the feature");
 
 if (failures.length) {
@@ -103,5 +105,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
-console.log("UX Reliability + Empty State Polish checks passed for v2.1.7.");
+console.log("UX Reliability + Empty State Polish checks passed for v2.1.11.");
 process.exit(0);

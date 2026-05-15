@@ -1,3 +1,9 @@
+export const UX_RELIABILITY_RELEASE_CONTRACT = {
+  schema_version: "2.1.11",
+  app_version: "2.1.11",
+  marker: "v2.1.11 provider setup clarity",
+} as const;
+
 import type { ProjectLibrary, ProviderToggleMap, ResearchProject, ResearchResult, SearchDiagnostics, SearchProviderName } from "@/types/research";
 import { DEFAULT_PROVIDER_TOGGLES, SEARCH_PROVIDERS } from "@/types/research";
 import { buildBoardOrganizationAudit } from "@/lib/board-organization";
@@ -41,9 +47,9 @@ export interface ProviderSetupSummary {
 }
 
 export interface UxReliabilityAudit {
-  schema_version: "2.1.7";
+  schema_version: "2.1.11";
   generated_at: string;
-  app_version: "2.1.7";
+  app_version: "2.1.11";
   workflow_ready: boolean;
   readiness_score: number;
   status: UxReadinessStatus;
@@ -220,9 +226,9 @@ export function buildUxReliabilityAudit({
   const nextActions = steps.filter((step) => step.status !== "ready").slice(0, 4).map((step) => `${step.label}: ${step.next_action}`);
 
   return {
-    schema_version: "2.1.7",
+    schema_version: "2.1.11",
     generated_at: new Date().toISOString(),
-    app_version: "2.1.7",
+    app_version: "2.1.11",
     workflow_ready: readinessScore >= 70 && blockedSteps === 0,
     readiness_score: readinessScore,
     status: blockedSteps > 0 ? "blocked" : readinessScore >= 70 ? "ready" : "needs_action",

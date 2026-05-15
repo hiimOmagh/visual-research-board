@@ -1,4 +1,4 @@
-# First-Run Responsive Screenshot Checklist — v2.1.7
+# First-Run Responsive Screenshot Checklist — v2.1.11
 
 ## Required screenshots
 

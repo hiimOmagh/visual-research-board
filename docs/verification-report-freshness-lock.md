@@ -1,6 +1,6 @@
-# Verification Report Freshness Lock — v2.1.7
+# Verification Report Freshness Lock — v2.1.11
 
-v2.1.7 adds the verification report freshness lock.
+v2.1.11 adds the verification report freshness lock.
 
 ## verification report freshness lock
 
