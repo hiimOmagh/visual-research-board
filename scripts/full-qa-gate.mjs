@@ -77,6 +77,7 @@ const gates = [
   { category: "exports", name: "attribution-generator", command: ["node", "tests/attribution-generator-check.mjs"] },
 
   { category: "release", name: "deployed-browser-evidence", command: ["node", "tests/deployed-browser-evidence-check.mjs"] },
+  { category: "workflow", name: "creator-workflow-mvp", command: ["node", "tests/creator-workflow-mvp-check.mjs"] },
   { category: "release", name: "full-qa-gate-manifest", command: ["node", "tests/full-qa-gate-check.mjs"] }
 ];
 
@@ -133,8 +134,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "2.1.11",
-  app_version: "2.1.11",
+  schema_version: "2.2.0",
+  app_version: "2.2.0",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -155,7 +156,7 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v2.1.11.");
+console.log("\nFull QA gate passed for v2.2.0.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");
 
-// TODO(v2.1.11): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check
+// TODO(v2.2.0): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check

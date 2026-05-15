@@ -1,15 +1,30 @@
-# v2.1.11 SearchPanel Controlled Mount Hotfix
+## v2.2.0 — End-to-End Creator Research Workflow MVP
 
-<!-- v2.1.11-full-qa-gate-manifest-lock:start -->
+Visual Research Board now exposes the creator research loop:
+Project Brief → Query Plan Preview → Discovery Results → Review Actions → Saved Board Sections → Evidence Pack Export Preview.
+
+Demo scenario: Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.
+
+Validation:
+
+```bash
+npm run creator-workflow:mvp:check
+npm run qa
+npm run verify:ci-parity
+```
+
+# v2.2.0 SearchPanel Controlled Mount Hotfix
+
+<!-- v2.2.0-full-qa-gate-manifest-lock:start -->
 
 ## Release identity and QA manifest
 
-Current release: v2.1.11
-Visual Research Board v2.1.11
-visual-research-board v2.1.11
-visual-research-board@2.1.11
-Package version: 2.1.11
-README identifies v2.1.11
+Current release: v2.2.0
+Visual Research Board v2.2.0
+visual-research-board v2.2.0
+visual-research-board@2.2.0
+Package version: 2.2.0
+README identifies v2.2.0
 
 Full QA Gate Manifest
 qa:list
@@ -22,23 +37,23 @@ It intentionally keeps both the bare package version and the v-prefixed release 
 - scripts/full-qa-gate.mjs
 - tests/full-qa-gate-check.mjs
 - docs/full-qa-gate.md
-- package.json version must be 2.1.11
+- package.json version must be 2.2.0
 - node scripts/full-qa-gate.mjs
 - npm run qa must delegate to scripts/full-qa-gate.mjs
 - node scripts/full-qa-gate.mjs --list
 - package.json must expose npm run qa:list
 - node tests/full-qa-gate-check.mjs
 - artifacts/full-qa-gate-report.json
-- full QA gate report schema must identify v2.1.11
+- full QA gate report schema must identify v2.2.0
 - full-qa-gate-report
-- release checklist must identify v2.1.11
-- validation report must identify v2.1.11
+- release checklist must identify v2.2.0
+- validation report must identify v2.2.0
 - README.md
-- README must identify v2.1.11
-- PATCH_MANIFEST must identify v2.1.11
-- Full QA Gate checks passed for v2.1.11.
+- README must identify v2.2.0
+- PATCH_MANIFEST must identify v2.2.0
+- Full QA Gate checks passed for v2.2.0.
 
-<!-- v2.1.11-full-qa-gate-manifest-lock:end -->
+<!-- v2.2.0-full-qa-gate-manifest-lock:end -->
 
 This hotfix targets:
 
@@ -49,7 +64,7 @@ FAIL first-run panel mount check: SearchPanel must contain controlled mount mark
 Run from the repository root:
 
 ```powershell
-python apply-v2.1.11-searchpanel-controlled-mount-hotfix.py
+python apply-v2.2.0-searchpanel-controlled-mount-hotfix.py
 npm run first-run:panel:check
 npm run verify:ci-parity
 ```
@@ -63,15 +78,15 @@ The script:
 
 ## Public Demo Stable Release
 
-v2.1.11 preserves the Public Demo Stable Release gate in the release verification path. Use 
+v2.2.0 preserves the Public Demo Stable Release gate in the release verification path. Use 
 pm run verify:ci-parity for clean-install parity, artifact generation, release verification, and stable public-demo evidence checks.
 
 ## Public Demo Final Acceptance
 
-v2.1.11 preserves the Public Demo Final Acceptance gate in the release verification path. This confirms the public demo remains acceptable after artifact generation, CI parity verification, stable public-demo checks, dependency audit triage, and safe-upgrade lock validation.
+v2.2.0 preserves the Public Demo Final Acceptance gate in the release verification path. This confirms the public demo remains acceptable after artifact generation, CI parity verification, stable public-demo checks, dependency audit triage, and safe-upgrade lock validation.
 
 
-## v2.1.11 Release Verification Gate Names
+## v2.2.0 Release Verification Gate Names
 
 The following named release gates are intentionally preserved for verification, documentation-lock, and CI parity checks:
 
@@ -87,7 +102,7 @@ The following named release gates are intentionally preserved for verification, 
 
 ## Legacy v0.3.1 Retrieval Evidence Gates
 
-The v0.3.1 retrieval evidence gates are intentionally preserved as historical QA anchors inside the current v2.1.11 release flow.
+The v0.3.1 retrieval evidence gates are intentionally preserved as historical QA anchors inside the current v2.2.0 release flow.
 
 Required command references:
 
@@ -107,7 +122,7 @@ Required historical identifier:
 <!-- BEGIN FULL QA GATE MANIFEST CONTRACT -->
 ## Full QA Gate Manifest
 
-Current release: v2.1.11
+Current release: v2.2.0
 
 Required QA commands:
 
@@ -118,7 +133,7 @@ npm run verify:ci-parity
 ```
 
 `qa:list` documents the available Full QA gate manifest entries before execution.
-`npm run qa` executes the complete Full QA gate for v2.1.11.
+`npm run qa` executes the complete Full QA gate for v2.2.0.
 `npm run verify:ci-parity` performs the clean-install CI parity verification path.
 
 <!-- END FULL QA GATE MANIFEST CONTRACT -->

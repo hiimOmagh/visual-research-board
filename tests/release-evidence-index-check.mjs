@@ -32,7 +32,7 @@ function parseJson(file) {
 const pkg = parseJson("package.json");
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
+assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
 assert(pkg.scripts?.["release:evidence:index"] === "node scripts/release-evidence-index.mjs", "package.json must expose release:evidence:index");
 assert(pkg.scripts?.["release:evidence:index:check"] === "node tests/release-evidence-index-check.mjs", "package.json must expose release:evidence:index:check");
 assert(exists("scripts/release-evidence-index.mjs"), "release evidence index generator must exist");

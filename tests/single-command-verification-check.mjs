@@ -31,7 +31,7 @@ function assert(condition, message) {
 const pkg = readJson("package.json");
 const scripts = pkg.scripts ?? {};
 
-assert(pkg.version === "2.1.11", "package version must be 2.1.11");
+assert(pkg.version === "2.2.0", "package version must be 2.2.0");
 
 assert(
   scripts["verify:artifacts"] === "node scripts/verify-artifacts.mjs",

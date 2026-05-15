@@ -1,6 +1,6 @@
-# Verification Artifact Schema Lock — v2.1.11
+# Verification Artifact Schema Lock — v2.2.0
 
-v2.1.11 adds the verification artifact schema lock.
+v2.2.0 adds the verification artifact schema lock.
 
 ## verification artifact schema lock
 

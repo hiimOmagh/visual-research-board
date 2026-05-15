@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
+assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
 assert(pkg.description?.includes("First-Run Visual QA + Responsive Screenshot Evidence"), "package description must identify First-Run Visual QA + Responsive Screenshot Evidence");
 assert(pkg.description?.includes("Controlled First-Run Panel Mount + UI Consistency"), "package description must preserve Controlled First-Run Panel Mount + UI Consistency wording");
 assert(pkg.description?.includes("First-Run UX + Workflow Clarity"), "package description must preserve First-Run UX + Workflow Clarity wording");
@@ -126,7 +126,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.1.11"), `${file} must reference v2.1.11`);
+  assert(read(file).includes("v2.2.0"), `${file} must reference v2.2.0`);
 }
 
 const evidencePath = "artifacts/first-run-visual-evidence.json";

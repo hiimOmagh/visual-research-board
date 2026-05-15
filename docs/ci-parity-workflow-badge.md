@@ -1,6 +1,6 @@
-# CI Parity Workflow Badge — v2.1.11
+# CI Parity Workflow Badge — v2.2.0
 
-v2.1.11 adds a dedicated CI parity workflow and README badge.
+v2.2.0 adds a dedicated CI parity workflow and README badge.
 
 ## CI parity workflow badge
 

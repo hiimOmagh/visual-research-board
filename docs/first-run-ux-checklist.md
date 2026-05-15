@@ -1,5 +1,5 @@
 
-# First-Run UX Checklist — v2.1.11
+# First-Run UX Checklist — v2.2.0
 
 ## Target
 

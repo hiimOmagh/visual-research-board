@@ -1,4 +1,4 @@
-# First-Run Demo Capture Notes — v2.1.11
+# First-Run Demo Capture Notes — v2.2.0
 
 ## demo capture notes
 

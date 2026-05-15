@@ -1,5 +1,5 @@
 
-# UI Consistency First-Run Checklist — v2.1.11
+# UI Consistency First-Run Checklist — v2.2.0
 
 ## Viewports
 

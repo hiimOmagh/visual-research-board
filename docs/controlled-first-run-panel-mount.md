@@ -1,7 +1,7 @@
 
-# Controlled First-Run Panel Mount + UI Consistency — v2.1.11
+# Controlled First-Run Panel Mount + UI Consistency — v2.2.0
 
-v2.1.11 mounts the first-run workflow panel in `SearchPanel` using a controlled mount path.
+v2.2.0 mounts the first-run workflow panel in `SearchPanel` using a controlled mount path.
 
 ## Objective
 
@@ -14,7 +14,7 @@ The mount must satisfy:
 - `SearchPanel` imports `FirstRunWorkflowPanel`
 - the import is outside any multiline import section
 - `SearchPanel` renders `<FirstRunWorkflowPanel />`
-- the mount includes the marker `v2.1.11 controlled first-run panel mount`
+- the mount includes the marker `v2.2.0 controlled first-run panel mount`
 - the panel remains early enough to explain the workflow before deeper controls
 - no regex-blind JSX corruption
 

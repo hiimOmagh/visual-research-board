@@ -1,6 +1,6 @@
-# First-Run Demo Script + Public Walkthrough Copy — v2.1.11
+# First-Run Demo Script + Public Walkthrough Copy — v2.2.0
 
-v2.1.11 adds a first-run demo script artifact and public walkthrough copy.
+v2.2.0 adds a first-run demo script artifact and public walkthrough copy.
 
 ## first-run demo script
 

@@ -29,7 +29,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.1.11", "package.json version must be 2.1.11");
+assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
 assert(pkg.description?.includes("Reference Activation Pack MVP"), "package description must identify Reference Activation Pack MVP");
 assert(pkg.description?.includes("Book / Bibliographic Discovery Layer"), "package description must preserve Book / Bibliographic Discovery Layer wording");
 assert(pkg.description?.includes("Social Reference Discovery Layer"), "package description must preserve Social Reference Discovery Layer wording");
@@ -47,8 +47,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.1.11"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.1.11"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.2.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.2.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "src/types/reference-activation-pack.ts",

@@ -1,6 +1,6 @@
 {
   "name": "visual-research-board",
-  "version": "2.1.11",
+  "version": "2.2.0",
   "private": true,
   "description": "Nested Verification Warning Silence + Final Freshness Recheck preserving Verification Artifact Schema Lock + Release Evidence Index, CI Parity Workflow Badge + Verification Docs Lock, Single-Command Verification UX + Release Command Compression, First-Run Demo Script + Public Walkthrough Copy, Unified Release Verification Runner, Security and Key Handling validation without dependency churn, provider expansion, export rewrite, scraping, image generation, copyrighted text extraction, paywall bypass, or source media rehosting., Public Demo Evidence Lock, Public Demo Release Candidate, Release Warning Cleanup, First-Run Evidence Artifact Review + Demo Capture Notes, First-Run Visual QA + Responsive Screenshot Evidence, Controlled First-Run Panel Mount + UI Consistency, First-Run UX + Workflow Clarity, Release Package Audit, Public Demo Evidence + Screenshot Lock, Dependency Audit Triage, Stable Release Hygiene + Audit Warning Review, Reference Workflow Stable Release, Activation Pack Export Integration, Activation Pack Export Preview, Activation Pack UI Integration, Reference Activation Pack MVP, Book / Bibliographic Discovery Layer, Social Reference Discovery Layer, Broad Web + Image Discovery Expansion, Broad Reference Result Model, Reference Intelligence Layer MVP, Public Demo Stable Release, Public Demo Final Acceptance, Hosted Demo Evidence Review, Verification Report Freshness Lock + Warning Suppression",
   "scripts": {
@@ -114,7 +114,8 @@
     "provider-runtime:pack:check": "node tests/provider-runtime-pack-check.mjs",
     "museum-open-access:report": "node scripts/provider-runtime-report.mjs",
     "museum-open-access:check": "node tests/museum-open-access-provider-pack-check.mjs",
-    "stock-illustrative:report": "node scripts/provider-runtime-report.mjs"
+    "stock-illustrative:report": "node scripts/provider-runtime-report.mjs",
+    "creator-workflow:mvp:check": "node tests/creator-workflow-mvp-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

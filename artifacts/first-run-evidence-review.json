@@ -1,24 +1,24 @@
 {
   "schema_version": "first-run.evidence-review.v1",
-  "app_version": "2.1.11",
-  "release": "v2.1.11",
-  "generated_at": "2026-05-15T17:08:37.983Z",
+  "app_version": "2.2.0",
+  "release": "v2.2.0",
+  "generated_at": "2026-05-15T17:54:48.442Z",
   "status": "review-recorded",
   "artifact_inputs": [
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 14555
+      "size_bytes": 14766
     },
     {
       "path": "artifacts/release-verify-report.json",
       "exists": true,
-      "size_bytes": 19872
+      "size_bytes": 15017
     },
     {
       "path": "artifacts/first-run-visual-evidence.json",
       "exists": true,
-      "size_bytes": 2121
+      "size_bytes": 2119
     }
   ],
   "screenshot_inputs": [
@@ -40,16 +40,16 @@
   ],
   "source_reports": {
     "full_qa": {
-      "app_version": "2.1.11",
+      "app_version": "2.2.0",
       "status": "passed",
       "failed_gate_count": 0
     },
     "release_verify": {
-      "app_version": "2.1.11",
-      "status": "passed"
+      "app_version": "2.2.0",
+      "status": "failed"
     },
     "first_run_visual_evidence": {
-      "app_version": "2.1.11",
+      "app_version": "2.2.0",
       "status": "planned",
       "screenshot_count": 3,
       "manual_review_required": true

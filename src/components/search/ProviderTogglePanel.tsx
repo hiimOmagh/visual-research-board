@@ -1,14 +1,14 @@
 "use client";
 
-/* v2.1.11 provider setup clarity */
+/* v2.2.0 provider setup clarity */
 
 
-// v2.1.11 UX Reliability release contract.
-// ProviderTogglePanel must mention v2.1.11 provider setup clarity.
+// v2.2.0 UX Reliability release contract.
+// ProviderTogglePanel must mention v2.2.0 provider setup clarity.
 export const PROVIDER_TOGGLE_PANEL_SETUP_CLARITY_CONTRACT = {
-  schema_version: "2.1.11",
-  app_version: "2.1.11",
-  marker: "v2.1.11 provider setup clarity",
+  schema_version: "2.2.0",
+  app_version: "2.2.0",
+  marker: "v2.2.0 provider setup clarity",
   gate: "ux-reliability",
 } as const;
 

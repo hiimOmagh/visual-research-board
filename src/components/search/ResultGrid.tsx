@@ -1,6 +1,6 @@
 "use client";
 
-/* v2.1.11 provider setup clarity */
+/* v2.2.0 provider setup clarity */
 
 
 import type { ResearchResult, SourceGroup } from "@/types/research";

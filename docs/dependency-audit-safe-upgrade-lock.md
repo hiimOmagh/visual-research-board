@@ -1,6 +1,6 @@
 # Dependency Audit Resolution + Safe Upgrade Lock
 
-Version: v2.1.11
+Version: v2.2.0
 
 This release locks dependency-audit handling into the release process without using unsafe automatic upgrades.
 

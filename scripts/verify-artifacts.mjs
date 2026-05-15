@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 const root = process.cwd();
-const version = "2.1.11";
+const version = "2.2.0";
 
 const artifactScripts = [
   
