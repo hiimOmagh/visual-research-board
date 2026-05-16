@@ -3,7 +3,7 @@ import path from "node:path";
 
 const suppressStaleReportWarnings = process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS === "1";
 const root = process.cwd();
-const VERSION = "2.2.0";
+const VERSION = "2.3.0";
 
 function fp(relativePath) {
   return path.join(root, relativePath);
@@ -65,13 +65,13 @@ for (const file of requiredFiles) {
 }
 
 const fullQaGate = read("scripts/full-qa-gate.mjs");
-assert(fullQaGate.includes("2.2.0"), "Full QA gate must reference v2.2.0");
+assert(fullQaGate.includes("2.3.0"), "Full QA gate must reference v2.3.0");
 assert(fullQaGate.includes("hosted-demo-evidence-review"), "Full QA gate must include hosted demo evidence review");
 assert(fullQaGate.includes("tests/hosted-demo-evidence-review-check.mjs"), "Full QA gate must run hosted demo evidence review check");
 assert(fullQaGate.includes("public-demo-evidence-lock"), "Full QA gate must preserve public demo evidence lock");
 
 const hostedDemoDoc = read("docs/hosted-demo-evidence-review.md");
-assert(hostedDemoDoc.includes("v2.2.0"), "hosted demo evidence review doc must reference v2.2.0");
+assert(hostedDemoDoc.includes("v2.3.0"), "hosted demo evidence review doc must reference v2.3.0");
 assert(hostedDemoDoc.includes("No feature changes"), "hosted demo evidence review doc must state no feature changes");
 assert(hostedDemoDoc.includes("No provider changes"), "hosted demo evidence review doc must state no provider changes");
 assert(hostedDemoDoc.includes("Hosted demo URL"), "hosted demo evidence review doc must include hosted demo URL section");
@@ -101,4 +101,4 @@ if (process.exitCode) {
   process.exit(process.exitCode);
 }
 
-console.log("Hosted Demo Evidence Review checks passed for v2.2.0.");
+console.log("Hosted Demo Evidence Review checks passed for v2.3.0.");

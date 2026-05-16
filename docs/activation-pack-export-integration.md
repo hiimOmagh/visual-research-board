@@ -1,7 +1,7 @@
 
-# Activation Pack Export Integration — v2.2.0
+# Activation Pack Export Integration — v2.3.0
 
-v2.2.0 connects activation pack preview text to existing text download utilities.
+v2.3.0 connects activation pack preview text to existing text download utilities.
 
 ## Purpose
 

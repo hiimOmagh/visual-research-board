@@ -1,5 +1,5 @@
 
-# Activation Pack Export Integration Boundaries — v2.2.0
+# Activation Pack Export Integration Boundaries — v2.3.0
 
 ## allowed
 

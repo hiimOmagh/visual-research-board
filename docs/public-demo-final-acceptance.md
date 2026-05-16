@@ -1,6 +1,6 @@
-# Public Demo Final Acceptance — v2.2.0
+# Public Demo Final Acceptance — v2.3.0
 
-v2.2.0 is the final public-demo acceptance milestone before the stable public-demo release.
+v2.3.0 is the final public-demo acceptance milestone before the stable public-demo release.
 
 ## Scope
 

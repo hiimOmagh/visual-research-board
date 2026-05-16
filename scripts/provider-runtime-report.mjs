@@ -1,5 +1,32 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync as fsWriteFileSync } from "node:fs";
 import { dirname } from "node:path";
+
+
+const waitForArtifactWriteRetry = (milliseconds) => {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+};
+
+const safeArtifactWriteFileSync = (targetPath, contents) => {
+  const retryableCodes = new Set(["UNKNOWN", "EBUSY", "EPERM", "EACCES", "EMFILE", "ENFILE"]);
+  let lastError;
+
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      fsWriteFileSync(targetPath, contents);
+      return;
+    } catch (error) {
+      lastError = error;
+      const code = error && typeof error === "object" ? error.code : undefined;
+      if (!retryableCodes.has(code) || attempt === 7) {
+        throw error;
+      }
+      waitForArtifactWriteRetry(50 * (attempt + 1));
+    }
+  }
+
+  throw lastError;
+};
+
 
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 const appVersion = pkg.version;
@@ -138,7 +165,7 @@ const paths = [
 
 for (const path of paths) {
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, JSON.stringify(report, null, 2) + "\n");
+  safeArtifactWriteFileSync(path, JSON.stringify(report, null, 2) + "\n");
 }
 
 console.log(`Provider runtime report written for v${appVersion}.`);

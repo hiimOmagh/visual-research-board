@@ -1,0 +1,21 @@
+{
+  "schema_version": "2.3.0",
+  "app_version": "2.3.0",
+  "status": "review-recorded",
+  "objective": "Real Creator Session Quality Pass",
+  "scenario": "Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.",
+  "checks": [
+    "Research brief has editable fields and demo reload path.",
+    "Smart query plan preview exposes primary query, expanded queries, source classes, routing reason, and expected result types.",
+    "Discovery results expose save, reject, strong, weak, note, copy attribution, and open source actions.",
+    "Saved board sections expose counts and section filters.",
+    "Evidence Pack Export Preview v2 contains project brief, saved references, source URLs, attribution text, usage/rights notes, review notes, missing coverage, query plan, and timestamp.",
+    "Fixture/demo mode is transparent; no OAuth, paid API, live scraping, or fake live claims were added."
+  ],
+  "manual_review_notes": [
+    "Run /creator-workflow and complete a 20–30 minute mock session.",
+    "Confirm the Carthage demo helps the user understand the workflow without reading docs.",
+    "Confirm empty/filter states produce clear next-step prompts."
+  ],
+  "generated_at": "2026-05-16T00:56:43.235Z"
+}

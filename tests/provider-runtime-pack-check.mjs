@@ -40,7 +40,7 @@ const pkg = readJson("package.json");
 const appVersion = pkg?.version;
 
 assert(Boolean(pkg), "package.json must be readable");
-assert(appVersion === "2.2.0", "package.json version must be 2.2.0");
+assert(appVersion === "2.3.0", "package.json version must be 2.3.0");
 assert(pkg?.scripts?.["provider-runtime:report"] === "node scripts/provider-runtime-report.mjs", "package.json must expose provider-runtime:report");
 assert(pkg?.scripts?.["verify:artifacts"] === "node scripts/verify-artifacts.mjs", "package.json must preserve compressed verify:artifacts");
 

@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-const APP_VERSION = "2.2.0";
+const APP_VERSION = "2.3.0";
 const ARTIFACT_PATH = path.join("artifacts", "dependency-audit-safe-upgrade-lock.json");
 const SCHEMA_VERSION = "visual-research-board.dependency-audit.safe-upgrade-lock.v1";
 

@@ -10,7 +10,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 const exists = (path) => existsSync(join(root, path));
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.2.0", "package.json version must be 2.2.0");
+assert(pkg.version === "2.3.0", "package.json version must be 2.3.0");
 assert(
   pkg.scripts?.["creator-workflow:mvp:check"] === "node tests/creator-workflow-mvp-check.mjs",
   "package.json must expose npm run creator-workflow:mvp:check",
@@ -28,7 +28,7 @@ const docs = read("docs/creator-workflow-mvp.md");
 const readme = read("README.md");
 const qaGate = exists("scripts/full-qa-gate.mjs") ? read("scripts/full-qa-gate.mjs") : "";
 
-assert(lib.includes('CREATOR_WORKFLOW_VERSION = "2.2.0"'), "creator workflow lib must expose v2.2.0");
+assert(lib.includes('CREATOR_WORKFLOW_VERSION = "2.3.0"'), "creator workflow lib must expose v2.3.0");
 assert(lib.includes("ResearchBrief"), "creator workflow lib must define ResearchBrief");
 assert(lib.includes("buildCreatorQueryPlan"), "creator workflow lib must define query plan builder");
 assert(lib.includes("createCreatorExportPack"), "creator workflow lib must define evidence export pack builder");
@@ -101,8 +101,8 @@ assert(panel.includes('data-testid="creator-workflow-mvp"'), "panel must expose 
 assert(route.includes("CreatorWorkflowPanel"), "creator workflow route must mount CreatorWorkflowPanel");
 assert(docs.includes("No fake live-provider claims"), "docs must forbid fake live-provider claims");
 assert(docs.includes("No paid API dependency"), "docs must preserve no paid API dependency scope");
-assert(readme.includes("v2.2.0"), "README must identify v2.2.0");
-assert(readme.includes("End-to-End Creator Research Workflow MVP"), "README must mention the v2.2.0 workflow MVP");
+assert(readme.includes("v2.3.0"), "README must identify v2.3.0");
+assert(readme.includes("End-to-End Creator Research Workflow MVP"), "README must mention the v2.3.0 workflow MVP");
 assert(readme.includes("npm run creator-workflow:mvp:check"), "README must document the creator workflow check");
 assert(qaGate.includes("creator-workflow-mvp"), "Full QA gate must include creator-workflow-mvp");
 assert(qaGate.includes("tests/creator-workflow-mvp-check.mjs"), "Full QA gate must run creator workflow MVP check");
@@ -113,4 +113,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("End-to-End Creator Research Workflow MVP checks passed for v2.2.0.");
+console.log("End-to-End Creator Research Workflow MVP checks passed for v2.3.0.");

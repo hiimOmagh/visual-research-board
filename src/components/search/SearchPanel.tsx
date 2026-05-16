@@ -22,7 +22,7 @@ import { SavedBoard } from "@/components/search/SavedBoard";
 import { ResultDetailPanel } from "@/components/search/ResultDetailPanel";
 import { ProviderHealthPanel } from "@/components/search/ProviderHealthPanel";
 import { ResultFilters, defaultResultFilters, type ResultFilterState } from "@/components/search/ResultFilters";
-import { ProviderTogglePanel /* v2.2.0 provider setup clarity */ } from "@/components/search/ProviderTogglePanel";
+import { ProviderTogglePanel /* v2.3.0 provider setup clarity */ } from "@/components/search/ProviderTogglePanel";
 import { RetrievalEvidencePanel } from "@/components/search/RetrievalEvidencePanel";
 import { ProviderRuntimePanel } from "@/components/search/ProviderRuntimePanel";
 import { LiveQualityCalibrationPanel } from "@/components/search/LiveQualityCalibrationPanel";
@@ -75,16 +75,16 @@ import {
 import { FirstRunWorkflowPanel } from "./FirstRunWorkflowPanel";
 
 export const PROVIDER_TOGGLE_PANEL_SETUP_CLARITY_CONTRACT = {
-  schema_version: "2.2.0",
-  app_version: "2.2.0",
-  marker: "v2.2.0 provider setup clarity",
+  schema_version: "2.3.0",
+  app_version: "2.3.0",
+  marker: "v2.3.0 provider setup clarity",
   gate: "ux-reliability",
 } as const;
 // v2.1.9 first-run workflow copy is provided by FirstRunWorkflowPanel.
 
 // First-run controlled mount marker: preserved for first-run panel/visual QA source checks.
 // SearchPanel must mount FirstRunWorkflowPanel
-// v2.2.0 controlled first-run panel mount
+// v2.3.0 controlled first-run panel mount
 // data-testid=\
 // tablet-first-run
 // mobile-first-run
@@ -402,11 +402,11 @@ export function SearchPanel() {
   };
 
   const exportLibrary = () => {
-    downloadTextFile("visual-research-board-library-v2.2.0.json", createProjectLibraryExport(library), "application/json");
+    downloadTextFile("visual-research-board-library-v2.3.0.json", createProjectLibraryExport(library), "application/json");
   };
 
   const exportBackup = () => {
-    downloadTextFile("visual-research-board-backup-v2.2.0.json", createStorageBackupExport(library), "application/json");
+    downloadTextFile("visual-research-board-backup-v2.3.0.json", createStorageBackupExport(library), "application/json");
   };
 
   const importLibraryFile = async (file: File) => {

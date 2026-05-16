@@ -1,7 +1,7 @@
 {
   "schema": "visual-research-board.release-evidence-index.v1",
-  "app_version": "2.2.0",
-  "generated_at": "2026-05-15T17:55:05.920Z",
+  "app_version": "2.3.0",
+  "generated_at": "2026-05-16T00:57:00.739Z",
   "status": "indexed",
   "artifact_count": 5,
   "missing_count": 0,
@@ -10,47 +10,47 @@
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 14768,
-      "sha256": "bd1df9a6e6413ea331d1754f4319074e8adf1e97f382b6535a16283df0ffbc41",
+      "size_bytes": 15481,
+      "sha256": "bdd23de88d2185ad0b0fc4c99eb82915cf0880fbb4247d1154ce0a037c372456",
       "json_status": "valid",
       "status": "passed",
-      "app_version": "2.2.0"
+      "app_version": "2.3.0"
     },
     {
       "path": "artifacts/release-verify-report.json",
       "exists": true,
-      "size_bytes": 15017,
-      "sha256": "92b07a5688de97fcdad8cb3fee0a0133969b4633ef7dd8af0e3c08e5a1969236",
+      "size_bytes": 17478,
+      "sha256": "7404f129df3dec4d883bd1ec2f61bb773eb949259ceacf7c7f4180bc4bf26839",
       "json_status": "valid",
       "status": "failed",
-      "app_version": "2.2.0"
+      "app_version": "2.3.0"
     },
     {
       "path": "artifacts/first-run-visual-evidence.json",
       "exists": true,
       "size_bytes": 2119,
-      "sha256": "2f62c4857e8c7ddb166b19e8964301b8a962947651981be5d5935d9645e4f0a0",
+      "sha256": "e6f43941cf961cff838c9a919fdc38ce322da3d4c54adc7fde0bb831c12ffb87",
       "json_status": "valid",
       "status": "planned",
-      "app_version": "2.2.0"
+      "app_version": "2.3.0"
     },
     {
       "path": "artifacts/first-run-evidence-review.json",
       "exists": true,
       "size_bytes": 2437,
-      "sha256": "58d5125cd12a8ae2b1f6e06c33f80de7f0af45e8428a6189f2b354ecaf149bb5",
+      "sha256": "1f34b0d017e86e42058c3213dbfcf0ac8b2d53268314d43bd3f80c3148329dd1",
       "json_status": "valid",
       "status": "review-recorded",
-      "app_version": "2.2.0"
+      "app_version": "2.3.0"
     },
     {
       "path": "artifacts/first-run-demo-script.json",
       "exists": true,
       "size_bytes": 3925,
-      "sha256": "b67592385ef4bbdfbd2cf9f428d504184cd3ab83d746ed8b3ad8a963ee361913",
+      "sha256": "0c9169d5ca626a1997f8492201a4c1422907cc6b02b11fde260c388f9013b278",
       "json_status": "valid",
       "status": "script-ready",
-      "app_version": "2.2.0"
+      "app_version": "2.3.0"
     }
   ],
   "commands": {

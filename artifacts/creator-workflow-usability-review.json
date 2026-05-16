@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "2.3.0",
+  "appVersion": "2.3.0",
+  "schema_version": "2.3.0",
+  "app_version": "2.3.0",
+  "status": "review-recorded",
+  "objective": "Creator Workflow Usability Depth Pass",
+  "scenario": "Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.",
+  "checks": [
+    "Brief-to-query depth is visible.",
+    "Saved reference editing is visible.",
+    "Export preview coverage is visible.",
+    "Next-step guidance is visible.",
+    "Creator session quality markers remain compatible with v2.3.0."
+  ],
+  "generated_at": "2026-05-16T00:56:43.798Z"
+}

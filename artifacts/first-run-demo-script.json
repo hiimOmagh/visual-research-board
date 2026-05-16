@@ -1,8 +1,8 @@
 {
   "schema_version": "first-run.demo-script.v1",
-  "app_version": "2.2.0",
-  "release": "v2.2.0",
-  "generated_at": "2026-05-15T17:54:48.722Z",
+  "app_version": "2.3.0",
+  "release": "v2.3.0",
+  "generated_at": "2026-05-16T00:56:44.630Z",
   "title": "Visual Research Board first-run walkthrough",
   "status": "script-ready",
   "audience": [

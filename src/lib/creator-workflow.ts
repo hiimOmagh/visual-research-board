@@ -1,4 +1,4 @@
-export const CREATOR_WORKFLOW_VERSION = "2.2.0" as const;
+export const CREATOR_WORKFLOW_VERSION = "2.3.0" as const;
 
 export const CREATOR_WORKFLOW_DEMO_TITLE =
   "Premium documentary thumbnail research: Ancient Carthage and Mediterranean power";

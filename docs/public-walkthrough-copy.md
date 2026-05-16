@@ -1,4 +1,4 @@
-# Public Walkthrough Copy — v2.2.0
+# Public Walkthrough Copy — v2.3.0
 
 ## public walkthrough copy
 

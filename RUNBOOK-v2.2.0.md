@@ -1,4 +1,4 @@
-# RUNBOOK v2.2.0 — End-to-End Creator Research Workflow MVP
+# RUNBOOK v2.2.2 — End-to-End Creator Research Workflow MVP
 
 ## Purpose
 
@@ -15,7 +15,7 @@ npm run verify:ci-parity
 
 ## Expected result
 
-- `node -p` returns `2.2.0`.
+- `node -p` returns `2.2.2`.
 - `npm run creator-workflow:mvp:check` passes.
 - `npm run qa` passes.
 - `npm run verify:ci-parity` passes.
@@ -40,7 +40,7 @@ The app must expose:
 - No mandatory paid APIs.
 - No fake live scraping claims.
 
-# RUNBOOK v2.2.0 — Creator Research Workflow MVP
+# RUNBOOK v2.2.2 — Creator Research Workflow MVP
 
 Purpose: validate the local-first creator research loop without packaging work.
 

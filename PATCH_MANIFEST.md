@@ -1,8 +1,8 @@
-# v2.2.0 — Verification Artifact Schema Lock + Release Evidence Index Patch Manifest
+# v2.3.0 — Verification Artifact Schema Lock + Release Evidence Index Patch Manifest
 
 ## Scope
 
-v2.2.0 adds a verification artifact schema lock and generated release evidence index.
+v2.3.0 adds a verification artifact schema lock and generated release evidence index.
 
 ## Changed files
 
@@ -38,11 +38,11 @@ v2.2.0 adds a verification artifact schema lock and generated release evidence i
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Verification Report Freshness Lock + Warning Suppression Patch Manifest
+# v2.3.0 — Verification Report Freshness Lock + Warning Suppression Patch Manifest
 
 ## Scope
 
-v2.2.0 adds a verification report freshness lock and stale warning suppression.
+v2.3.0 adds a verification report freshness lock and stale warning suppression.
 
 ## Changed files
 
@@ -77,17 +77,17 @@ v2.2.0 adds a verification report freshness lock and stale warning suppression.
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — CI Parity Workflow Badge + Verification Docs Lock Patch Manifest
+# v2.3.0 — CI Parity Workflow Badge + Verification Docs Lock Patch Manifest
 
 Adds `.github/workflows/ci-parity.yml`, README CI Parity badge, and verification docs lock.
 
 Normal local: `npm run verify:all`. Clean install parity: `npm run verify:ci-parity`.
 
-# v2.2.0 — Single-Command Verification UX + Release Command Compression Patch Manifest
+# v2.3.0 — Single-Command Verification UX + Release Command Compression Patch Manifest
 
 ## Scope
 
-v2.2.0 formalizes the compressed verification command model.
+v2.3.0 formalizes the compressed verification command model.
 
 ## Changed files
 
@@ -120,11 +120,11 @@ v2.2.0 formalizes the compressed verification command model.
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — First-Run Demo Script + Public Walkthrough Copy Patch Manifest
+# v2.3.0 — First-Run Demo Script + Public Walkthrough Copy Patch Manifest
 
 ## Scope
 
-v2.2.0 adds first-run demo narration and public walkthrough copy after the evidence artifact review milestone.
+v2.3.0 adds first-run demo narration and public walkthrough copy after the evidence artifact review milestone.
 
 ## Changed files
 
@@ -151,11 +151,11 @@ v2.2.0 adds first-run demo narration and public walkthrough copy after the evide
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — First-Run Evidence Artifact Review + Demo Capture Notes Patch Manifest
+# v2.3.0 — First-Run Evidence Artifact Review + Demo Capture Notes Patch Manifest
 
 ## Scope
 
-v2.2.0 adds a first-run evidence artifact review layer and demo capture notes after the responsive screenshot evidence milestone.
+v2.3.0 adds a first-run evidence artifact review layer and demo capture notes after the responsive screenshot evidence milestone.
 
 ## Changed files
 
@@ -182,11 +182,11 @@ v2.2.0 adds a first-run evidence artifact review layer and demo capture notes af
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — First-Run Visual QA + Responsive Screenshot Evidence Patch Manifest
+# v2.3.0 — First-Run Visual QA + Responsive Screenshot Evidence Patch Manifest
 
 ## Scope
 
-v2.2.0 adds first-run visual QA and responsive screenshot evidence planning after the controlled first-run panel mount.
+v2.3.0 adds first-run visual QA and responsive screenshot evidence planning after the controlled first-run panel mount.
 
 ## Changed files
 
@@ -213,11 +213,11 @@ v2.2.0 adds first-run visual QA and responsive screenshot evidence planning afte
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Controlled First-Run Panel Mount + UI Consistency Patch Manifest
+# v2.3.0 — Controlled First-Run Panel Mount + UI Consistency Patch Manifest
 
 ## Scope
 
-v2.2.0 safely mounts the first-run workflow panel in the SearchPanel UI.
+v2.3.0 safely mounts the first-run workflow panel in the SearchPanel UI.
 
 ## Changed files
 
@@ -245,11 +245,11 @@ v2.2.0 safely mounts the first-run workflow panel in the SearchPanel UI.
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — First-Run UX + Workflow Clarity Patch Manifest
+# v2.3.0 — First-Run UX + Workflow Clarity Patch Manifest
 
 ## Scope
 
-v2.2.0 improves first-run workflow clarity after the v2.0.x release automation baseline.
+v2.3.0 improves first-run workflow clarity after the v2.0.x release automation baseline.
 
 ## Changed files
 
@@ -278,11 +278,11 @@ v2.2.0 improves first-run workflow clarity after the v2.0.x release automation b
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Unified Release Verification Runner Patch Manifest
+# v2.3.0 — Unified Release Verification Runner Patch Manifest
 
 ## Scope
 
-v2.2.0 adds a unified release verification runner for local and CI parity.
+v2.3.0 adds a unified release verification runner for local and CI parity.
 
 ## Changed files
 
@@ -310,11 +310,11 @@ v2.2.0 adds a unified release verification runner for local and CI parity.
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Release Package Audit Patch Manifest
+# v2.3.0 — Release Package Audit Patch Manifest
 
 ## Scope
 
-v2.2.0 audits release package integrity after the public demo screenshot/evidence lock.
+v2.3.0 audits release package integrity after the public demo screenshot/evidence lock.
 
 ## Changed files
 
@@ -342,11 +342,11 @@ v2.2.0 audits release package integrity after the public demo screenshot/evidenc
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Public Demo Evidence + Screenshot Lock Patch Manifest
+# v2.3.0 — Public Demo Evidence + Screenshot Lock Patch Manifest
 
 ## Scope
 
-v2.2.0 locks public demo screenshot/evidence requirements for the stable v2 workflow.
+v2.3.0 locks public demo screenshot/evidence requirements for the stable v2 workflow.
 
 ## Changed files
 
@@ -374,11 +374,11 @@ v2.2.0 locks public demo screenshot/evidence requirements for the stable v2 work
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Dependency Audit Triage Patch Manifest
+# v2.3.0 — Dependency Audit Triage Patch Manifest
 
 ## Scope
 
-v2.2.0 triages the 2 moderate npm audit warnings without force-fixing or dependency churn.
+v2.3.0 triages the 2 moderate npm audit warnings without force-fixing or dependency churn.
 
 ## Changed files
 
@@ -407,11 +407,11 @@ v2.2.0 triages the 2 moderate npm audit warnings without force-fixing or depende
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Stable Release Hygiene + Audit Warning Review Patch Manifest
+# v2.3.0 — Stable Release Hygiene + Audit Warning Review Patch Manifest
 
 ## Scope
 
-v2.2.0 is a hygiene-only patch after the v2.0.0 stable release.
+v2.3.0 is a hygiene-only patch after the v2.0.0 stable release.
 
 ## Changed files
 
@@ -441,11 +441,11 @@ v2.2.0 is a hygiene-only patch after the v2.0.0 stable release.
 - No paywall bypass
 - No source media rehosting
 
-# v2.2.0 — Reference Workflow Stable Release Patch Manifest
+# v2.3.0 — Reference Workflow Stable Release Patch Manifest
 
 ## Scope
 
-v2.2.0 stabilizes the full discovery → board → activation → export workflow.
+v2.3.0 stabilizes the full discovery → board → activation → export workflow.
 
 ## Changed files
 
@@ -473,11 +473,11 @@ v2.2.0 stabilizes the full discovery → board → activation → export workflo
 - No export rewrite
 - No source media rehosting
 
-# v2.2.0 — Activation Pack Export Integration Patch Manifest
+# v2.3.0 — Activation Pack Export Integration Patch Manifest
 
 ## Scope
 
-v2.2.0 connects activation pack Markdown/JSON preview output to existing text download utilities.
+v2.3.0 connects activation pack Markdown/JSON preview output to existing text download utilities.
 
 ## Changed files
 
@@ -508,11 +508,11 @@ v2.2.0 connects activation pack Markdown/JSON preview output to existing text do
 - No access circumvention
 - No source media rehosting
 
-# v2.2.0 — Activation Pack Export Preview Patch Manifest
+# v2.3.0 — Activation Pack Export Preview Patch Manifest
 
 ## Scope
 
-v2.2.0 adds preview-only Markdown/JSON rendering for activation packs.
+v2.3.0 adds preview-only Markdown/JSON rendering for activation packs.
 
 ## Changed files
 
@@ -542,11 +542,11 @@ v2.2.0 adds preview-only Markdown/JSON rendering for activation packs.
 - No paywall bypass
 - No access circumvention
 
-# v2.2.0 — Activation Pack UI Integration Patch Manifest
+# v2.3.0 — Activation Pack UI Integration Patch Manifest
 
 ## Scope
 
-v2.2.0 wires activation packs into a visible board workflow panel using already-gathered references.
+v2.3.0 wires activation packs into a visible board workflow panel using already-gathered references.
 
 ## Changed files
 
@@ -574,11 +574,11 @@ v2.2.0 wires activation packs into a visible board workflow panel using already-
 - No access circumvention
 - No export behavior changes
 
-# v2.2.0 — Reference Activation Pack MVP Patch Manifest
+# v2.3.0 — Reference Activation Pack MVP Patch Manifest
 
 ## Scope
 
-v2.2.0 adds activation-ready reference packs built from already-gathered board/reference data.
+v2.3.0 adds activation-ready reference packs built from already-gathered board/reference data.
 
 ## Changed files
 
@@ -606,11 +606,11 @@ v2.2.0 adds activation-ready reference packs built from already-gathered board/r
 - No access circumvention
 - No broad export behavior changes
 
-# v2.2.0 — Book / Bibliographic Discovery Layer Patch Manifest
+# v2.3.0 — Book / Bibliographic Discovery Layer Patch Manifest
 
 ## Scope
 
-v2.2.0 adds metadata-first book and bibliographic discovery planning and classification.
+v2.3.0 adds metadata-first book and bibliographic discovery planning and classification.
 
 ## Changed files
 
@@ -638,11 +638,11 @@ v2.2.0 adds metadata-first book and bibliographic discovery planning and classif
 - No generation engine
 - No export behavior changes
 
-# v2.2.0 — Social Reference Discovery Layer Patch Manifest
+# v2.3.0 — Social Reference Discovery Layer Patch Manifest
 
 ## Scope
 
-v2.2.0 adds public social-reference discovery planning and classification.
+v2.3.0 adds public social-reference discovery planning and classification.
 
 ## Changed files
 
@@ -672,11 +672,11 @@ v2.2.0 adds public social-reference discovery planning and classification.
 - No generation engine
 - No export behavior changes
 
-# v2.2.0 — Broad Web + Image Discovery Expansion Patch Manifest
+# v2.3.0 — Broad Web + Image Discovery Expansion Patch Manifest
 
 ## Scope
 
-v2.2.0 adds broad web/image discovery planning and candidate normalization.
+v2.3.0 adds broad web/image discovery planning and candidate normalization.
 
 ## Changed files
 
@@ -705,11 +705,11 @@ v2.2.0 adds broad web/image discovery planning and candidate normalization.
 - No generation engine
 - No export behavior changes
 
-# v2.2.0 — Broad Reference Result Model Patch Manifest
+# v2.3.0 — Broad Reference Result Model Patch Manifest
 
 ## Scope
 
-v2.2.0 adds the Broad Reference Result Model.
+v2.3.0 adds the Broad Reference Result Model.
 
 ## Changed files
 
@@ -738,11 +738,11 @@ v2.2.0 adds the Broad Reference Result Model.
 - No generation engine
 - No export behavior changes yet
 
-# v2.2.0 — Reference Intelligence Layer MVP Patch Manifest
+# v2.3.0 — Reference Intelligence Layer MVP Patch Manifest
 
 ## Scope
 
-v2.2.0 adds the Reference Intelligence Layer MVP.
+v2.3.0 adds the Reference Intelligence Layer MVP.
 
 ## Changed files
 
@@ -770,11 +770,11 @@ v2.2.0 adds the Reference Intelligence Layer MVP.
 - No generation engine
 - No export behavior changes yet
 
-# v2.2.0 — Public Demo Stable Release Patch Manifest
+# v2.3.0 — Public Demo Stable Release Patch Manifest
 
 ## Scope
 
-v2.2.0 locks the public demo stable release.
+v2.3.0 locks the public demo stable release.
 
 ## Changed files
 
@@ -798,11 +798,11 @@ v2.2.0 locks the public demo stable release.
 - No export behavior changes
 - No social/book/generation expansion
 
-# v2.2.0 — Public Demo Final Acceptance Patch Manifest
+# v2.3.0 — Public Demo Final Acceptance Patch Manifest
 
 ## Scope
 
-v2.2.0 finalizes public-demo acceptance before stable release.
+v2.3.0 finalizes public-demo acceptance before stable release.
 
 ## Changed files
 
@@ -825,11 +825,11 @@ v2.2.0 finalizes public-demo acceptance before stable release.
 - No retrieval logic changes
 - No export behavior changes
 
-# v2.2.0 — Hosted Demo Evidence Review Patch Manifest
+# v2.3.0 — Hosted Demo Evidence Review Patch Manifest
 
 ## Scope
 
-v2.2.0 adds a hosted-demo evidence-review gate and documentation while preserving the v2.2.0 Public Demo Evidence Lock.
+v2.3.0 adds a hosted-demo evidence-review gate and documentation while preserving the v2.3.0 Public Demo Evidence Lock.
 
 ## Changed files
 
@@ -852,7 +852,7 @@ v2.2.0 adds a hosted-demo evidence-review gate and documentation while preservin
 - No retrieval logic changes
 - No export behavior changes
 
-# v2.2.0 — Public Demo Evidence Lock Patch Manifest
+# v2.3.0 — Public Demo Evidence Lock Patch Manifest
 
 ## Changed files
 
@@ -870,7 +870,7 @@ v2.2.0 adds a hosted-demo evidence-review gate and documentation while preservin
 
 ## Scope
 
-v2.2.0 locks public-demo release evidence without changing product behavior.
+v2.3.0 locks public-demo release evidence without changing product behavior.
 
 ## Non-goals
 
@@ -894,7 +894,7 @@ npm run lint
 npm run build
 ```
 
-# v2.2.0 — Public Demo Release Candidate Patch Manifest
+# v2.3.0 — Public Demo Release Candidate Patch Manifest
 
 ## Changed files
 
@@ -916,7 +916,7 @@ npm run build
 
 ## Scope
 
-v2.2.0 prepares the app as a Public Demo Release Candidate while preserving the v2.2.0 Security and Key Handling layer.
+v2.3.0 prepares the app as a Public Demo Release Candidate while preserving the v2.3.0 Security and Key Handling layer.
 
 ## Non-goals
 
@@ -940,7 +940,7 @@ npm run lint
 npm run build
 ```
 
-# v2.2.0 — Security and Key Handling Patch Manifest
+# v2.3.0 — Security and Key Handling Patch Manifest
 
 ## Changed files
 
@@ -980,13 +980,13 @@ These labels are intentionally retained because the consolidated QA gate validat
 - v0.4.1 — Evidence Pack Export v1
 - v0.4.1 — Attribution Generator Upgrade
 - v0.4.1 — Coverage and Bias Audit
-- v2.2.0 — UX Reliability + Empty State Polish
-- v2.2.0 — Local Storage + Import/Export Hardening
-- v2.2.0 — Security and Key Handling
+- v2.3.0 — UX Reliability + Empty State Polish
+- v2.3.0 — Local Storage + Import/Export Hardening
+- v2.3.0 — Security and Key Handling
 
-## v2.2.0 — Release Warning Cleanup
+## v2.3.0 — Release Warning Cleanup
 
-This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.2.0 Public Demo Release Candidate and Security and Key Handling behavior.
+This micro-patch removes targeted lint warnings and updates CI action/runtime references while preserving v2.3.0 Public Demo Release Candidate and Security and Key Handling behavior.
 
 Validation:
 
@@ -1001,7 +1001,7 @@ npm run lint
 npm run build
 ```
 
-## v2.2.0 Verification Commands
+## v2.3.0 Verification Commands
 
 The release verification flow is intentionally compressed into stable commands:
 
@@ -1013,29 +1013,29 @@ CI parity requirement: local release verification and CI verification must prese
 
 This preserves the CI Parity Workflow Badge + Verification Docs Lock and the Verification Artifact Schema Lock + Release Evidence Index.
 
-## v2.2.0 — Nested Verification Warning Silence + Final Freshness Recheck
+## v2.3.0 — Nested Verification Warning Silence + Final Freshness Recheck
 
 - Added nested stale-report warning suppression for release-verifier child checks.
 - Added final freshness recheck after the release report is written as passed.
 - Preserved compressed `verify:artifacts`, `verify:all`, and `verify:ci-parity` semantics.
 - No dependency churn, provider expansion, scraping, or runtime feature expansion.
-## v2.2.0 — Dependency Audit Resolution + Safe Upgrade Lock
+## v2.3.0 — Dependency Audit Resolution + Safe Upgrade Lock
 
 - Adds dependency audit safe-upgrade lock artifact generation.
 - Documents noncritical audit findings without using `npm audit fix --force`.
 - Requires package-lock review and `npm run verify:ci-parity` after dependency changes.
 - Blocks high/critical vulnerability release states.
 
-## v2.2.0 — Dependency Audit Resolution + Safe Upgrade Lock
+## v2.3.0 — Dependency Audit Resolution + Safe Upgrade Lock
 
 - Adds dependency audit safe-upgrade lock artifact generation.
-- Adds `RUNBOOK-v2.2.0.md`.
+- Adds `RUNBOOK-v2.3.0.md`.
 - Documents nested verification warning silence and final freshness recheck.
 - Documents noncritical audit findings without using `npm audit fix --force`.
 - Requires package-lock review and `npm run verify:ci-parity` after dependency changes.
 - Blocks high/critical vulnerability release states.
 
-## v2.2.0 — End-to-End Creator Research Workflow MVP
+## v2.3.0 — End-to-End Creator Research Workflow MVP
 
 - Added local-first creator research workflow data model.
 - Added Research Brief panel, Smart Query Plan Preview, demo discovery results, review actions, saved board sections, and Evidence Pack Export Preview v2.
@@ -1043,3 +1043,37 @@ This preserves the CI Parity Workflow Badge + Verification Docs Lock and the Ver
 - Added `npm run creator-workflow:mvp:check`.
 - Avoided packaging expansion, OAuth, paid API requirements, and fake live-provider claims.
 
+## v2.3.0 — Creator Workflow Interaction Polish + Real Use-Path Validation
+
+Changed:
+- `src/components/search/CreatorWorkflowPanel.tsx`
+- `app/creator-workflow/page.tsx`
+- `scripts/creator-workflow-manual-review.mjs`
+- `tests/creator-workflow-interaction-polish-check.mjs`
+- `RUNBOOK-v2.3.0.md`
+
+Validation:
+- `npm run creator-workflow:interaction:check`
+- `npm run qa`
+- `npm run verify:ci-parity`
+
+
+
+## v2.3.0 — Creator Workflow Usability Depth Pass
+
+- Added creator workflow usability depth contract.
+- Replaced the creator workflow panel with a fuller local-first use path.
+- Added saved-reference editing and section movement.
+- Added export-preview coverage and next-step guidance.
+- Added `creator-workflow:usability:check` and `creator-workflow:usability:review`.
+
+
+## v2.3.0 — Real Creator Session Quality Pass
+
+- Added `src/lib/creator-session-quality.ts`.
+- Rebuilt `src/components/search/CreatorWorkflowPanel.tsx` around a real creator research session.
+- Ensured `/creator-workflow` renders the product workflow.
+- Added `scripts/creator-session-quality-review.mjs`.
+- Added `tests/creator-session-quality-pass-check.mjs`.
+- Registered `creator-session-quality-pass` in the full QA gate.
+- Updated package metadata and documentation to v2.3.0.

@@ -31,7 +31,7 @@ function readIfExists(filePath) {
 const pkg = readJson(packageJsonPath);
 const scripts = pkg.scripts ?? {};
 
-assert(pkg.version === "2.2.0", "package.json version must be 2.2.0");
+assert(pkg.version === "2.3.0", "package.json version must be 2.3.0");
 assert(
   scripts["verify:artifacts"] === "node scripts/verify-artifacts.mjs",
   "package.json must expose compressed verify:artifacts",

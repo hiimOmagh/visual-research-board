@@ -1,6 +1,6 @@
-# Release Evidence Index — v2.2.0
+# Release Evidence Index — v2.3.0
 
-v2.2.0 adds a generated release evidence index.
+v2.3.0 adds a generated release evidence index.
 
 ## release evidence index
 

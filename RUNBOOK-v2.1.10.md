@@ -1,8 +1,8 @@
-# RUNBOOK v2.2.0 — Dependency Audit Resolution + Safe Upgrade Lock
+# RUNBOOK v2.2.2 — Dependency Audit Resolution + Safe Upgrade Lock
 
 ## Purpose
 
-This runbook locks the v2.2.0 release verification path after the dependency audit safe-upgrade lock was added.
+This runbook locks the v2.2.2 release verification path after the dependency audit safe-upgrade lock was added.
 
 It preserves the single-command verification UX while making the release evidence explicit:
 
@@ -133,10 +133,10 @@ Nested verification warning silence means the release verifier should not leave 
 Final expected state:
 
 ```text
-Full QA gate passed for v2.2.0.
-[release-verify] passed for v2.2.0
-Verification Report Freshness Lock + Warning Suppression checks passed for v2.2.0.
-Nested Verification Warning Silence + Final Freshness Recheck checks passed for v2.2.0.
+Full QA gate passed for v2.2.2.
+[release-verify] passed for v2.2.2
+Verification Report Freshness Lock + Warning Suppression checks passed for v2.2.2.
+Nested Verification Warning Silence + Final Freshness Recheck checks passed for v2.2.2.
 ```
 
 ## Final freshness recheck
@@ -150,9 +150,9 @@ npm run verify:all
 
 Clean final state means:
 
-- `artifacts/full-qa-gate-report.json` has `appVersion` or equivalent version marker for `2.2.0`
+- `artifacts/full-qa-gate-report.json` has `appVersion` or equivalent version marker for `2.2.2`
 - `artifacts/full-qa-gate-report.json` has passed status
-- `artifacts/release-verify-report.json` has `appVersion` or equivalent version marker for `2.2.0`
+- `artifacts/release-verify-report.json` has `appVersion` or equivalent version marker for `2.2.2`
 - `artifacts/release-verify-report.json` has passed status
 - `npm run verification:freshness:check` passes without stale-report warnings
 
@@ -166,7 +166,7 @@ Force dependency fixes are forbidden because they may introduce breaking depende
 
 ## Release acceptance
 
-v2.2.0 is accepted only when this command passes:
+v2.2.2 is accepted only when this command passes:
 
 ```powershell
 npm run verify:ci-parity

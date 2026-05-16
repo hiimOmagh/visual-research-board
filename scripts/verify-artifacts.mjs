@@ -2,11 +2,14 @@ import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 const root = process.cwd();
-const version = "2.2.0";
+const version = "2.3.0";
 
 const artifactScripts = [
   
-  "provider-runtime:report","first-run:visual:evidence",
+  "provider-runtime:report",
+  "creator-session:quality:review",
+  "creator-workflow:manual-review",
+  "creator-workflow:usability:review","first-run:visual:evidence",
   "first-run:evidence-review",
   "first-run:demo-script",
   "release:evidence:index",

@@ -19,7 +19,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
+assert(VERSION === "2.3.0", "package.json version must be 2.3.0");
 assert(pkg.description?.includes("First-Run Demo Script + Public Walkthrough Copy"), "package description must identify First-Run Demo Script + Public Walkthrough Copy");
 assert(pkg.description?.includes("First-Run Evidence Artifact Review + Demo Capture Notes"), "package description must preserve First-Run Evidence Artifact Review + Demo Capture Notes wording");
 assert(pkg.description?.includes("First-Run Visual QA + Responsive Screenshot Evidence"), "package description must preserve First-Run Visual QA + Responsive Screenshot Evidence wording");
@@ -169,7 +169,7 @@ for (const file of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.2.0"), `${file} must reference v2.2.0`);
+  assert(read(file).includes("v2.3.0"), `${file} must reference v2.3.0`);
 }
 
 if (process.exitCode) process.exit(process.exitCode);

@@ -1,6 +1,6 @@
-# Nested Verification Warning Silence + Final Freshness Recheck — v2.2.0
+# Nested Verification Warning Silence + Final Freshness Recheck — v2.3.0
 
-v2.2.0 keeps the single-command verification path intact while removing misleading stale-report warnings from nested release verification runs.
+v2.3.0 keeps the single-command verification path intact while removing misleading stale-report warnings from nested release verification runs.
 
 ## Problem corrected
 

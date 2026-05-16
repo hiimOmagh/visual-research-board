@@ -22,7 +22,7 @@ const evidenceReview = readJson("artifacts/first-run-evidence-review.json");
 const demoScript = {
   schema_version: "first-run.demo-script.v1",
   app_version: pkg?.version ?? "unknown",
-  release: "v2.2.0",
+  release: "v2.3.0",
   generated_at: new Date().toISOString(),
   title: "Visual Research Board first-run walkthrough",
   status: "script-ready",

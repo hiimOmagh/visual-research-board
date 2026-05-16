@@ -20,7 +20,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
+assert(VERSION === "2.3.0", "package.json version must be 2.3.0");
 assert(pkg.description?.includes("Controlled First-Run Panel Mount + UI Consistency"), "package description must identify Controlled First-Run Panel Mount + UI Consistency");
 assert(pkg.description?.includes("First-Run UX + Workflow Clarity"), "package description must preserve First-Run UX + Workflow Clarity wording");
 assert(pkg.description?.includes("Unified Release Verification Runner"), "package description must preserve Unified Release Verification Runner wording");
@@ -53,7 +53,7 @@ for (const file of [
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes('import { FirstRunWorkflowPanel } from "./FirstRunWorkflowPanel";'), "SearchPanel must import FirstRunWorkflowPanel");
 assert(searchPanel.includes("<FirstRunWorkflowPanel />"), "SearchPanel must mount FirstRunWorkflowPanel");
-assert(searchPanel.includes("v2.2.0 controlled first-run panel mount"), "SearchPanel must contain controlled mount marker");
+assert(searchPanel.includes("v2.3.0 controlled first-run panel mount"), "SearchPanel must contain controlled mount marker");
 
 const component = read("src/components/search/FirstRunWorkflowPanel.tsx");
 for (const token of [
@@ -106,7 +106,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.2.0"), `${file} must reference v2.2.0`);
+  assert(read(file).includes("v2.3.0"), `${file} must reference v2.3.0`);
 }
 
 const reportPath = "artifacts/full-qa-gate-report.json";

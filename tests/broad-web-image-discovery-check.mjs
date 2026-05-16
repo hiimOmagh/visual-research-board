@@ -28,7 +28,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.2.0", "package.json version must be 2.2.0");
+assert(VERSION === "2.3.0", "package.json version must be 2.3.0");
 assert(pkg.description?.includes("Broad Web + Image Discovery Expansion"), "package description must identify Broad Web + Image Discovery Expansion");
 assert(pkg.description?.includes("Broad Reference Result Model"), "package description must preserve Broad Reference Result Model wording");
 assert(pkg.description?.includes("Reference Intelligence Layer MVP"), "package description must preserve Reference Intelligence Layer MVP wording");
@@ -43,8 +43,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.2.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.2.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.3.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.3.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "src/types/broad-discovery.ts",

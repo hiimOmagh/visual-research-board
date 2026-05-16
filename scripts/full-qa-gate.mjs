@@ -78,6 +78,13 @@ const gates = [
 
   { category: "release", name: "deployed-browser-evidence", command: ["node", "tests/deployed-browser-evidence-check.mjs"] },
   { category: "workflow", name: "creator-workflow-mvp", command: ["node", "tests/creator-workflow-mvp-check.mjs"] },
+
+  { category: "workflow", name: "creator-workflow-interaction-polish", command: ["node", "tests/creator-workflow-interaction-polish-check.mjs"] },
+  {
+    category: "workflow",
+    name: "creator-workflow-usability-depth",
+    command: ["node", "tests/creator-workflow-usability-depth-check.mjs"],
+  },  { category: "workflow", name: "creator-session-quality-pass", command: ["node", "tests/creator-session-quality-pass-check.mjs"] },
   { category: "release", name: "full-qa-gate-manifest", command: ["node", "tests/full-qa-gate-check.mjs"] }
 ];
 
@@ -121,7 +128,7 @@ for (const gate of selectedGates) {
   results.push({
     category: gate.category,
     name: gate.name,
-    command: gate.command.join(" "),
+    command: Array.isArray(gate.command) ? gate.command.join(" ") : String(gate.command),
     status,
     exit_code: result.status,
     duration_ms: durationMs
@@ -134,8 +141,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "2.2.0",
-  app_version: "2.2.0",
+  schema_version: "2.3.0",
+  app_version: "2.3.0",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -156,7 +163,7 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v2.2.0.");
+console.log("\nFull QA gate passed for v2.3.0.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");
 
-// TODO(v2.2.0): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check
+// TODO(v2.3.0): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check
