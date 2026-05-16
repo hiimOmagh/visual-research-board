@@ -124,6 +124,12 @@ function normalizeHref(p) {
   return p.replace(/\\/g, "/");
 }
 
+function writeNoJekyll() {
+  const noJekyll = path.join(projectRoot, "out", ".nojekyll");
+  fs.writeFileSync(noJekyll, "");
+  log("wrote out/.nojekyll so GitHub Pages serves _next assets");
+}
+
 function buildTailwindCss() {
   const inputCss = path.join(projectRoot, "src", "app", "globals.css");
   const tailwindCli = path.join(projectRoot, "node_modules", "tailwindcss", "lib", "cli.js");
@@ -219,6 +225,24 @@ function validateOutput(cssHref) {
     missing.push(`base-path creator workflow link ${expectedCreatorHref}`);
   }
 
+  if (basePath) {
+    const forbiddenStaticLinks = [
+      'href="/creator-workflow"',
+      'href="/api/',
+      'src="/_next/',
+      'href="/_next/'
+    ];
+    for (const htmlFile of collectHtmlFiles(outDir)) {
+      const html = fs.readFileSync(htmlFile, "utf8");
+      const relativeHtml = normalizeHref(path.relative(projectRoot, htmlFile));
+      for (const token of forbiddenStaticLinks) {
+        if (html.includes(token)) {
+          missing.push(`forbidden static root-relative link ${token} in ${relativeHtml}`);
+        }
+      }
+    }
+  }
+
   if (missing.length > 0) {
     const htmlFiles = collectHtmlFiles(outDir).map((file) => normalizeHref(path.relative(projectRoot, file)));
     throw new Error(
@@ -253,6 +277,7 @@ function main() {
     rm(path.join(projectRoot, ".next"));
     runNpmScript("build");
     const cssFile = buildTailwindCss();
+    writeNoJekyll();
     const cssHref = injectCssLink(cssFile);
     validateOutput(cssHref);
   } finally {

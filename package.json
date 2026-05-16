@@ -19,7 +19,7 @@
     "build:static:repo": "node scripts/build-static-demo.mjs --base-path=/visual-research-board",
     "validate": "npm run test:ci:no-browser",
     "validate:full": "npm run test:ci:no-browser && npm run build",
-    "build:static:pages": "node scripts/build-static-demo.mjs",
+    "build:static:pages": "npm run build:github-pages",
     "validate:deploy": "npm run test:ci:no-browser && npm run build && npm run build:static",
     "release:check": "npm run validate:deploy",
     "broad:retrieval:test": "node tests/broad-retrieval-check.mjs",
@@ -125,7 +125,8 @@
     "route-surface:review": "node scripts/route-surface-integrity-review.mjs",
     "route-surface:check": "node tests/route-surface-integrity-check.mjs",
     "evidence-pack:v2:check": "node tests/evidence-pack-v2-check.mjs",
-    "build:github-pages": "node scripts/github-pages-static-export.mjs"
+    "build:github-pages": "node scripts/github-pages-static-export.mjs",
+    "github-pages:static:check": "npm run build:github-pages"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

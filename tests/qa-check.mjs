@@ -192,7 +192,12 @@ const ciWorkflow = read(".github/workflows/ci.yml");
 assert(ciWorkflow.includes("npm run qa") && ciWorkflow.includes("npm run build"), "CI workflow must run QA and runtime build");
 
 const pagesWorkflow = read(".github/workflows/pages-static-demo.yml");
-assert(pagesWorkflow.includes("deploy-pages") && pagesWorkflow.includes("build:static:pages"), "Pages workflow must build and deploy the static demo");
+const pagesWorkflowUsesStaticBuild =
+  pagesWorkflow.includes("build:static:pages") || pagesWorkflow.includes("build:github-pages");
+assert(
+  pagesWorkflow.includes("deploy-pages") && pagesWorkflowUsesStaticBuild,
+  "Pages workflow must build and deploy the static demo"
+);
 
 const nextConfig = read("next.config.ts");
 assert(nextConfig.includes("VISUAL_RESEARCH_BOARD_STATIC_EXPORT"), "next.config.ts must support static export mode");

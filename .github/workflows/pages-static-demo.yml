@@ -20,27 +20,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
+
       - name: Install dependencies
         run: npm ci
+
       - name: Unified release verification
         run: npm run verify:release
+
       - name: Run source QA
         run: npm run qa
-      - name: Build static GitHub Pages demo
-        run: npm run build:static:pages
+
+      - name: Build GitHub Pages static export
+        run: npm run build:github-pages
         env:
           VISUAL_RESEARCH_BOARD_BASE_PATH: /${{ github.event.repository.name }}
+
+      - name: Verify GitHub Pages static export artifact
+        run: |
+          test -f out/.nojekyll
+          test -f out/index.html
+          test -f out/creator-workflow/index.html
+          find out/_next/static -name "*.css" -print -quit | grep .
+          grep -q "stylesheet" out/index.html
+          grep -q "/${{ github.event.repository.name }}/creator-workflow" out/index.html
+          ! grep -q 'href="/creator-workflow"' out/index.html
+          ! grep -q 'href="/api/' out/index.html
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: ./out
+
   deploy:
     environment:
       name: github-pages
