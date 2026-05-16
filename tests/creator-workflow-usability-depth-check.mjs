@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const root = process.cwd();
 const failures = [];
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 
 const read = (path) => readFileSync(join(root, path), "utf8");
 const assert = (condition, message) => {
@@ -26,7 +26,7 @@ const panel = existsSync(join(root, panelPath)) ? read(panelPath) : "";
 const reviewScript = existsSync(join(root, reviewScriptPath)) ? read(reviewScriptPath) : "";
 const reviewArtifactText = existsSync(join(root, reviewArtifactPath)) ? read(reviewArtifactPath) : "";
 
-assert(reviewScript.includes(VERSION), "review script must use v2.3.0 version");
+assert(reviewScript.includes(VERSION), "review script must use v2.4.0 version");
 
 for (const token of [
   "CREATOR_WORKFLOW_SAVED_REFERENCE_NOTE_EDIT_CONTRACT",
@@ -59,7 +59,7 @@ for (const token of [
 
 if (reviewArtifactText) {
   const lower = reviewArtifactText.toLowerCase();
-  assert(lower.includes("v2.3.0") || lower.includes("2.3.0"), "usability review artifact must identify v2.3.0");
+  assert(lower.includes("v2.4.0") || lower.includes("2.4.0"), "usability review artifact must identify v2.4.0");
 }
 
 if (failures.length) {

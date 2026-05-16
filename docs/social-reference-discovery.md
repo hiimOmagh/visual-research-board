@@ -1,7 +1,7 @@
 
-# Social Reference Discovery Layer — v2.3.0
+# Social Reference Discovery Layer — v2.4.0
 
-v2.3.0 adds public social-reference discovery planning and classification.
+v2.4.0 adds public social-reference discovery planning and classification.
 
 ## Purpose
 

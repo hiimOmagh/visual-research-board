@@ -1,6 +1,6 @@
 {
-  "schema_version": "2.3.0",
-  "app_version": "2.3.0",
+  "schema_version": "2.4.0",
+  "app_version": "2.4.0",
   "status": "review-recorded",
   "objective": "Real Creator Session Quality Pass",
   "scenario": "Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.",
@@ -17,5 +17,5 @@
     "Confirm the Carthage demo helps the user understand the workflow without reading docs.",
     "Confirm empty/filter states produce clear next-step prompts."
   ],
-  "generated_at": "2026-05-16T00:56:43.235Z"
+  "generated_at": "2026-05-16T14:51:30.885Z"
 }

@@ -1,7 +1,7 @@
 
-# Stable Release Hygiene + Audit Warning Review — v2.3.0
+# Stable Release Hygiene + Audit Warning Review — v2.4.0
 
-v2.3.0 is a hygiene-only patch after the v2.0.0 stable release.
+v2.4.0 is a hygiene-only patch after the v2.0.0 stable release.
 
 ## Objective
 
@@ -32,7 +32,7 @@ Reason: force-fixing may introduce breaking dependency changes and move the rele
 - `npm run lint` passes
 - `npm run build` passes
 - `artifacts/full-qa-gate-report.json` exists
-- full QA artifact reports `app_version = 2.3.0`
+- full QA artifact reports `app_version = 2.4.0`
 - full QA artifact reports `failed_gate_count = 0`
 
 ## Artifact hygiene
@@ -54,10 +54,10 @@ Do not commit generated/cache files:
 
 After CI is green, the release tag should match:
 
-- tag: `v2.3.0`
-- package version: `2.3.0`
-- full QA artifact: `2.3.0`
-- release docs: `v2.3.0`
+- tag: `v2.4.0`
+- package version: `2.4.0`
+- full QA artifact: `2.4.0`
+- release docs: `v2.4.0`
 
 ## Non-goals
 

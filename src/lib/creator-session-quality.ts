@@ -1,4 +1,4 @@
-export const CREATOR_SESSION_VERSION = "2.3.0";
+export const CREATOR_SESSION_VERSION = "2.4.0";
 
 export type CreatorSessionStatus = "saved" | "rejected" | "strong" | "weak" | "export-candidate";
 

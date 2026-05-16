@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 
 const artifact = {
   schemaVersion: VERSION,
@@ -16,7 +16,7 @@ const artifact = {
     "Saved reference editing is visible.",
     "Export preview coverage is visible.",
     "Next-step guidance is visible.",
-    "Creator session quality markers remain compatible with v2.3.0."
+    "Creator session quality markers remain compatible with v2.4.0."
   ],
   generated_at: new Date().toISOString()
 };

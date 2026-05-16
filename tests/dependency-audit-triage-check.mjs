@@ -29,7 +29,7 @@ function assert(condition, message) {
 const pkg = JSON.parse(read("package.json"));
 const VERSION = pkg.version;
 
-assert(VERSION === "2.3.0", "package.json version must be 2.3.0");
+assert(VERSION === "2.4.0", "package.json version must be 2.4.0");
 assert(pkg.description?.includes("Dependency Audit Triage"), "package description must identify Dependency Audit Triage");
 assert(pkg.description?.includes("Stable Release Hygiene + Audit Warning Review"), "package description must preserve Stable Release Hygiene + Audit Warning Review wording");
 assert(pkg.description?.includes("Reference Workflow Stable Release"), "package description must preserve Reference Workflow Stable Release wording");
@@ -47,8 +47,8 @@ if (exists("package-lock.json")) {
 }
 
 const lockText = exists("package-lock.json") ? read("package-lock.json") : "";
-assert(!lockText.includes('"is-finalizationregistry": "^2.3.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
-assert(!lockText.includes('"which-boxed-primitive": "^2.3.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
+assert(!lockText.includes('"is-finalizationregistry": "^2.4.0"'), "lockfile must not mutate is-finalizationregistry dependency to app version");
+assert(!lockText.includes('"which-boxed-primitive": "^2.4.0"'), "lockfile must not mutate which-boxed-primitive dependency to app version");
 
 const requiredFiles = [
   "tests/dependency-audit-triage-check.mjs",
@@ -135,7 +135,7 @@ for (const token of [
 
 for (const file of ["README.md", "PATCH_MANIFEST.md", "docs/release-checklist.md", "docs/validation-report.md"]) {
   assert(exists(file), `${file} must exist`);
-  assert(read(file).includes("v2.3.0"), `${file} must reference v2.3.0`);
+  assert(read(file).includes("v2.4.0"), `${file} must reference v2.4.0`);
 }
 
 const forbiddenPositiveClaims = [

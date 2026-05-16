@@ -1,7 +1,7 @@
 
-# Activation Pack UI Integration — v2.3.0
+# Activation Pack UI Integration — v2.4.0
 
-v2.3.0 integrates activation packs into the visible board workflow.
+v2.4.0 integrates activation packs into the visible board workflow.
 
 ## Purpose
 

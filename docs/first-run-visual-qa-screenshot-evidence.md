@@ -1,6 +1,6 @@
-# First-Run Visual QA + Responsive Screenshot Evidence — v2.3.0
+# First-Run Visual QA + Responsive Screenshot Evidence — v2.4.0
 
-v2.3.0 records the visual QA plan for the mounted first-run workflow panel.
+v2.4.0 records the visual QA plan for the mounted first-run workflow panel.
 
 ## Objective
 

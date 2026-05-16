@@ -1,5 +1,5 @@
 
-# Reference Activation Safety Boundaries — v2.3.0
+# Reference Activation Safety Boundaries — v2.4.0
 
 ## allowed
 

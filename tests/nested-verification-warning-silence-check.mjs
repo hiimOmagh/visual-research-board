@@ -16,7 +16,7 @@ function read(path) {
   return readFileSync(path, "utf8");
 }
 
-assert(VERSION === "2.3.0", "package.json version must be 2.3.0");
+assert(VERSION === "2.4.0", "package.json version must be 2.4.0");
 assert(
   pkg.description?.includes("Nested Verification Warning Silence + Final Freshness Recheck"),
   "package description must identify Nested Verification Warning Silence + Final Freshness Recheck"
@@ -100,10 +100,10 @@ for (const file of [
   "README.md",
   "PATCH_MANIFEST.md",
   "docs/nested-verification-warning-silence.md",
-  "RUNBOOK-v2.3.0.md"
+  "RUNBOOK-v2.4.0.md"
 ]) {
   assert(existsSync(file), `${file} must exist`);
-  assert(read(file).includes("v2.3.0"), `${file} must reference v2.3.0`);
+  assert(read(file).includes("v2.4.0"), `${file} must reference v2.4.0`);
 }
 
 if (!process.exitCode) {

@@ -1,9 +1,9 @@
-export const CREATOR_WORKFLOW_USABILITY_VERSION = "2.3.0";
+export const CREATOR_WORKFLOW_USABILITY_VERSION = "2.4.0";
 
 export const creatorWorkflowUsabilityContract = {
-  schema_version: "2.3.0",
-  app_version: "2.3.0",
-  release: "v2.3.0",
+  schema_version: "2.4.0",
+  app_version: "2.4.0",
+  release: "v2.4.0",
   capability: "Creator Workflow Usability Depth Pass",
   local_first: true,
   paid_api_required: false,

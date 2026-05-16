@@ -1,5 +1,5 @@
 
-# Book Reference Safety Boundaries — v2.3.0
+# Book Reference Safety Boundaries — v2.4.0
 
 ## allowed
 

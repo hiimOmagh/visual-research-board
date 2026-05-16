@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 const failures = [];
 
 const read = (path) => readFileSync(join(root, path), "utf8");
@@ -35,7 +35,7 @@ const route = read(routePath);
 const review = read(reviewPath);
 const qa = read(qaPath);
 
-assert(lib.includes(`CREATOR_SESSION_VERSION = "${VERSION}"`), "creator session lib must expose v2.3.0 version");
+assert(lib.includes(`CREATOR_SESSION_VERSION = "${VERSION}"`), "creator session lib must expose v2.4.0 version");
 assert(lib.includes("buildCreatorSessionExportPreview"), "creator session lib must build evidence export preview v2");
 assert(lib.includes("getCreatorSessionCoverageSuggestions"), "creator session lib must expose coverage gap suggestions");
 
@@ -98,15 +98,15 @@ assert(!panel.includes("paid API"), "panel must not require paid APIs");
 assert(!panel.includes("live scraping"), "panel must not claim live scraping");
 
 assert(route.includes("CreatorWorkflowPanel"), "creator workflow route must render CreatorWorkflowPanel");
-assert(review.includes(`VERSION = "${VERSION}"`), "creator session review script must use v2.3.0 version");
+assert(review.includes(`VERSION = "${VERSION}"`), "creator session review script must use v2.4.0 version");
 assert(qa.includes("creator-session-quality-pass"), "full QA gate must include creator-session-quality-pass");
 assert(qa.includes("tests/creator-session-quality-pass-check.mjs"), "full QA gate must call creator session quality test");
 
 const artifactPath = join(root, "artifacts", "creator-session-quality-review.json");
 if (existsSync(artifactPath)) {
   const artifact = JSON.parse(readFileSync(artifactPath, "utf8"));
-  assert(artifact.schema_version === VERSION, "creator session review artifact schema_version must be v2.3.0");
-  assert(artifact.app_version === VERSION, "creator session review artifact app_version must be v2.3.0");
+  assert(artifact.schema_version === VERSION, "creator session review artifact schema_version must be v2.4.0");
+  assert(artifact.app_version === VERSION, "creator session review artifact app_version must be v2.4.0");
   assert(artifact.status === "review-recorded", "creator session review artifact status must be review-recorded");
 }
 

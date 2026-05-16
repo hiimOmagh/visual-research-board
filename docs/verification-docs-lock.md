@@ -1,6 +1,6 @@
-# Verification Docs Lock — v2.3.0
+# Verification Docs Lock — v2.4.0
 
-v2.3.0 locks the verification documentation contract.
+v2.4.0 locks the verification documentation contract.
 
 ## verification docs lock
 

@@ -1,6 +1,6 @@
-# First-Run Evidence Artifact Review + Demo Capture Notes — v2.3.0
+# First-Run Evidence Artifact Review + Demo Capture Notes — v2.4.0
 
-v2.3.0 adds an evidence artifact review layer for first-run UX validation.
+v2.4.0 adds an evidence artifact review layer for first-run UX validation.
 
 ## Objective
 

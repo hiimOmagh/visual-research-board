@@ -15,7 +15,7 @@ const requiredFiles = [
 for (const file of requiredFiles) assert(existsSync(join(root, file)), `Missing auto-tuning file: ${file}`);
 
 const pkg = JSON.parse(read("package.json"));
-assert(pkg.version === "2.3.0", "package.json version must be 2.3.0");
+assert(pkg.version === "2.4.0", "package.json version must be 2.4.0");
 assert(Boolean(pkg.scripts?.["retrieval:autotune:check"]), "package.json must define npm run retrieval:autotune:check");
 assert((pkg.scripts?.qa?.includes("retrieval-autotuning-check") || pkg.scripts?.qa === "node scripts/full-qa-gate.mjs"), "npm run qa must include retrieval-autotuning-check");
 
@@ -55,8 +55,8 @@ assert(panel.includes("Signals used for tuning"), "auto-tuning panel must show t
 
 const searchPanel = read("src/components/search/SearchPanel.tsx");
 assert(searchPanel.includes("RetrievalAutoTuningPanel"), "SearchPanel must render RetrievalAutoTuningPanel");
-assert(searchPanel.includes("v2.3.0"), "SearchPanel header must show v2.3.0");
-assert(searchPanel.includes("visual-research-board-library-v2.3.0.json"), "library export filename must use v2.3.0");
+assert(searchPanel.includes("v2.4.0"), "SearchPanel header must show v2.4.0");
+assert(searchPanel.includes("visual-research-board-library-v2.4.0.json"), "library export filename must use v2.4.0");
 
 const docs = read("docs/retrieval-weak-case-auto-tuning.md");
 assert(docs.includes("v0.3.1"), "auto-tuning docs must identify v0.3.1");

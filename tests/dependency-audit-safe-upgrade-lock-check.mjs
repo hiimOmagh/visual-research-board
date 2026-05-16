@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from "node:fs";
 
-const APP_VERSION = "2.3.0";
+const APP_VERSION = "2.4.0";
 const ARTIFACT_PATH = "artifacts/dependency-audit-safe-upgrade-lock.json";
 const EXPECTED_SCHEMA = "visual-research-board.dependency-audit.safe-upgrade-lock.v1";
 

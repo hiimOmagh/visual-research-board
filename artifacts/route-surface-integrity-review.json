@@ -1,0 +1,75 @@
+{
+  "schema_version": "2.4.0",
+  "app_version": "2.4.0",
+  "workflow": "route-surface-integrity",
+  "status": "review-recorded",
+  "generated_at": "2026-05-16T14:51:30.617Z",
+  "route_surface": [
+    {
+      "route": "/",
+      "purpose": "Landing page and product entry point",
+      "present": true,
+      "files": [
+        "app/page.tsx",
+        "src/app/page.tsx"
+      ]
+    },
+    {
+      "route": "/creator-workflow",
+      "purpose": "End-to-end creator research workflow",
+      "present": true,
+      "files": [
+        "app/creator-workflow/page.tsx",
+        "src/app/creator-workflow/page.tsx"
+      ]
+    },
+    {
+      "route": "/api/search",
+      "purpose": "local-first search endpoint with transparent fixture/provider mode",
+      "present": true,
+      "files": [
+        "app/api/search/route.ts",
+        "src/app/api/search/route.ts"
+      ]
+    },
+    {
+      "route": "/api/export",
+      "purpose": "Evidence pack export endpoint",
+      "present": true,
+      "files": [
+        "app/api/export/route.ts",
+        "src/app/api/export/route.ts"
+      ]
+    },
+    {
+      "route": "/api/metadata",
+      "purpose": "Metadata helper endpoint",
+      "present": true,
+      "files": [
+        "app/api/metadata/route.ts",
+        "src/app/api/metadata/route.ts"
+      ]
+    },
+    {
+      "route": "/api/provider-runtime",
+      "purpose": "Provider runtime status endpoint",
+      "present": true,
+      "files": [
+        "app/api/provider-runtime/route.ts",
+        "src/app/api/provider-runtime/route.ts"
+      ]
+    }
+  ],
+  "landing_integration": {
+    "requires_creator_workflow_link": true,
+    "requires_api_surface_visibility": true,
+    "requires_local_first_disclosure": true
+  },
+  "non_goals": [
+    "No packaging work",
+    "No release archive gate",
+    "No OAuth",
+    "No paid API requirement",
+    "No live scraping"
+  ]
+}

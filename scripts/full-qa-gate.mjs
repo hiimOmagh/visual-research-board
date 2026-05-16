@@ -8,6 +8,7 @@ process.env.VRB_SUPPRESS_STALE_REPORT_WARNINGS ??= "1";
 const startedAt = new Date().toISOString();
 
 const gates = [
+  { category: "exports", name: "evidence-pack-v2", command: ["node", "tests/evidence-pack-v2-check.mjs"] },
     { category: "release", name: "public-demo-evidence-lock", command: ["node", "tests/public-demo-evidence-lock-check.mjs"] },
   { category: "release", name: "hosted-demo-evidence-review", command: ["node", "tests/hosted-demo-evidence-review-check.mjs"] },
   { category: "release", name: "public-demo-final-acceptance", command: ["node", "tests/public-demo-final-acceptance-check.mjs"] },
@@ -85,6 +86,12 @@ const gates = [
     name: "creator-workflow-usability-depth",
     command: ["node", "tests/creator-workflow-usability-depth-check.mjs"],
   },  { category: "workflow", name: "creator-session-quality-pass", command: ["node", "tests/creator-session-quality-pass-check.mjs"] },
+
+  {
+    category: "workflow",
+    name: "route-surface-integrity",
+    command: ["node", "tests/route-surface-integrity-check.mjs"],
+  },
   { category: "release", name: "full-qa-gate-manifest", command: ["node", "tests/full-qa-gate-check.mjs"] }
 ];
 
@@ -141,8 +148,8 @@ for (const gate of selectedGates) {
 
 const finishedAt = new Date().toISOString();
 const report = {
-  schema_version: "2.3.0",
-  app_version: "2.3.0",
+  schema_version: "2.4.0",
+  app_version: "2.4.0",
   gate: "full_qa_gate",
   started_at: startedAt,
   finished_at: finishedAt,
@@ -163,7 +170,7 @@ if (failed) {
   process.exit(1);
 }
 
-console.log("\nFull QA gate passed for v2.3.0.");
+console.log("\nFull QA gate passed for v2.4.0.");
 console.log("Evidence artifact: artifacts/full-qa-gate-report.json");
 
-// TODO(v2.3.0): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check
+// TODO(v2.4.0): add dependency-audit-safe-upgrade-lock gate: npm run dependency:audit:safe-lock:check

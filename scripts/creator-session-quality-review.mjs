@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 
 const artifact = {
   schema_version: VERSION,

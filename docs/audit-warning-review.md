@@ -1,5 +1,5 @@
 
-# Audit Warning Review — v2.3.0
+# Audit Warning Review — v2.4.0
 
 ## Current signal
 

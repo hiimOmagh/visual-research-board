@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const root = process.cwd();
 const failures = [];
-const VERSION = "2.3.0";
+const VERSION = "2.4.0";
 
 const read = (path) => readFileSync(join(root, path), "utf8");
 const assert = (condition, message) => {
@@ -33,7 +33,7 @@ const artifactText = deepText(artifact);
 const scriptText = manualScript.toLowerCase();
 const combinedText = `${artifactText}\n${scriptText}`;
 
-assert(manualScript.includes(`const VERSION = "${VERSION}"`) || manualScript.includes(`VERSION = "${VERSION}"`), "manual review script must use v2.3.0 version");
+assert(manualScript.includes(`const VERSION = "${VERSION}"`) || manualScript.includes(`VERSION = "${VERSION}"`), "manual review script must use v2.4.0 version");
 assert(manualScript.includes("creator-workflow-manual-review.json"), "manual review script must write creator-workflow-manual-review.json");
 
 assert(combinedText.includes("/creator-workflow"), "manual review artifact must identify /creator-workflow route");

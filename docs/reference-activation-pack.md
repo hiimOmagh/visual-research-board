@@ -1,7 +1,7 @@
 
-# Reference Activation Pack MVP — v2.3.0
+# Reference Activation Pack MVP — v2.4.0
 
-v2.3.0 turns gathered references into activation-ready metadata and brief-text packs.
+v2.4.0 turns gathered references into activation-ready metadata and brief-text packs.
 
 ## Purpose
 

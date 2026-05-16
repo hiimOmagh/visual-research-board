@@ -1,4 +1,4 @@
-# v2.3.0 — End-to-End Creator Research Workflow MVP
+# v2.4.0 — End-to-End Creator Research Workflow MVP
 
 Objective: shift Visual Research Board from release-hardened infrastructure into a usable product workflow.
 

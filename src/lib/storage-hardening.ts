@@ -1,7 +1,7 @@
 /* BEGIN STORAGE HARDENING RELEASE CONTRACT
- * schema_version: "2.3.0"
- * app_version: "2.3.0"
- * release_version: "2.3.0"
+ * schema_version: "2.4.0"
+ * app_version: "2.4.0"
+ * release_version: "2.4.0"
  * gate: "storage-hardening"
  * This marker is intentionally explicit for release QA source-contract checks.
  * END STORAGE HARDENING RELEASE CONTRACT */
