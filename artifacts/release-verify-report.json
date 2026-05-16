@@ -3,8 +3,8 @@
   "app_version": "2.4.0",
   "release_label": "v2.4.0",
   "status": "passed",
-  "started_at": "2026-05-16T15:57:23.056Z",
-  "finished_at": "2026-05-16T15:58:03.786Z",
+  "started_at": "2026-05-16T17:13:19.867Z",
+  "finished_at": "2026-05-16T17:14:12.475Z",
   "failed_command": null,
   "command_count": 37,
   "passed_command_count": 37,
@@ -64,7 +64,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 362,
+      "duration_ms": 509,
       "error": null
     },
     {
@@ -83,7 +83,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 356,
+      "duration_ms": 371,
       "error": null
     },
     {
@@ -102,7 +102,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 361,
+      "duration_ms": 425,
       "error": null
     },
     {
@@ -121,7 +121,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 360,
+      "duration_ms": 502,
       "error": null
     },
     {
@@ -140,7 +140,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 355,
+      "duration_ms": 450,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 348,
+      "duration_ms": 379,
       "error": null
     },
     {
@@ -178,7 +178,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 357,
+      "duration_ms": 386,
       "error": null
     },
     {
@@ -197,7 +197,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 369,
+      "duration_ms": 388,
       "error": null
     },
     {
@@ -216,7 +216,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 360,
+      "duration_ms": 397,
       "error": null
     },
     {
@@ -235,7 +235,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 370,
+      "duration_ms": 372,
       "error": null
     },
     {
@@ -254,7 +254,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 358,
+      "duration_ms": 379,
       "error": null
     },
     {
@@ -273,7 +273,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 359,
+      "duration_ms": 514,
       "error": null
     },
     {
@@ -292,7 +292,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 352,
+      "duration_ms": 388,
       "error": null
     },
     {
@@ -311,7 +311,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 461,
+      "duration_ms": 497,
       "error": null
     },
     {
@@ -330,7 +330,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 361,
+      "duration_ms": 515,
       "error": null
     },
     {
@@ -349,7 +349,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 361,
+      "duration_ms": 389,
       "error": null
     },
     {
@@ -368,7 +368,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 357,
+      "duration_ms": 375,
       "error": null
     },
     {
@@ -387,7 +387,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 363,
+      "duration_ms": 374,
       "error": null
     },
     {
@@ -406,7 +406,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 363,
+      "duration_ms": 394,
       "error": null
     },
     {
@@ -425,7 +425,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 363,
+      "duration_ms": 391,
       "error": null
     },
     {
@@ -444,7 +444,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 361,
+      "duration_ms": 380,
       "error": null
     },
     {
@@ -463,7 +463,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 363,
+      "duration_ms": 405,
       "error": null
     },
     {
@@ -482,7 +482,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 382,
+      "duration_ms": 378,
       "error": null
     },
     {
@@ -501,7 +501,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 478,
+      "duration_ms": 389,
       "error": null
     },
     {
@@ -520,7 +520,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 467,
+      "duration_ms": 463,
       "error": null
     },
     {
@@ -539,7 +539,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 360,
+      "duration_ms": 377,
       "error": null
     },
     {
@@ -558,7 +558,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 6536,
+      "duration_ms": 7355,
       "error": null
     },
     {
@@ -577,7 +577,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 355,
+      "duration_ms": 382,
       "error": null
     },
     {
@@ -596,7 +596,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 349,
+      "duration_ms": 389,
       "error": null
     },
     {
@@ -615,7 +615,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 374,
+      "duration_ms": 477,
       "error": null
     },
     {
@@ -634,7 +634,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 365,
+      "duration_ms": 369,
       "error": null
     },
     {
@@ -653,7 +653,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 2342,
+      "duration_ms": 2562,
       "error": null
     },
     {
@@ -672,7 +672,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 5119,
+      "duration_ms": 6857,
       "error": null
     },
     {
@@ -691,7 +691,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 14441,
+      "duration_ms": 21404,
       "error": null
     },
     {
@@ -710,7 +710,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 396,
+      "duration_ms": 587,
       "error": null
     },
     {
@@ -729,7 +729,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 383,
+      "duration_ms": 953,
       "error": null
     },
     {
@@ -748,7 +748,7 @@
       "ok": true,
       "status": 0,
       "signal": null,
-      "duration_ms": 358,
+      "duration_ms": 477,
       "error": null,
       "phase": "final_freshness_recheck"
     }

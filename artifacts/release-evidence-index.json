@@ -1,7 +1,7 @@
 {
   "schema": "visual-research-board.release-evidence-index.v1",
   "app_version": "2.4.0",
-  "generated_at": "2026-05-16T15:57:40.349Z",
+  "generated_at": "2026-05-16T17:13:39.221Z",
   "status": "indexed",
   "artifact_count": 5,
   "missing_count": 0,
@@ -10,8 +10,8 @@
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 15909,
-      "sha256": "0ef6456002808ee8961145162959e60ce8cde64e2ebd9d67825590a516e9f956",
+      "size_bytes": 15918,
+      "sha256": "e14203185ead539e82f4ff9428bc8fa88aab6790b9d49f95b5df08be35775d0b",
       "json_status": "valid",
       "status": "passed",
       "app_version": "2.4.0"
@@ -20,7 +20,7 @@
       "path": "artifacts/release-verify-report.json",
       "exists": true,
       "size_bytes": 19870,
-      "sha256": "50189b29f4248a48b2c3466d4aa2885f367519ffc8505b68ead08c64ac6e8fdd",
+      "sha256": "3f241ea36f7e2de12271c2c6c472b95d8090d1a11f0e2c6f33b5091c4bb17e6d",
       "json_status": "valid",
       "status": "passed",
       "app_version": "2.4.0"
@@ -29,7 +29,7 @@
       "path": "artifacts/first-run-visual-evidence.json",
       "exists": true,
       "size_bytes": 2119,
-      "sha256": "a0433b892bb07ad35c82cd15ab264dce22e8c4e835b58e84551b315c1b3ad451",
+      "sha256": "2f9581d2b920efe38e0540a377629cc3610f0adda81d0fd3c6ef1d966759a679",
       "json_status": "valid",
       "status": "planned",
       "app_version": "2.4.0"
@@ -38,7 +38,7 @@
       "path": "artifacts/first-run-evidence-review.json",
       "exists": true,
       "size_bytes": 2437,
-      "sha256": "e358b74c8816db7fdc224901a19f542180add3348516a6f1f8a88e58adc1974f",
+      "sha256": "729812ce106e7f7a1830c70d2eb6c005554de78e6b57d3e4dd7140850a6cb546",
       "json_status": "valid",
       "status": "review-recorded",
       "app_version": "2.4.0"
@@ -47,7 +47,7 @@
       "path": "artifacts/first-run-demo-script.json",
       "exists": true,
       "size_bytes": 3925,
-      "sha256": "a4238f06087a9f5b2bc4a422ff39b7d59f4da50397d4427022609d932500f873",
+      "sha256": "fa663219ea167b7cfe11914375df36aeed37b579597f4e51f040c246edceeba6",
       "json_status": "valid",
       "status": "script-ready",
       "app_version": "2.4.0"
