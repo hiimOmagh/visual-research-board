@@ -2,13 +2,13 @@
   "schema_version": "first-run.evidence-review.v1",
   "app_version": "2.4.0",
   "release": "v2.4.0",
-  "generated_at": "2026-05-16T15:11:46.588Z",
+  "generated_at": "2026-05-16T15:57:19.638Z",
   "status": "review-recorded",
   "artifact_inputs": [
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 15908
+      "size_bytes": 15916
     },
     {
       "path": "artifacts/release-verify-report.json",

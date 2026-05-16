@@ -1,7 +1,7 @@
 {
   "schema": "visual-research-board.release-evidence-index.v1",
   "app_version": "2.4.0",
-  "generated_at": "2026-05-16T15:12:03.647Z",
+  "generated_at": "2026-05-16T15:57:40.349Z",
   "status": "indexed",
   "artifact_count": 5,
   "missing_count": 0,
@@ -11,7 +11,7 @@
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
       "size_bytes": 15909,
-      "sha256": "bba24cfaa3fec070601c420e0aa0ade8b64589a9f756dc06805ebf436b0e1a6d",
+      "sha256": "0ef6456002808ee8961145162959e60ce8cde64e2ebd9d67825590a516e9f956",
       "json_status": "valid",
       "status": "passed",
       "app_version": "2.4.0"
@@ -20,7 +20,7 @@
       "path": "artifacts/release-verify-report.json",
       "exists": true,
       "size_bytes": 19870,
-      "sha256": "c732b03bda5d0d5efb092d3435056f7c8997a59c486b2ff40dd755884e60f093",
+      "sha256": "50189b29f4248a48b2c3466d4aa2885f367519ffc8505b68ead08c64ac6e8fdd",
       "json_status": "valid",
       "status": "passed",
       "app_version": "2.4.0"
@@ -29,7 +29,7 @@
       "path": "artifacts/first-run-visual-evidence.json",
       "exists": true,
       "size_bytes": 2119,
-      "sha256": "4028f420e22f18b1951d4e12026fefd3125c7cd31ef19a6b5c7229ed69059319",
+      "sha256": "a0433b892bb07ad35c82cd15ab264dce22e8c4e835b58e84551b315c1b3ad451",
       "json_status": "valid",
       "status": "planned",
       "app_version": "2.4.0"
@@ -38,7 +38,7 @@
       "path": "artifacts/first-run-evidence-review.json",
       "exists": true,
       "size_bytes": 2437,
-      "sha256": "f2ce574d8a0ed94862bf552d466d9cbe0fcb4071992480258691d41ad50efb7e",
+      "sha256": "e358b74c8816db7fdc224901a19f542180add3348516a6f1f8a88e58adc1974f",
       "json_status": "valid",
       "status": "review-recorded",
       "app_version": "2.4.0"
@@ -47,7 +47,7 @@
       "path": "artifacts/first-run-demo-script.json",
       "exists": true,
       "size_bytes": 3925,
-      "sha256": "9ab9eac99a59711d92b9783c40d7d094f9e9b655c87bdb24a8c1b275ff672297",
+      "sha256": "a4238f06087a9f5b2bc4a422ff39b7d59f4da50397d4427022609d932500f873",
       "json_status": "valid",
       "status": "script-ready",
       "app_version": "2.4.0"
