@@ -3,7 +3,7 @@
   "schemaVersion": "visual-research-board.dependency-audit.safe-upgrade-lock.v1",
   "appVersion": "2.4.0",
   "lockVersion": "2.4.0",
-  "generatedAt": "2026-05-16T19:04:50.952Z",
+  "generatedAt": "2026-05-26T00:01:44.917Z",
   "status": "documented-noncritical",
   "statusReason": "npm audit reported only noncritical vulnerabilities; findings are documented and force fixes remain forbidden.",
   "policy": {
@@ -51,12 +51,30 @@
   "severityTotals": {
     "info": 0,
     "low": 0,
-    "moderate": 2,
+    "moderate": 3,
     "high": 0,
     "critical": 0,
-    "total": 2
+    "total": 3
   },
   "vulnerabilities": [
+    {
+      "name": "brace-expansion",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "name": "brace-expansion",
+          "source": 1119088,
+          "title": "brace-expansion: Large numeric range defeats documented `max` DoS protection",
+          "severity": "moderate",
+          "range": ">=5.0.0 <5.0.6",
+          "url": "https://github.com/advisories/GHSA-jxxr-4gwj-5jf2"
+        }
+      ],
+      "effects": [],
+      "range": "5.0.2 - 5.0.5",
+      "fixAvailable": true
+    },
     {
       "name": "next",
       "severity": "moderate",

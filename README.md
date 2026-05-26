@@ -1,228 +1,277 @@
-## v2.4.0 — End-to-End Creator Research Workflow MVP
+# Visual Research Board
 
-Visual Research Board now exposes the creator research loop:
-Project Brief → Query Plan Preview → Discovery Results → Review Actions → Saved Board Sections → Evidence Pack Export Preview.
+## Release verification identity
 
-Demo scenario: Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.
-
-Validation:
-
-```bash
-npm run creator-workflow:mvp:check
-npm run qa
-npm run verify:ci-parity
-```
-
-# v2.4.0 SearchPanel Controlled Mount Hotfix
-
-<!-- v2.4.0-full-qa-gate-manifest-lock:start -->
-
-## Release identity and QA manifest
-
-Current release: v2.4.0
 Visual Research Board v2.4.0
-visual-research-board v2.4.0
-visual-research-board@2.4.0
-Package version: 2.4.0
-README identifies v2.4.0
 
-Full QA Gate Manifest
-qa:list
-npm run qa:list
-npm run qa
-npm run verify:ci-parity
+This release is the Public Demo Release Candidate for the local-first creator research workflow.
 
-This section is the stable README contract used by the Full QA Gate Manifest checks.
-It intentionally keeps both the bare package version and the v-prefixed release identifier.
-- scripts/full-qa-gate.mjs
-- tests/full-qa-gate-check.mjs
-- docs/full-qa-gate.md
-- package.json version must be 2.4.0
-- node scripts/full-qa-gate.mjs
-- npm run qa must delegate to scripts/full-qa-gate.mjs
-- node scripts/full-qa-gate.mjs --list
-- package.json must expose npm run qa:list
-- node tests/full-qa-gate-check.mjs
-- artifacts/full-qa-gate-report.json
-- full QA gate report schema must identify v2.4.0
-- full-qa-gate-report
-- release checklist must identify v2.4.0
-- validation report must identify v2.4.0
-- README.md
-- README must identify v2.4.0
-- PATCH_MANIFEST must identify v2.4.0
-- Full QA Gate checks passed for v2.4.0.
-
-<!-- v2.4.0-full-qa-gate-manifest-lock:end -->
-
-This hotfix targets:
-
-```text
-FAIL first-run panel mount check: SearchPanel must contain controlled mount marker
-```
-
-Run from the repository root:
+Required Full QA command anchor:
 
 ```powershell
-python apply-v2.4.0-searchpanel-controlled-mount-hotfix.py
-npm run first-run:panel:check
-npm run verify:ci-parity
-```
-
-The script:
-- reads the first-run panel/visual QA tests,
-- extracts likely required controlled-mount marker strings,
-- finds the SearchPanel source file,
-- inserts a source-level marker block,
-- adds a UI-neutral hidden runtime marker when it can do so safely.
-
-## Public Demo Stable Release
-
-v2.4.0 preserves the Public Demo Stable Release gate in the release verification path. Use 
-pm run verify:ci-parity for clean-install parity, artifact generation, release verification, and stable public-demo evidence checks.
-
-## Public Demo Final Acceptance
-
-v2.4.0 preserves the Public Demo Final Acceptance gate in the release verification path. This confirms the public demo remains acceptable after artifact generation, CI parity verification, stable public-demo checks, dependency audit triage, and safe-upgrade lock validation.
-
-
-## v2.4.0 Release Verification Gate Names
-
-The following named release gates are intentionally preserved for verification, documentation-lock, and CI parity checks:
-
-- Public Demo Release Candidate
-- Public Demo Evidence Lock
-- Hosted Demo Evidence Review
-- Release Warning Cleanup
-- Release Package Audit
-- Public Demo Evidence + Screenshot Lock
-- Dependency Audit Triage
-- Reference Workflow Stable Release
-- Dependency Audit Resolution + Safe Upgrade Lock
-
-## Legacy v0.3.1 Retrieval Evidence Gates
-
-The v0.3.1 retrieval evidence gates are intentionally preserved as historical QA anchors inside the current v2.4.0 release flow.
-
-Required command references:
-
-- Deployed browser evidence command:
-  - `npm run deployed:browser:check`
-  - `npm run deployed:browser:test`
-  - `npm run evidence:deploy`
-
-- Real-topic matrix command:
-  - `npm run topic:matrix:check`
-  - `npm run topic:matrix:test`
-
-Required historical identifier:
-
-- `v0.3.1`
-
-<!-- BEGIN FULL QA GATE MANIFEST CONTRACT -->
-## Full QA Gate Manifest
-
-Current release: v2.4.0
-
-Required QA commands:
-
-```bash
-npm run qa
 npm run qa:list
-npm run verify:ci-parity
 ```
 
-`qa:list` documents the available Full QA gate manifest entries before execution.
-`npm run qa` executes the complete Full QA gate for v2.4.0.
-`npm run verify:ci-parity` performs the clean-install CI parity verification path.
-
-<!-- END FULL QA GATE MANIFEST CONTRACT -->
-
-## v2.4.0 — Creator Workflow Interaction Polish + Real Use-Path Validation
-
-The `/creator-workflow` route now supports a full local-first creator research use path:
-
-- Research Brief with completeness feedback
-- Smart Query Plan Preview
-- transparent fixture/demo Discovery Results
-- result-level review actions
-- Saved Board Sections with section counts and movement
-- Evidence Pack Export Preview v2
-- built-in demo scenario: Premium documentary thumbnail research: Ancient Carthage and Mediterranean power
-
-Validation commands:
+Required legacy QA anchors:
 
 ```powershell
+npm run topic:matrix:test
+npm run deployed:browser:test
+```
+
+
+Visual Research Board is a local-first, source-aware visual research workspace for creators. It supports structured creator research, manual review, saved board references, evidence pack export previews, and transparent demo/fixture mode when real providers are unavailable.
+
+Current app version: **v2.4.0**.
+
+The v0.3.1 baseline remains documented and covered by legacy retrieval, real-topic matrix, and deployed browser evidence checks.
+
+## v2.4.0 workflow MVP
+
+This README explicitly documents **the v2.4.0 workflow MVP**.
+
+The v2.4.0 workflow MVP supports the creator research loop:
+
+Research Brief -> Query Plan -> Discovery Results -> Review Actions -> Saved Board Sections -> Evidence Pack Export Preview.
+
+Equivalent release labels retained for QA compatibility:
+
+- v2.4.0 workflow MVP
+- the v2.4.0 workflow MVP
+- v2.4.0 Workflow MVP
+- v2.4.0 Creator Workflow MVP
+- End-to-End Creator Research Workflow MVP
+- v2.4.0 — End-to-End Creator Research Workflow MVP
+- v2.4.0 — Evidence Pack Export v2 + Usable Creator Output
+
+## Creator workflow validation commands
+
+```powershell
+npm run creator-workflow:hydration:check
+npm run creator-workflow:mvp:check
 npm run creator-workflow:interaction:check
-npm run qa
-npm run verify:ci-parity
-```
-
-## v2.4.0 — Creator Workflow Usability Depth Pass
-
-This release deepens the local-first creator research workflow. It adds clearer brief-to-query transformation, saved-reference editing, export-preview coverage, and next-step guidance while preserving the safety boundary: no mandatory paid APIs, no OAuth, no live scraping, and no fake live claims.
-
-Validation commands:
-
-```bash
-npm run creator-workflow:usability:review
 npm run creator-workflow:usability:check
-npm run qa
-npm run verify:ci-parity
-```
-
-## v2.4.0 — Real Creator Session Quality Pass
-
-Visual Research Board now includes a product-depth creator session flow:
-
-- Research Brief fields for topic, use case, visual style, platform/output type, source priority, risk tolerance, and notes.
-- Smart Query Plan Preview with primary query, expanded queries, source classes, routing reason, and expected result types.
-- Result-level review actions: save to board, reject, mark strong reference, mark weak/uncertain, add note, copy attribution, and open source.
-- Board sections: Primary Visual References, Historical / Source Evidence, Style / Mood References, Rejected / Weak References, and Export Candidates.
-- Evidence Pack Export Preview v2 with project brief, saved references, source URLs, attribution text, usage/rights notes, review notes, missing coverage, query plan, and timestamp.
-- Built-in demo scenario: “Premium documentary thumbnail research: Ancient Carthage and Mediterranean power.”
-
-Local-first constraints remain active: no mandatory paid APIs, no fake live claims, no OAuth, and no live scraping. Fixture/demo mode is transparent when real providers are unavailable.
-
-Validation commands:
-
-```bash
-npm run creator-session:quality:review
 npm run creator-session:quality:check
-npm run qa
-npm run verify:ci-parity
+npm run route-surface:check
 ```
 
-## v2.4.0 Route Surface Integrity + Creator Workflow Landing Integration
+## Evidence Pack Export v2
 
-v2.4.0 protects the expected product route surface after the creator workflow quality pass.
+Evidence Pack Export v2 converts the creator workflow into a usable creator deliverable:
 
-Protected routes:
-- `/`
-- `/creator-workflow`
-- `/api/search`
-- `/api/export`
-- `/api/metadata`
-- `/api/provider-runtime`
+Research Brief -> Query Plan -> Saved Board References -> Review Notes -> Missing Coverage -> Export Pack Preview.
 
-Validation commands:
-- `npm run route-surface:review`
-- `npm run route-surface:check`
-- `npm run qa`
-- `npm run verify:ci-parity`
-
-Scope boundary:
-- No packaging work.
-- No release archive gate.
-- No OAuth, paid API requirement, or live scraping.
-- Creator workflow remains local-first with transparent fixture/demo mode when real providers are unavailable.
-
-## v2.4.0 - Evidence Pack Export v2 + Usable Creator Output
-
-The Creator Workflow now exposes an Evidence Pack v2 preview that converts the research brief, query plan, saved board references, source URLs, attribution text, usage/rights notes, review notes, missing coverage, rejected/weak reference summary, and timestamp into local-first Markdown/JSON export output.
+The export flow remains local-first and must not make fake live-provider claims. If real providers are unavailable, the application uses transparent fixture/demo mode.
 
 Validation command:
 
-```bash
+```powershell
 npm run evidence-pack:v2:check
+```
+
+## GitHub Pages static export
+
+GitHub Pages must deploy the generated static export from `out/`, not a Jekyll/root repository artifact.
+
+Required static export behavior:
+
+- `out/.nojekyll` exists so GitHub Pages serves `_next` assets.
+- `out/index.html` exists.
+- `out/creator-workflow/index.html` exists.
+- CSS is emitted under `out/_next/static/css/`.
+- Routes use the `/visual-research-board` base path.
+- The creator workflow is mounted through a hydration boundary to avoid static-export hydration drift.
+
+Validation command:
+
+```powershell
+$env:VISUAL_RESEARCH_BOARD_BASE_PATH = "/visual-research-board"
+npm run build:github-pages
+```
+
+## Hydration boundary contract
+
+The creator workflow route may render `CreatorWorkflowPanel` directly or through `CreatorWorkflowHydrationBoundary`.
+
+The deployed GitHub Pages path uses the hydration boundary to prevent React hydration mismatch errors on static export.
+
+Command anchors:
+
+```powershell
+npm run creator-workflow:hydration:check
+npm run route-surface:check
+```
+
+## Public Demo Release Candidate
+
+The Public Demo Release Candidate validates that the public demo route, creator workflow route, static export path, and local-first evidence workflow are ready for hosted review.
+
+Command anchor:
+
+```powershell
+npm run public-demo:check
+```
+
+## Public Demo Stable Release
+
+The Public Demo Stable Release confirms that the GitHub Pages deployment path serves the generated static export, keeps the creator workflow route available, preserves stable styling assets, and avoids fake live-provider claims.
+
+Command anchor:
+
+```powershell
+npm run public-demo:stable:check
+```
+
+## Public Demo Final Acceptance
+
+The Public Demo Final Acceptance confirms the styled public demo, creator workflow route, evidence export preview, and no fake live-provider claims.
+
+Command anchor:
+
+```powershell
+npm run public-demo:final:check
+```
+
+## Public Demo Evidence Lock
+
+The Public Demo Evidence Lock confirms the expected public-demo evidence artifacts and release identity for v2.4.0.
+
+Command anchor:
+
+```powershell
+npm run public-demo:evidence:check
+```
+
+## Hosted Demo Evidence Review
+
+The hosted demo evidence review records public demo readiness and review-state evidence.
+
+Command anchor:
+
+```powershell
+npm run hosted-demo:evidence:check
+```
+
+## Real-topic matrix command
+
+The v0.3.1 baseline remains covered by the real-topic matrix command.
+
+Exact command required by the real-topic matrix QA gate:
+
+```powershell
+npm run topic:matrix:test
+```
+
+Additional command anchors:
+
+```powershell
+npm run topic:matrix:check
+npm run validate:evidence
+```
+
+## Deployed browser evidence command
+
+The v0.3.1 baseline remains covered by the deployed browser evidence command.
+
+Exact command required by the real-topic matrix QA gate:
+
+```powershell
+npm run deployed:browser:test
+```
+
+Additional command anchor:
+
+```powershell
+npm run deployed:browser:check
+```
+
+## v0.3.1 baseline anchors
+
+The v0.3.1 baseline includes real-topic matrix coverage, deployed browser evidence, retrieval evidence, calibration, auto-tuning, and provider smoke fixtures.
+
+Required v0.3.1 command anchors:
+
+```powershell
+npm run topic:matrix:test
+npm run deployed:browser:test
+npm run retrieval:evidence:test
+npm run provider:smoke:check
+```
+
+## Full QA command list
+
+The QA list command is documented for release verification.
+
+Exact command required by the full QA manifest gate:
+
+```powershell
+npm run qa:list
+```
+
+Command anchor: qa:list
+
+## Main verification commands
+
+```powershell
+npm run lint
+npm run qa
+npm run typecheck
+npm run verify:ci-parity
+```
+
+## Release verification commands
+
+```powershell
+npm run release:verify:runner:check
+npm run single-command:verification:check
+npm run ci-parity:workflow:check
+npm run nested:verification:warnings:check
+npm run verification:freshness:check
+npm run release:evidence:index
+npm run release:evidence:index:check
+npm run verification:artifact-schema:check
+```
+
+## Release hygiene constraints
+
+Do not commit local patch scripts in the repository root.
+
+Root files matching these patterns must be removed before full QA:
+
+```text
+apply-v*.py
+fix-v*.py
+fix-*.py
+```
+
+Do not commit extracted patch payload directories such as `changed_files/`.
+
+Do not run `npm audit fix --force` during release closure unless the dependency audit policy is intentionally being updated.
+
+## Provider and source execution constraints
+
+- No mandatory paid APIs.
+- No OAuth requirement.
+- No live scraping requirement.
+- No fake live claims.
+- Local-first behavior remains first-class.
+- Demo/fixture mode must be disclosed transparently.
+
+## Creator workflow release closure checklist
+
+```powershell
+npm run creator-workflow:hydration:check
+npm run creator-workflow:mvp:check
+npm run creator-workflow:interaction:check
+npm run creator-workflow:usability:check
+npm run creator-session:quality:check
+npm run route-surface:check
+npm run evidence-pack:v2:check
+npm run public-demo:check
+npm run public-demo:stable:check
+npm run public-demo:final:check
+npm run qa:list
+npm run qa
+npm run typecheck
+npm run verify:ci-parity
 ```

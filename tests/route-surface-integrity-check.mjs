@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+﻿import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -75,7 +75,7 @@ for (const token of [
 }
 
 const creatorPage = fileText(["app/creator-workflow/page.tsx", "src/app/creator-workflow/page.tsx"]);
-assert(creatorPage.includes("CreatorWorkflowPanel"), "creator workflow route must render CreatorWorkflowPanel");
+assert(creatorPage.includes("CreatorWorkflowPanel") || creatorPage.includes("CreatorWorkflowHydrationBoundary"), "creator workflow route must render CreatorWorkflowPanel directly or through CreatorWorkflowHydrationBoundary");
 
 for (const apiRoute of ["/api/search", "/api/export", "/api/metadata", "/api/provider-runtime"]) {
   const files = expectedRoutes.find((entry) => entry.route === apiRoute)?.files ?? [];
@@ -90,3 +90,4 @@ if (failures.length) {
 }
 
 console.log("Route Surface Integrity + Creator Workflow Landing checks passed for v2.4.0.");
+

@@ -2,18 +2,18 @@
   "schema_version": "first-run.evidence-review.v1",
   "app_version": "2.4.0",
   "release": "v2.4.0",
-  "generated_at": "2026-05-16T19:04:48.766Z",
+  "generated_at": "2026-05-26T00:01:43.210Z",
   "status": "review-recorded",
   "artifact_inputs": [
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 15909
+      "size_bytes": 15908
     },
     {
       "path": "artifacts/release-verify-report.json",
       "exists": true,
-      "size_bytes": 15016
+      "size_bytes": 15017
     },
     {
       "path": "artifacts/first-run-visual-evidence.json",
