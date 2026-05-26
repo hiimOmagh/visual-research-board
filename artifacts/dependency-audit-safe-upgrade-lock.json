@@ -3,7 +3,7 @@
   "schemaVersion": "visual-research-board.dependency-audit.safe-upgrade-lock.v1",
   "appVersion": "2.4.0",
   "lockVersion": "2.4.0",
-  "generatedAt": "2026-05-26T00:01:44.917Z",
+  "generatedAt": "2026-05-26T01:36:54.953Z",
   "status": "documented-noncritical",
   "statusReason": "npm audit reported only noncritical vulnerabilities; findings are documented and force fixes remain forbidden.",
   "policy": {

@@ -2,18 +2,18 @@
   "schema_version": "first-run.evidence-review.v1",
   "app_version": "2.4.0",
   "release": "v2.4.0",
-  "generated_at": "2026-05-26T00:01:43.210Z",
+  "generated_at": "2026-05-26T01:36:52.771Z",
   "status": "review-recorded",
   "artifact_inputs": [
     {
       "path": "artifacts/full-qa-gate-report.json",
       "exists": true,
-      "size_bytes": 15908
+      "size_bytes": 15910
     },
     {
       "path": "artifacts/release-verify-report.json",
       "exists": true,
-      "size_bytes": 15017
+      "size_bytes": 19870
     },
     {
       "path": "artifacts/first-run-visual-evidence.json",
@@ -46,7 +46,7 @@
     },
     "release_verify": {
       "app_version": "2.4.0",
-      "status": "failed"
+      "status": "passed"
     },
     "first_run_visual_evidence": {
       "app_version": "2.4.0",
