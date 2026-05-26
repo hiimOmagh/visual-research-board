@@ -98,7 +98,10 @@ assert(
 );
 assert(panel.includes("fixture/demo mode"), "panel must transparently label fixture/demo mode");
 assert(panel.includes('data-testid="creator-workflow-mvp"'), "panel must expose creator workflow test id");
-assert(route.includes("CreatorWorkflowPanel"), "creator workflow route must mount CreatorWorkflowPanel");
+assert(
+  route.includes("CreatorWorkflowPanel") || route.includes("CreatorWorkflowHydrationBoundary"),
+  "creator workflow route must mount CreatorWorkflowPanel directly or through CreatorWorkflowHydrationBoundary"
+);
 assert(docs.includes("No fake live-provider claims"), "docs must forbid fake live-provider claims");
 assert(docs.includes("No paid API dependency"), "docs must preserve no paid API dependency scope");
 assert(readme.includes("v2.4.0"), "README must identify v2.4.0");

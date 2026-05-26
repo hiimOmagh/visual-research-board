@@ -126,7 +126,8 @@
     "route-surface:check": "node tests/route-surface-integrity-check.mjs",
     "evidence-pack:v2:check": "node tests/evidence-pack-v2-check.mjs",
     "build:github-pages": "node scripts/github-pages-static-export.mjs",
-    "github-pages:static:check": "npm run build:github-pages"
+    "github-pages:static:check": "npm run build:github-pages",
+    "creator-workflow:hydration:check": "node tests/creator-workflow-hydration-boundary-check.mjs"
   },
   "dependencies": {
     "@types/node": "^22.10.2",

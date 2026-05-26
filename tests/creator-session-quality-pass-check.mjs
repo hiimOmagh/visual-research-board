@@ -97,7 +97,10 @@ assert(!panel.includes("OAuth"), "panel must not add OAuth workflow copy");
 assert(!panel.includes("paid API"), "panel must not require paid APIs");
 assert(!panel.includes("live scraping"), "panel must not claim live scraping");
 
-assert(route.includes("CreatorWorkflowPanel"), "creator workflow route must render CreatorWorkflowPanel");
+assert(
+  route.includes("CreatorWorkflowPanel") || route.includes("CreatorWorkflowHydrationBoundary"),
+  "creator workflow route must render CreatorWorkflowPanel directly or through CreatorWorkflowHydrationBoundary"
+);
 assert(review.includes(`VERSION = "${VERSION}"`), "creator session review script must use v2.4.0 version");
 assert(qa.includes("creator-session-quality-pass"), "full QA gate must include creator-session-quality-pass");
 assert(qa.includes("tests/creator-session-quality-pass-check.mjs"), "full QA gate must call creator session quality test");

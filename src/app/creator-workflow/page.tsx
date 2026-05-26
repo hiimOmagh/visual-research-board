@@ -1,4 +1,5 @@
-import CreatorWorkflowPanel from "@/components/search/CreatorWorkflowPanel";
+import CreatorWorkflowHydrationBoundary from "../../components/search/CreatorWorkflowHydrationBoundary";
+
 export default function CreatorWorkflowPage() {
-  return <CreatorWorkflowPanel />;
+  return <CreatorWorkflowHydrationBoundary />;
 }
